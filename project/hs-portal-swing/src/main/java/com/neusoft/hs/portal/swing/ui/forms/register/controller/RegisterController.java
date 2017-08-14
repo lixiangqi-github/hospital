@@ -18,6 +18,7 @@ import com.neusoft.hs.domain.organization.OrganizationAdminDomainService;
 import com.neusoft.hs.domain.organization.UserAdminDomainService;
 import com.neusoft.hs.domain.visit.CreateVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
+import com.neusoft.hs.domain.visit.VisitException;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.portal.swing.ui.forms.register.view.VisitTableBtnPanel;
 import com.neusoft.hs.portal.swing.ui.forms.register.view.VisitTableFrame;
@@ -159,9 +160,15 @@ public class RegisterController extends AbstractFrameController {
 			ValidationError validationError = errors.get();
 			Notifications.showFormValidationAlert(validationError.getMessage());
 		} else {
-			Visit visit = registerAppService.register(entity);
-			tableModel.addEntity(visit);
-			closeModalWindow();
+			try {
+				Visit visit = registerAppService.register(entity);
+				tableModel.addEntity(visit);
+				closeModalWindow();
+			} catch (VisitException e) {
+				e.printStackTrace();
+				Notifications.showFormValidationAlert(e.getMessage());
+			}
+			
 		}
 	}
 

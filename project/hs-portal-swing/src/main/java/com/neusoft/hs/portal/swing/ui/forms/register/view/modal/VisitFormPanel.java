@@ -109,6 +109,7 @@ public class VisitFormPanel extends JPanel {
 	public CreateVisitVO getEntityFromForm() throws HsException {
 
 		CreateVisitVO createVisitVO = new CreateVisitVO();
+		createVisitVO.setCardNumber(carNumberTF.getText());
 		createVisitVO.setName(nameTF.getText());
 		createVisitVO.setBirthday((Date) birthdaySD.getValue());
 		createVisitVO.setSex(sexComboBoxModel.getSelectedItem());

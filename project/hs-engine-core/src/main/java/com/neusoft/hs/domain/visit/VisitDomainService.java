@@ -46,8 +46,13 @@ public class VisitDomainService {
 	 * 
 	 * @param createVisitVO
 	 * @return
+	 * @throws VisitException
 	 */
-	public Visit create(CreateVisitVO createVisitVO) {
+	public Visit create(CreateVisitVO createVisitVO) throws VisitException {
+
+		if (createVisitVO.getCardNumber() == null) {
+			throw new VisitException(null, "身份标识CardNumber不能为空");
+		}
 
 		Patient patient = patientDomainService.findByCardNumber(createVisitVO
 				.getCardNumber());
@@ -91,13 +96,12 @@ public class VisitDomainService {
 		visit.setLast(true);
 
 		visit.setPatient(patient);
-		//创建病历夹
+		// 创建病历夹
 		MedicalRecordClip medicalRecordClip = new MedicalRecordClip();
 		medicalRecordClip.setVisit(visit);
 		medicalRecordClip.setState(MedicalRecordClip.State_Writing);
 
 		visit.save();
-
 
 		LogUtil.log(this.getClass(), "用户[{}]创建了患者一次就诊[{}]的病历夹[{}]",
 				createVisitVO.getOperator().getId(), visit.getName(),
@@ -305,12 +309,12 @@ public class VisitDomainService {
 	public List<Visit> findByStates(List<String> states, Pageable pageable) {
 		return visitRepo.findByStateIn(states, pageable);
 	}
-	
+
 	public List<Visit> findByStateAndDept(String state, Dept dept,
 			Pageable pageable) {
 		return visitRepo.findByStateAndDept(state, dept, pageable);
 	}
-	
+
 	public List<Visit> findByStatesAndDept(List<String> states, Dept dept,
 			Pageable pageable) {
 		return visitRepo.findByStateInAndDept(states, dept, pageable);

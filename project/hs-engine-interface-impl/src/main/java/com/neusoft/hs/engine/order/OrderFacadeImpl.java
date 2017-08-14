@@ -134,10 +134,20 @@ public class OrderFacadeImpl implements OrderFacade {
 		order.setPlaceType(createOrderDTO.getPlaceType());
 		order.setPlanStartDate(createOrderDTO.getPlanStartDate());
 
-		Visit visit = visitDomainService.find(createOrderDTO.getVisitId());
-		if (visit == null) {
-			throw new OrderDTOException(null, "患者一次就诊[%s]不存在",
-					createOrderDTO.getVisitId());
+		Visit visit;
+		if (createOrderDTO.getVisitId() != null) {
+			visit = visitDomainService.find(createOrderDTO.getVisitId());
+			if (visit == null) {
+				throw new OrderDTOException(null, "患者一次就诊Id[%s]不存在",
+						createOrderDTO.getVisitId());
+			}
+		} else {
+			visit = visitDomainService.findLastVisit(createOrderDTO
+					.getVisitCardNumber());
+			if (visit == null) {
+				throw new OrderDTOException(null, "患者一次就诊cardNumber[%s]不存在",
+						createOrderDTO.getVisitCardNumber());
+			}
 		}
 		order.setVisit(visit);
 

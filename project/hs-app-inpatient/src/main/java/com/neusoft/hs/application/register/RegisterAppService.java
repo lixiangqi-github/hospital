@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.neusoft.hs.domain.visit.CreateVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitDomainService;
+import com.neusoft.hs.domain.visit.VisitException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -21,9 +22,10 @@ public class RegisterAppService {
 	private VisitDomainService visitDomainService;
 
 	/**
+	 * @throws VisitException 
 	 * @roseuid 584A697D031B
 	 */
-	public Visit register(CreateVisitVO createVisitVO) {
+	public Visit register(CreateVisitVO createVisitVO) throws VisitException {
 		createVisitVO.setState(Visit.State_NeedInitAccount);
 		createVisitVO.setInPatient(true);
 		return visitDomainService.create(createVisitVO);

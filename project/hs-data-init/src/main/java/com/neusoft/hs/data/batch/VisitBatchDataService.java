@@ -20,6 +20,7 @@ import com.neusoft.hs.domain.visit.CreateVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitAdminDomainService;
 import com.neusoft.hs.domain.visit.VisitDomainService;
+import com.neusoft.hs.domain.visit.VisitException;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 
@@ -103,7 +104,7 @@ public class VisitBatchDataService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public void create(CreateVisitVO createVisitVO) {
+	public void create(CreateVisitVO createVisitVO) throws VisitException {
 		Visit visit = visitDomainService.create(createVisitVO);
 		costDomainService.createChargeBill(visit, 20000, admin);
 		visit.save();

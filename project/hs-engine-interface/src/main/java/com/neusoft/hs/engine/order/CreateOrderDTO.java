@@ -8,6 +8,8 @@ public class CreateOrderDTO {
 
 	private String visitId;
 
+	private String visitCardNumber;
+
 	private String placeType;
 
 	private boolean isLong;
@@ -36,6 +38,14 @@ public class CreateOrderDTO {
 
 	public void setVisitId(String visitId) {
 		this.visitId = visitId;
+	}
+
+	public String getVisitCardNumber() {
+		return visitCardNumber;
+	}
+
+	public void setVisitCardNumber(String visitCardNumber) {
+		this.visitCardNumber = visitCardNumber;
 	}
 
 	public String getPlaceType() {
