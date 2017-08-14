@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface OrderFacadeStub extends OrderFacade {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/order/create")
-	public List<OrderDTO> create(@RequestBody CreateOrderDTO createOrderDTO) throws OrderDTOException, OrderExecuteDTOException;
+	public List<OrderDTO> create(@RequestBody CreateOrderDTO createOrderDTO)
+			throws OrderDTOException, OrderExecuteDTOException;
 
 }

@@ -17,7 +17,7 @@ public class OrderFrontRestController {
 	@Autowired
 	private OrderFacade orderFacade;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/order/create")
+	@RequestMapping(method = RequestMethod.GET, value = "/test/order/create")
 	public List<OrderDTO> create()
 			throws HsException {
 		CreateOrderDTO createOrderDTO = new CreateOrderDTO();

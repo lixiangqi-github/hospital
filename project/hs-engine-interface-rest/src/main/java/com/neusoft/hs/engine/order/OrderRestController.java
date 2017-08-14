@@ -14,7 +14,7 @@ public class OrderRestController {
 	@Autowired
 	private OrderFacade orderFacade;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/order/create")
+	@RequestMapping(method = RequestMethod.POST, value = "/order/create")
 	public List<OrderDTO> create(@RequestBody CreateOrderDTO createOrderDTO)
 			throws OrderDTOException, OrderExecuteDTOException {
 		return orderFacade.create(createOrderDTO);
