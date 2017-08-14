@@ -24,7 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = { "com.neusoft.hs.*" })
 @ComponentScan(basePackages = { "com.neusoft.hs.*" })
 @EnableFeignClients(basePackages = { "com.neusoft.hs.*" })
-@ImportResource(locations = { "classpath:application-bean.xml" })
+//@ImportResource(locations = { "classpath:application-bean.xml" })
 @EnableDiscoveryClient
 //@EnableZuulProxy
 //@EnableHystrix
