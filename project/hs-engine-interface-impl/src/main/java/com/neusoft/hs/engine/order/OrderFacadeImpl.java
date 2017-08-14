@@ -167,14 +167,17 @@ public class OrderFacadeImpl implements OrderFacade {
 		OrderType orderType = orderAdminDomainService
 				.findOrderType(orderTypeId);
 		if (orderType == null) {
-			throw new OrderDTOException(null, "医嘱类型[%s]不存在", createOrderDTO
-					.getItems().get(0).getOrderTypeId());
+			throw new OrderDTOException(null, "医嘱类型[%s]不存在",
+					item.getOrderTypeId());
 		}
 		order.setOrderType(orderType);
 		order.setName(orderType.getName());
 
 		if (orderType instanceof DrugOrderType) {
 			Pharmacy pharmacy = (Pharmacy) order.getExecuteDept();
+			if (pharmacy == null) {
+				throw new OrderDTOException(null, "没有指定执行科室（药房）");
+			}
 
 			DrugUseMode drugUseMode = pharmacyAdminService
 					.findDrugUseMode(createOrderDTO.getDrugUseModeId());

@@ -35,6 +35,8 @@ public class OrderFrontTestRestController {
 
 		createOrderDTO.setDrugUseModeId("oralOrderUseMode");
 		createOrderDTO.setPlanStartDate(DateUtil.getSysDate());
+		
+		createOrderDTO.setExecuteDeptId("deptccc");
 
 		createOrderDTO.setCreator("doctor002");
 

@@ -8,6 +8,7 @@ spring:
     cache: false             # Allow Thymeleaf templates to be reloaded at runtime
     prefix: classpath:/test-server/templates/    # Trailing / mandatory
                              # Template location for this application only
+    encoding: UTF-8
   datasource:
     url: jdbc:mysql://localhost:3306/hs?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
     username: root
