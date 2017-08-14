@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.exception.HsException;
 
 @FeignClient("engine-service")
@@ -17,6 +16,6 @@ public interface VisitFacadeStub extends VisitFacade {
 			throws HsException;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/visit/{visitId}/find")
-	public Visit find(@PathVariable("visitId") String visitId);
+	public VisitDTO find(@PathVariable("visitId") String visitId);
 
 }

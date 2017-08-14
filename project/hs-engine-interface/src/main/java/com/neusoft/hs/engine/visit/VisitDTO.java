@@ -68,6 +68,7 @@ public class VisitDTO {
 			this.respNurseId = visit.getRespNurse().getId();
 			this.patientId = visit.getPatient().getId();
 			this.patientName = visit.getPatient().getName();
+			this.areaId = visit.getArea().getId();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

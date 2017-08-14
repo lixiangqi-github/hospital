@@ -23,7 +23,6 @@ import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.PrescriptionBuilder;
 import com.neusoft.hs.domain.order.TemporaryDrugOrderBuilder;
 import com.neusoft.hs.domain.order.TemporaryOrder;
-import com.neusoft.hs.domain.outpatientoffice.OutPatientPlanRecord;
 import com.neusoft.hs.domain.pharmacy.Prescription;
 import com.neusoft.hs.domain.registration.Voucher;
 import com.neusoft.hs.domain.treatment.Itemable;
@@ -33,6 +32,7 @@ import com.neusoft.hs.domain.treatment.TreatmentItemValue;
 import com.neusoft.hs.domain.visit.CreateVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.engine.visit.LeaveHospitalDTO;
+import com.neusoft.hs.engine.visit.VisitDTO;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 
@@ -59,6 +59,7 @@ public class OutPatientMainTestService extends AppTestService {
 
 		CreateVisitVO createVisitVO;
 		Visit theVisit;
+		VisitDTO visitDTO;
 		Pageable pageable;
 		List<OrderExecute> executes;
 		int changedCount;
@@ -423,21 +424,21 @@ public class OutPatientMainTestService extends AppTestService {
 		visitFacade.leaveHospital(leaveHospitalDTO);
 
 		// theVisit = visitDomainService.find(visit002.getId());
-		theVisit = visitFacade.find(visit002.getId());
+		visitDTO = visitFacade.find(visit002.getId());
 
-		assertTrue(theVisit.getState().equals(Visit.State_LeaveHospital));
+		assertTrue(visitDTO.getState().equals(Visit.State_LeaveHospital));
 
 		// 2016-12-28
 		DateUtil.setSysDate(DateUtil.createDay("2016-12-28"));
 		patientNightTestService.calculate(admin001);
 
-		theVisit = visitFacade.find(visit001.getId());
+		visitDTO = visitFacade.find(visit001.getId());
 
-		assertTrue(theVisit.getState().equals(Visit.State_LeaveHospital));
+		assertTrue(visitDTO.getState().equals(Visit.State_LeaveHospital));
 
-		theVisit = visitFacade.find(visit003.getId());
+		visitDTO = visitFacade.find(visit003.getId());
 
-		assertTrue(theVisit.getState().equals(Visit.State_LeaveHospital));
+		assertTrue(visitDTO.getState().equals(Visit.State_LeaveHospital));
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 09:00"));
 

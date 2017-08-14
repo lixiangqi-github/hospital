@@ -24,8 +24,7 @@ public class VisitRestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/visit/{visitId}/find")
 	public VisitDTO find(@PathVariable("visitId") String visitId) {
-		Visit visit = visitFacade.find(visitId);
-		return new VisitDTO(visit);
+		return visitFacade.find(visitId);
 	}
 
 }

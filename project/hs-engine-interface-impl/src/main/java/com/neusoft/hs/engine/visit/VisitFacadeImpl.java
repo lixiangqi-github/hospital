@@ -39,8 +39,13 @@ public class VisitFacadeImpl implements VisitFacade {
 	}
 
 	@Override
-	public Visit find(String visitId) {
-		return visitDomainService.find(visitId);
+	public VisitDTO find(String visitId) {
+		Visit visit = visitDomainService.find(visitId);
+		if (visit != null) {
+			return new VisitDTO(visit);
+		} else {
+			return null;
+		}
 	}
 
 }

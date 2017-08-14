@@ -1,8 +1,5 @@
 package com.neusoft.hs.engine.visit;
 
-import java.util.List;
-
-import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.exception.HsException;
 
 public interface VisitFacade {
@@ -20,7 +17,7 @@ public interface VisitFacade {
 	public void leaveHospital(LeaveHospitalDTO leaveHospitalDTO)
 			throws HsException;
 
-	public Visit find(String visitId);
+	public VisitDTO find(String visitId);
 //
 //	public Visit findLastVisit(String cardNumber);
 //
