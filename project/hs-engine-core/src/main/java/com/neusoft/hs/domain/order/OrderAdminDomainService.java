@@ -51,6 +51,10 @@ public class OrderAdminDomainService {
 		return orderFrequencyTypeRepo.findAll(pageable).getContent();
 	}
 
+	public OrderFrequencyType findFrequencyType(String id) {
+		return orderFrequencyTypeRepo.findOne(id);
+	}
+
 	public void createOrderTypes(List<OrderType> orderTypes) {
 		orderTypeRepo.save(orderTypes);
 	}
@@ -78,5 +82,9 @@ public class OrderAdminDomainService {
 
 	public void clearOrderFrequencyTypes() {
 		orderFrequencyTypeRepo.deleteAll();
+	}
+
+	public OrderType findOrderType(String id) {
+		return orderTypeRepo.findOne(id);
 	}
 }

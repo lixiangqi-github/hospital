@@ -1,14 +1,17 @@
 package com.neusoft.hs.engine.order;
 
+import com.neusoft.hs.domain.order.OrderExecuteException;
 import com.neusoft.hs.platform.exception.HsException;
 
 public class OrderExecuteDTOException extends HsException {
 
 	private String executeId;
 
-	public OrderExecuteDTOException(String executeId) {
-		super();
-		this.executeId = executeId;
+	public OrderExecuteDTOException(OrderExecuteException e) {
+		super(e.getMessage());
+		if (e.getExecute() != null) {
+			this.executeId = e.getExecute().getId();
+		}
 	}
 
 	public OrderExecuteDTOException(String executeId, String arg0,
@@ -17,7 +20,8 @@ public class OrderExecuteDTOException extends HsException {
 		this.executeId = executeId;
 	}
 
-	public OrderExecuteDTOException(String executeId, String arg0, Object... params) {
+	public OrderExecuteDTOException(String executeId, String arg0,
+			Object... params) {
 		super(String.format(arg0, params));
 		this.executeId = executeId;
 	}

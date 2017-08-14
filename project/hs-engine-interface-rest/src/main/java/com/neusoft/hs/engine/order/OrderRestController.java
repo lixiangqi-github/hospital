@@ -19,5 +19,4 @@ public class OrderRestController {
 			throws OrderDTOException, OrderExecuteDTOException {
 		return orderFacade.create(createOrderDTO);
 	}
-
 }

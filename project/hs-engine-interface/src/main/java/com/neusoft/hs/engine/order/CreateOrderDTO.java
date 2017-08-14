@@ -16,6 +16,8 @@ public class CreateOrderDTO {
 
 	private Date planEndDate;
 
+	private String frequencyTypeId;
+
 	private String executeDeptId;
 
 	private String drugUseModeId;
@@ -66,6 +68,14 @@ public class CreateOrderDTO {
 
 	public void setPlanEndDate(Date planEndDate) {
 		this.planEndDate = planEndDate;
+	}
+
+	public String getFrequencyTypeId() {
+		return frequencyTypeId;
+	}
+
+	public void setFrequencyTypeId(String frequencyTypeId) {
+		this.frequencyTypeId = frequencyTypeId;
 	}
 
 	public String getExecuteDeptId() {
