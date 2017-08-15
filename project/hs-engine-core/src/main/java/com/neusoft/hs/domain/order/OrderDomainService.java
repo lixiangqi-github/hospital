@@ -83,10 +83,13 @@ public class OrderDomainService {
 				}
 			}
 
-			if (order.isInPatient()) {
-				order.setState(Order.State_Created);
-			} else {
-				order.setState(Order.State_Executing);
+			if (order.getState() == null) {
+				// 根据医嘱placeType计算状态
+				if (order.isInPatient()) {
+					order.setState(Order.State_Created);
+				} else {
+					order.setState(Order.State_Executing);
+				}
 			}
 		}
 		if (orderCommand.getCreateDate() == null) {
@@ -99,19 +102,24 @@ public class OrderDomainService {
 		// 保存医嘱
 		orderCommand.save();
 
-		// 对于门诊开立的医嘱自动分解
+		applicationContext.publishEvent(new OrderCreatedEvent(orderCommand));
+
+		// 对于执行中的医嘱自动分解
 		for (Order order : orderCommand.getOrders()) {
-			if (!order.isInPatient()) {
+			if (order.getState().equals(Order.State_Executing)) {
 				order.resolve(doctor);
 			}
 		}
 
-		applicationContext.publishEvent(new OrderCreatedEvent(orderCommand));
+		// 创建回调
+		for (Order order : orderCommand.getOrders()) {
+			order.doCreate();
+		}
 
+		// 写日志
 		List<String> orderIds = new ArrayList<String>();
 		List<String> orderTypes = new ArrayList<String>();
 		for (Order order : orderCommand.getOrders()) {
-			order.doCreate();
 			orderIds.add(order.getId());
 			orderTypes.add(order.getOrderType().getId());
 		}
