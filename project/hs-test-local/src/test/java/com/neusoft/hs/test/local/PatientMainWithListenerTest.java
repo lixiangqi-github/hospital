@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.neusoft.hs.engine.DTOException;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 import com.neusoft.hs.test.AppTestService;
@@ -29,7 +30,7 @@ public class PatientMainWithListenerTest {
 	}
 
 	@Test
-	public void testExecute() throws HsException {
+	public void testExecute() throws HsException, DTOException {
 		appTestService.execute();
 	}
 

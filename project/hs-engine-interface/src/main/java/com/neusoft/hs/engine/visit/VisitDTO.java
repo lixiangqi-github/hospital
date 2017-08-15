@@ -2,10 +2,6 @@ package com.neusoft.hs.engine.visit;
 
 import java.util.Date;
 
-import org.apache.commons.beanutils.BeanUtils;
-
-import com.neusoft.hs.domain.visit.Visit;
-
 public class VisitDTO {
 
 	private String id;
@@ -57,21 +53,6 @@ public class VisitDTO {
 	private String patientName;
 
 	public VisitDTO() {
-	}
-
-	public VisitDTO(Visit visit) {
-		try {
-			BeanUtils.copyProperties(this, visit);
-
-			this.deptId = visit.getDept().getId();
-			this.respDoctorId = visit.getRespDoctor().getId();
-			this.respNurseId = visit.getRespNurse().getId();
-			this.patientId = visit.getPatient().getId();
-			this.patientName = visit.getPatient().getName();
-			this.areaId = visit.getArea().getId();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public String getId() {

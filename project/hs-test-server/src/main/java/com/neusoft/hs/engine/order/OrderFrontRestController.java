@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.neusoft.hs.domain.order.Order;
+import com.neusoft.hs.engine.DTOException;
 import com.neusoft.hs.platform.exception.HsException;
-import com.neusoft.hs.platform.util.DateUtil;
 
 @RestController
 public class OrderFrontRestController {
@@ -20,7 +19,7 @@ public class OrderFrontRestController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/order/create")
 	public List<OrderDTO> create(@RequestBody CreateOrderDTO createOrderDTO)
-			throws HsException {
+			throws HsException, DTOException {
 		return orderFacade.create(createOrderDTO);
 	}
 }

@@ -31,6 +31,7 @@ import com.neusoft.hs.domain.treatment.TreatmentItem;
 import com.neusoft.hs.domain.treatment.TreatmentItemValue;
 import com.neusoft.hs.domain.visit.CreateVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
+import com.neusoft.hs.engine.DTOException;
 import com.neusoft.hs.engine.visit.VisitDTO;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
@@ -52,7 +53,7 @@ public class OutPatientMainTestService extends AppTestService {
 	protected DiagnosisTreatmentItemValue hypoglycemiaDTV;
 
 	@Override
-	public void execute() throws HsException {
+	public void execute() throws HsException, DTOException {
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-27 09:00"));
 

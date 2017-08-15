@@ -1,18 +1,11 @@
 package com.neusoft.hs.engine.order;
 
-import com.neusoft.hs.domain.order.OrderExecuteException;
-import com.neusoft.hs.platform.exception.HsException;
+import com.neusoft.hs.engine.DTOException;
 
-public class OrderExecuteDTOException extends HsException {
+
+public class OrderExecuteDTOException extends DTOException {
 
 	private String executeId;
-
-	public OrderExecuteDTOException(OrderExecuteException e) {
-		super(e.getMessage());
-		if (e.getExecute() != null) {
-			this.executeId = e.getExecute().getId();
-		}
-	}
 
 	public OrderExecuteDTOException(String executeId, String arg0,
 			Throwable arg1, Object... params) {

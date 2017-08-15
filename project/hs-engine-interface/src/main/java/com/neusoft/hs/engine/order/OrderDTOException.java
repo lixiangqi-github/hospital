@@ -2,20 +2,12 @@ package com.neusoft.hs.engine.order;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.neusoft.hs.domain.order.OrderException;
-import com.neusoft.hs.platform.exception.HsException;
+import com.neusoft.hs.engine.DTOException;
 
-public class OrderDTOException extends HsException {
+public class OrderDTOException extends DTOException {
 
 	private String orderId;
 		
-	public OrderDTOException(OrderException e) {
-		super(e.getMessage());
-		if (e.getOrder() != null) {
-			this.orderId = e.getOrder().getId();
-		}
-	}
-	
 	public OrderDTOException(IllegalAccessException e) {
 		super(e);
 	}

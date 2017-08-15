@@ -24,6 +24,7 @@ import com.neusoft.hs.domain.order.OrderDAO;
 import com.neusoft.hs.domain.order.OrderUtil;
 import com.neusoft.hs.domain.orderexecute.OrderExecuteAppService;
 import com.neusoft.hs.domain.pharmacy.DrugUseModeAssistMaterial;
+import com.neusoft.hs.engine.DTOException;
 import com.neusoft.hs.engine.visit.VisitFacade;
 import com.neusoft.hs.platform.exception.HsException;
 
@@ -103,8 +104,9 @@ public abstract class AppTestService extends DataIniter {
 	/**
 	 * 
 	 * @throws HsException
+	 * @throws DTOException 
 	 */
-	public void execute() throws HsException {
+	public void execute() throws HsException, DTOException {
 	}
 
 	public void choice() {

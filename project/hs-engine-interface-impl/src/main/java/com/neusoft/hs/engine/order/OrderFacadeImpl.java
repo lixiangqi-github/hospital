@@ -70,7 +70,12 @@ public class OrderFacadeImpl implements OrderFacade {
 					compsiteOrder.addOrder(order);
 				} catch (OrderException e) {
 					e.printStackTrace();
-					throw new OrderDTOException(e);
+					if (e.getOrder() != null) {
+						throw new OrderDTOException(e.getOrder().getId(),
+								e.getMessage());
+					} else {
+						throw new OrderDTOException(null, e.getMessage());
+					}
 				}
 			}
 
@@ -97,10 +102,20 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		} catch (OrderException e) {
 			e.printStackTrace();
-			throw new OrderDTOException(e);
+			if (e.getOrder() != null) {
+				throw new OrderDTOException(e.getOrder().getId(),
+						e.getMessage());
+			} else {
+				throw new OrderDTOException(null, e.getMessage());
+			}
 		} catch (OrderExecuteException e) {
 			e.printStackTrace();
-			throw new OrderExecuteDTOException(e);
+			if (e.getExecute() != null) {
+				throw new OrderDTOException(e.getExecute().getId(),
+						e.getMessage());
+			} else {
+				throw new OrderDTOException(null, e.getMessage());
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 			throw new OrderDTOException(e);

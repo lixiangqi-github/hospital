@@ -3,6 +3,7 @@ package com.neusoft.hs.test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.neusoft.hs.engine.DTOException;
 import com.neusoft.hs.platform.exception.HsException;
 
 @Service
@@ -29,7 +30,7 @@ public class PatientMainTestService extends AppTestService {
 	}
 
 	@Override
-	public void execute() throws HsException {
+	public void execute() throws HsException, DTOException {
 
 		outPatientMainTestService.execute();
 

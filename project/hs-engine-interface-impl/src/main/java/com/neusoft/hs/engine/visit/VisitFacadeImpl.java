@@ -1,5 +1,7 @@
 package com.neusoft.hs.engine.visit;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +17,18 @@ public class VisitFacadeImpl implements VisitFacade {
 	private VisitDomainService visitDomainService;
 
 	@Override
-	public VisitDTO find(String visitId) {
+	public VisitDTO find(String visitId) throws VisitDTOException{
 		Visit visit = visitDomainService.find(visitId);
 		if (visit != null) {
-			return new VisitDTO(visit);
+			try {
+				return VisitDTOUtil.convert(visit);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				throw new VisitDTOException(e);
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+				throw new VisitDTOException(e);
+			}
 		} else {
 			return null;
 		}

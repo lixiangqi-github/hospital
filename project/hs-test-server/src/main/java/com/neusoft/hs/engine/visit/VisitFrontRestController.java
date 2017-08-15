@@ -13,7 +13,7 @@ public class VisitFrontRestController {
 	private VisitFacade visitFacade;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/visit/{visitId}/find")
-	public VisitDTO find(@PathVariable("visitId") String visitId) {
+	public VisitDTO find(@PathVariable("visitId") String visitId) throws VisitDTOException {
 		return visitFacade.find(visitId);
 	}
 

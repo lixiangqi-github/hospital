@@ -8,6 +8,6 @@ public interface VisitFacade {
 	 * @param visitId
 	 * @return
 	 */
-	public VisitDTO find(String visitId);
+	public VisitDTO find(String visitId) throws VisitDTOException;
 
 }
