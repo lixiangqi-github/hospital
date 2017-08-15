@@ -3,6 +3,7 @@ package com.neusoft.hs.domain.order;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import com.neusoft.hs.domain.cost.ChargeItem;
 import com.neusoft.hs.domain.cost.ChargeOrderExecute;
 import com.neusoft.hs.domain.organization.OrganizationAdminDomainService;
 import com.neusoft.hs.domain.pharmacy.DrugUseMode;
@@ -27,6 +28,9 @@ public class OralOrderUseMode extends DrugUseMode {
 		OrganizationAdminDomainService organizationAdminDomainService = this
 				.getService(OrganizationAdminDomainService.class);
 
+		ChargeItem chargeItem = drugOrderTypeApp.getDrugTypeSpec()
+				.getChargeItem();
+
 		ChargeOrderExecute chargeOrderExecute = null;
 		if (!order.isInPatient()) {
 			// 收费执行条目
@@ -35,6 +39,7 @@ public class OralOrderUseMode extends DrugUseMode {
 			chargeOrderExecute.setVisit(visit);
 			chargeOrderExecute.setBelongDept(order.getBelongDept());
 			chargeOrderExecute.setType(OrderExecute.Type_Change);
+			chargeOrderExecute.addChargeItem(chargeItem);
 
 			chargeOrderExecute.setExecuteDept(organizationAdminDomainService
 					.getOutChargeDept(visit.getDept()));
@@ -50,8 +55,7 @@ public class OralOrderUseMode extends DrugUseMode {
 		dispensingDrugExecute.setVisit(visit);
 		dispensingDrugExecute.setBelongDept(order.getBelongDept());
 		dispensingDrugExecute.setType(OrderExecute.Type_Dispense_Drug);
-		dispensingDrugExecute.addChargeItem(drugOrderTypeApp.getDrugTypeSpec()
-				.getChargeItem());
+		dispensingDrugExecute.addChargeItem(chargeItem);
 		dispensingDrugExecute.setCount(order.getCount());
 
 		dispensingDrugExecute.setExecuteDept(pharmacy);
@@ -61,7 +65,6 @@ public class OralOrderUseMode extends DrugUseMode {
 			dispensingDrugExecute.setState(OrderExecute.State_NeedSend);
 		} else {
 			dispensingDrugExecute.setState(OrderExecute.State_NeedExecute);
-			chargeOrderExecute.setCharge(dispensingDrugExecute);
 		}
 		dispensingDrugExecute.setPharmacy(pharmacy);
 		dispensingDrugExecute.setDrugTypeSpec(drugOrderTypeApp

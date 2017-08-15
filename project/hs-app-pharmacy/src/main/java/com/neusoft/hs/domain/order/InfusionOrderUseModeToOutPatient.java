@@ -9,7 +9,6 @@ import com.neusoft.hs.domain.cost.ChargeItem;
 import com.neusoft.hs.domain.cost.ChargeOrderExecute;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.organization.OrganizationAdminDomainService;
-import com.neusoft.hs.domain.pharmacy.DrugType;
 import com.neusoft.hs.domain.pharmacy.DrugUseMode;
 import com.neusoft.hs.domain.pharmacy.DrugUseModeAssistMaterial;
 import com.neusoft.hs.domain.pharmacy.Pharmacy;
@@ -39,15 +38,32 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 
 		Dept chargeDept = organizationAdminDomainService.getOutChargeDept(visit
 				.getDept());
-
+		// 药品费用
+		ChargeItem chargeItem = drugOrderTypeApp.getDrugTypeSpec()
+				.getChargeItem();
+		// 辅材费用
 		ChargeItem assistMaterialChargeItem = null;
+		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this
+				.getTheOrderUseModeChargeItem(transportFluid);
+		if (orderUseModeAssistMaterial != null) {
+			// 判断在指定药品规格上绑定材料费进行收费
+			if (drugOrderTypeApp.getDrugTypeSpec().isTransportFluidCharge()) {
+				// 记录辅材收费项目
+				assistMaterialChargeItem = orderUseModeAssistMaterial
+						.getAssistMaterial().getChargeItem();
+			}
+		}
 
-		// 收药品费执行条目
+		// 收药品费/辅材费执行条目
 		ChargeOrderExecute chargeOrderExecute = new ChargeOrderExecute();
 		chargeOrderExecute.setOrder(order);
 		chargeOrderExecute.setVisit(visit);
 		chargeOrderExecute.setBelongDept(order.getBelongDept());
 		chargeOrderExecute.setType(OrderExecute.Type_Change);
+		chargeOrderExecute.addChargeItem(chargeItem);
+		if (assistMaterialChargeItem != null) {
+			chargeOrderExecute.addChargeItem(assistMaterialChargeItem);
+		}
 
 		chargeOrderExecute.setExecuteDept(chargeDept);
 		chargeOrderExecute.setChargeDept(pharmacy);
@@ -59,11 +75,8 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		team.addOrderExecute(chargeOrderExecute);
 
 		// 收辅材费执行条目
-		ChargeOrderExecute assistMaterialChargeOrderExecute = null;
-
-		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this
-				.getTheOrderUseModeChargeItem(transportFluid);
-		if (orderUseModeAssistMaterial != null) {
+		if (assistMaterialChargeItem != null) {
+			ChargeOrderExecute assistMaterialChargeOrderExecute = null;
 			// 判断在指定药品规格上绑定材料费进行收费
 			if (drugOrderTypeApp.getDrugTypeSpec().isTransportFluidCharge()) {
 				assistMaterialChargeOrderExecute = new ChargeOrderExecute();
@@ -97,8 +110,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		dispensingDrugExecute.setVisit(visit);
 		dispensingDrugExecute.setBelongDept(order.getBelongDept());
 		dispensingDrugExecute.setType(OrderExecute.Type_Dispense_Drug);
-		dispensingDrugExecute.addChargeItem(drugOrderTypeApp.getDrugTypeSpec()
-				.getChargeItem());
+		dispensingDrugExecute.addChargeItem(chargeItem);
 		dispensingDrugExecute.setCount(order.getCount());
 
 		dispensingDrugExecute.setExecuteDept(pharmacy);
@@ -114,7 +126,6 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		dispensingDrugExecute.setPlanEndDate(sysDate);
 
 		team.addOrderExecute(dispensingDrugExecute);
-		chargeOrderExecute.setCharge(dispensingDrugExecute);
 
 		// 发药执行条目
 		DistributeDrugOrderExecute distributeDrugExecute = new DistributeDrugOrderExecute();
@@ -151,9 +162,6 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 				.getDrugTypeSpec());
 
 		team.addOrderExecute(transportFluidExecute);
-		if (assistMaterialChargeOrderExecute != null) {
-			assistMaterialChargeOrderExecute.setCharge(transportFluidExecute);
-		}
 
 		order.addExecuteTeam(team);
 	}

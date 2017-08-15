@@ -1,11 +1,9 @@
 package com.neusoft.hs.domain.cost;
 
+import java.util.List;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 
 import com.neusoft.hs.domain.order.OrderExecute;
 
@@ -19,17 +17,16 @@ import com.neusoft.hs.domain.order.OrderExecute;
 @DiscriminatorValue("Charge")
 public class ChargeOrderExecute extends OrderExecute {
 
-	@NotNull(message = "被收费执行条目不能为空")
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "charge_id")
-	private OrderExecute charge;
-
-	public OrderExecute getCharge() {
-		return charge;
+	@Override
+	public List<ChargeRecord> createChargeRecords() {
+		List<ChargeRecord> chargeRecords = super.createChargeRecords();
+		for(ChargeRecord chargeRecord : chargeRecords){
+			//将费用改变成整数，表示预存
+			chargeRecord.setAmount(-chargeRecord.getAmount());
+		}
+		return chargeRecords;
 	}
 
-	public void setCharge(OrderExecute charge) {
-		this.charge = charge;
-	}
+	
 
 }

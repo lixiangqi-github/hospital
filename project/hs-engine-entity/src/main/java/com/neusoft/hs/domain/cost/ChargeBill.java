@@ -74,38 +74,32 @@ public class ChargeBill extends IdEntity {
 			throws CostException {
 
 		if (this.visit.getState().equals(Visit.State_OutHospital)
-				|| this.visit.getState().equals(Visit.State_LeaveHospital)
 				|| this.visit.getState().equals(Visit.State_Archived)
 				|| this.visit.getState().equals(Visit.State_IntoRecordRoom)) {
 			throw new CostException("患者一次就诊[%s]状态为[%s],不能增加费用条目",
 					this.visit.getName(), this.visit.getState());
 		}
 
-		float theConsume = 0F;
-
-		ChargeRecord payChargeRecord;
 		for (ChargeRecord chargeRecord : chargeRecords) {
 			if (chargeRecord.getType() == null) {
-				chargeRecord.setType(ChargeRecord.Type_ShouldCharge);
+				if (chargeRecord.getAmount() > 0) {
+					chargeRecord.setType(ChargeRecord.Type_ShouldCharge);
+				} else {
+					chargeRecord.setType(ChargeRecord.Type_Charged);
+				}
 			}
 			this.addChargeRecord(chargeRecord);
-
-			if (this.chargeMode.equals(ChargeMode_NoPreCharge)) {
-				payChargeRecord = chargeRecord.createPayRecord();
-				theConsume += payChargeRecord.getAmount();// 金额为正
-				this.addChargeRecord(payChargeRecord);
-			}
 		}
 
-		if (this.chargeMode.equals(ChargeMode_PreCharge)) {
-			float theBalance = 0F;
-			for (ChargeRecord chargeRecord : chargeRecords) {
-				theBalance += chargeRecord.getAmount();// 金额为负
+		float theBalance = 0F;
+		float theConsume = 0F;
+		for (ChargeRecord chargeRecord : chargeRecords) {
+			theBalance += chargeRecord.getAmount();
+			if (chargeRecord.getAmount() < 0) {
+				theConsume -= chargeRecord.getAmount();
 			}
-			this.balance += theBalance;
-			theConsume -= theBalance;// 金额为负
 		}
-
+		this.balance += theBalance;
 		this.consume += theConsume;
 
 		return theConsume;

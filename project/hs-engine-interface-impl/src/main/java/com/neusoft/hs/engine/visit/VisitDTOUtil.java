@@ -14,11 +14,17 @@ public class VisitDTOUtil {
 		BeanUtils.copyProperties(visitDTO, visit);
 
 		visitDTO.setDeptId(visit.getDept().getId());
-		visitDTO.setRespDoctorId(visit.getRespDoctor().getId());
-		visitDTO.setRespNurseId(visit.getRespNurse().getId());
+		if (visit.getRespDoctor() != null) {
+			visitDTO.setRespDoctorId(visit.getRespDoctor().getId());
+		}
+		if (visit.getRespNurse() != null) {
+			visitDTO.setRespNurseId(visit.getRespNurse().getId());
+		}
 		visitDTO.setPatientId(visit.getPatient().getId());
 		visitDTO.setPatientName(visit.getPatient().getName());
-		visitDTO.setAreaId(visit.getArea().getId());
+		if (visit.getArea() != null) {
+			visitDTO.setAreaId(visit.getArea().getId());
+		}
 
 		return visitDTO;
 

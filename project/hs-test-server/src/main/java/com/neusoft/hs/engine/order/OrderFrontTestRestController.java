@@ -24,7 +24,7 @@ public class OrderFrontTestRestController {
 		CreateOrderDTO createOrderDTO = new CreateOrderDTO();
 
 		createOrderDTO.setVisitCardNumber("ttt");
-		createOrderDTO.setPlaceType(Order.PlaceType_InPatient);
+		createOrderDTO.setPlaceType(Order.PlaceType_OutPatient);
 		createOrderDTO.setLong(false);
 
 		CreateOrderItemDTO createOrderItemDTO = new CreateOrderItemDTO();

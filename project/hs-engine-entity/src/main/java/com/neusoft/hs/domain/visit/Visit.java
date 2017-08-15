@@ -422,8 +422,8 @@ public class Visit extends IdEntity {
 	 */
 	public void leaveHospital(AbstractUser user) throws VisitException {
 
-		if (this.chargeBill.getBalance() != 0L) {
-			throw new VisitException(this, "visit=[%s]的收费单余额[%s]不为零",
+		if (this.chargeBill.getBalance() < 0L) {
+			throw new VisitException(this, "visit=[%s]的收费单余额[%s]不能小于零",
 					this.getName(), this.chargeBill.getBalance());
 		}
 		this.setState(State_LeaveHospital);

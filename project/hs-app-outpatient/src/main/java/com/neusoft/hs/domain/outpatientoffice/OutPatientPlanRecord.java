@@ -130,12 +130,15 @@ public class OutPatientPlanRecord extends IdEntity {
 		chargeItem = voucherType.getChargeItem();
 		chargeRecord.setPrice(chargeItem.getPrice());
 		chargeRecord.setCount(1);
-		chargeRecord.setAmount(-chargeItem.getPrice());
+		chargeRecord.setAmount(chargeItem.getPrice());
 		chargeRecord.setChargeItem(chargeItem);
 		chargeRecord.setChargeDept(visit.getDept());
 		chargeRecord.setBelongDept(visit.getDept());
+		chargeRecord.setVisit(visit);
 
 		chargeRecords.add(chargeRecord);
+
+		chargeRecords.add(chargeRecord.createPayRecord());
 
 		return chargeRecords;
 	}

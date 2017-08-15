@@ -74,7 +74,7 @@ public class CheckTestService extends AppTestService {
 		orderExecutes = orderExecuteDomainService.findByChargeState(
 				OrderExecute.ChargeState_Charge, pageable);
 
-		assertTrue(orderExecutes.size() == 49);
+		assertTrue(orderExecutes.size() == 57);
 
 		orderExecutes = orderExecuteDomainService.findByChargeState(
 				OrderExecute.ChargeState_BackCharge, pageable);
