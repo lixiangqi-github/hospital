@@ -61,7 +61,7 @@ public class OralOrderUseMode extends DrugUseMode {
 		dispensingDrugExecute.setExecuteDept(pharmacy);
 		dispensingDrugExecute.setChargeDept(pharmacy);
 
-		if (order.isInPatient()) {
+		if (dispensingDrugExecute.needSend()) {
 			dispensingDrugExecute.setState(OrderExecute.State_NeedSend);
 		} else {
 			dispensingDrugExecute.setState(OrderExecute.State_NeedExecute);

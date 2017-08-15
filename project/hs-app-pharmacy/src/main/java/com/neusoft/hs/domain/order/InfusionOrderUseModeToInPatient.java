@@ -34,7 +34,13 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 
 		configureFluidDrugExecute.setExecuteDept(pharmacy);
 		configureFluidDrugExecute.setChargeDept(pharmacy);
-		configureFluidDrugExecute.setState(OrderExecute.State_NeedSend);
+		
+		if (configureFluidDrugExecute.needSend()) {
+			configureFluidDrugExecute.setState(OrderExecute.State_NeedSend);
+		} else {
+			configureFluidDrugExecute.setState(OrderExecute.State_NeedExecute);
+		}
+		
 
 		configureFluidDrugExecute.setPharmacy(pharmacy);
 		configureFluidDrugExecute.setDrugTypeSpec(drugOrderTypeApp

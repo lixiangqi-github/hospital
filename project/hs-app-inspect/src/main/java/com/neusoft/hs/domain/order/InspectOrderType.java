@@ -20,7 +20,7 @@ public class InspectOrderType extends OrderType {
 	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
 
 		Order order = orderTypeApp.getOrder();
-		
+
 		InspectApply inspectApply = (InspectApply) order.getApply();
 		for (InspectApplyItem inspectApplyItem : inspectApply
 				.getInspectApplyItems()) {
@@ -37,7 +37,11 @@ public class InspectOrderType extends OrderType {
 			arrange.setPlanEndDate(order.getPlanStartDate());
 
 			arrange.setExecuteDept(inspectApplyItem.getArrangeDept());
-			arrange.setState(OrderExecute.State_NeedSend);
+			if (arrange.needSend()) {
+				arrange.setState(OrderExecute.State_NeedSend);
+			} else {
+				arrange.setState(OrderExecute.State_NeedExecute);
+			}
 
 			team.addOrderExecute(arrange);
 

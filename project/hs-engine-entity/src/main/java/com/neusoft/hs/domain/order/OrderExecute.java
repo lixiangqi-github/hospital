@@ -300,7 +300,8 @@ public abstract class OrderExecute extends IdEntity {
 	 * 
 	 * @throws OrderExecuteException
 	 */
-	protected void doExecuteBefore(AbstractUser user) throws OrderExecuteException {
+	protected void doExecuteBefore(AbstractUser user)
+			throws OrderExecuteException {
 	}
 
 	/**
@@ -313,33 +314,6 @@ public abstract class OrderExecute extends IdEntity {
 	protected void doFinish(Map<String, Object> params, AbstractUser user)
 			throws OrderExecuteException {
 
-	}
-
-	/**
-	 * 创建该执行条目对应的费用条目
-	 * 
-	 * @return
-	 * @roseuid 58509B990022
-	 */
-	public List<ChargeRecord> createChargeRecords() {
-		List<ChargeRecord> chargeRecords = new ArrayList<ChargeRecord>();
-
-		if (this.chargeItemRecords != null && this.chargeItemRecords.size() > 0) {
-			for (OrderExecuteChargeItemRecord chargeItemRecord : this.chargeItemRecords) {
-				ChargeRecord chargeRecord = new ChargeRecord();
-
-				ChargeItem chargeItem = chargeItemRecord.getChargeItem();
-
-				chargeRecord.setPrice(chargeItem.getPrice());
-				chargeRecord.setCount(chargeItemRecord.getCount());
-				chargeRecord.setAmount(-this.calAmout(chargeItemRecord));
-				chargeRecord.setChargeItem(chargeItem);
-
-				chargeRecords.add(chargeRecord);
-			}
-		}
-
-		return chargeRecords;
 	}
 
 	/**
@@ -400,6 +374,33 @@ public abstract class OrderExecute extends IdEntity {
 	}
 
 	/**
+	 * 创建该执行条目对应的费用条目
+	 * 
+	 * @return
+	 * @roseuid 58509B990022
+	 */
+	public List<ChargeRecord> createChargeRecords() {
+		List<ChargeRecord> chargeRecords = new ArrayList<ChargeRecord>();
+
+		if (this.chargeItemRecords != null && this.chargeItemRecords.size() > 0) {
+			for (OrderExecuteChargeItemRecord chargeItemRecord : this.chargeItemRecords) {
+				ChargeRecord chargeRecord = new ChargeRecord();
+
+				ChargeItem chargeItem = chargeItemRecord.getChargeItem();
+
+				chargeRecord.setPrice(chargeItem.getPrice());
+				chargeRecord.setCount(chargeItemRecord.getCount());
+				chargeRecord.setAmount(-this.calAmout(chargeItemRecord));
+				chargeRecord.setChargeItem(chargeItem);
+
+				chargeRecords.add(chargeRecord);
+			}
+		}
+
+		return chargeRecords;
+	}
+
+	/**
 	 * 填充计划执行时间
 	 * 
 	 * @param planStartDate
@@ -412,6 +413,15 @@ public abstract class OrderExecute extends IdEntity {
 		if (this.planEndDate == null) {
 			this.planEndDate = planEndDate;
 		}
+	}
+
+	/**
+	 * 判断执行条目是否需要发送
+	 * 
+	 * @return
+	 */
+	public boolean needSend() {
+		return !this.executeDept.equals(this.order.getBelongDept());
 	}
 
 	public OrderExecute() {
@@ -759,7 +769,7 @@ public abstract class OrderExecute extends IdEntity {
 			}
 		}
 	}
-	
+
 	private Float calAmout(OrderExecuteChargeItemRecord chargeItemRecord) {
 		if (chargeItemRecord.getCount() == null
 				|| chargeItemRecord.getCount() == 0) {
