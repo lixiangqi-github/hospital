@@ -125,6 +125,7 @@ public class OutPatientPlanRecord extends IdEntity {
 		ChargeRecord chargeRecord;
 		ChargeItem chargeItem;
 
+		// 创建应扣
 		chargeRecord = new ChargeRecord();
 
 		chargeItem = voucherType.getChargeItem();
@@ -137,7 +138,7 @@ public class OutPatientPlanRecord extends IdEntity {
 		chargeRecord.setVisit(visit);
 
 		chargeRecords.add(chargeRecord);
-
+		// 创建已扣
 		chargeRecords.add(chargeRecord.createPayRecord());
 
 		return chargeRecords;

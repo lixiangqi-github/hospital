@@ -80,6 +80,7 @@ public class ChargeBill extends IdEntity {
 					this.visit.getName(), this.visit.getState());
 		}
 
+		// 加入消费记录
 		for (ChargeRecord chargeRecord : chargeRecords) {
 			if (chargeRecord.getType() == null) {
 				if (chargeRecord.getAmount() > 0) {
@@ -90,7 +91,7 @@ public class ChargeBill extends IdEntity {
 			}
 			this.addChargeRecord(chargeRecord);
 		}
-
+		// 计算金额
 		float theBalance = 0F;
 		float theConsume = 0F;
 		for (ChargeRecord chargeRecord : chargeRecords) {
