@@ -14,6 +14,36 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.neusoft.hospital</groupId>
+			<artifactId>hs-app-outpatient</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neusoft.hospital</groupId>
+			<artifactId>hs-app-inpatient</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neusoft.hospital</groupId>
+			<artifactId>hs-app-inspect</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neusoft.hospital</groupId>
+			<artifactId>hs-app-pharmacy</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neusoft.hospital</groupId>
+			<artifactId>hs-app-recordroom</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neusoft.hospital</groupId>
+			<artifactId>hs-app-cost</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neusoft.hospital</groupId>
 			<artifactId>hs-engine-interface</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -21,6 +51,11 @@
 			<groupId>com.neusoft.hospital</groupId>
 			<artifactId>hs-engine-core</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
 		</dependency>
 	</dependencies>
 </project>
