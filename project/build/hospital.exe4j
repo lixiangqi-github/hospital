@@ -56,17 +56,17 @@
       <archive location="/lib/hs-data-init-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-core-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-entity-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-engine-interface-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-engine-interface-impl-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-listener-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-interface-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-interface-impl-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-platform-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-portal-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-portal-swing-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-portal-swing-h2-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-test-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/jackson-annotations-2.8.0.jar" failOnError="false" />
-      <archive location="/lib/jackson-core-2.8.7.jar" failOnError="false" />
-      <archive location="/lib/jackson-databind-2.8.7.jar" failOnError="false" />
+      <archive location="/lib/jackson-annotations-2.9.0.jar" failOnError="false" />
+      <archive location="/lib/jackson-core-2.9.0.jar" failOnError="false" />
+      <archive location="/lib/jackson-databind-2.9.0.jar" failOnError="false" />
       <archive location="/lib/jandex-2.0.3.Final.jar" failOnError="false" />
       <archive location="/lib/javassist-3.20.0-GA.jar" failOnError="false" />
       <archive location="/lib/javax.el-api-2.2.4.jar" failOnError="false" />
