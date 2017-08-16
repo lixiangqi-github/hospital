@@ -40,7 +40,7 @@ public class OrderDTO {
 
 	private String drugUseModeId;
 
-	private String drugUseModename;
+	private String drugUseModeName;
 
 	private Integer count;
 
@@ -208,12 +208,12 @@ public class OrderDTO {
 		this.drugUseModeId = drugUseModeId;
 	}
 
-	public String getDrugUseModename() {
-		return drugUseModename;
+	public String getDrugUseModeName() {
+		return drugUseModeName;
 	}
 
-	public void setDrugUseModename(String drugUseModename) {
-		this.drugUseModename = drugUseModename;
+	public void setDrugUseModeName(String drugUseModeName) {
+		this.drugUseModeName = drugUseModeName;
 	}
 
 	public Integer getCount() {

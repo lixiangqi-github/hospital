@@ -45,6 +45,7 @@ public class OrderDTOUtil {
 			DrugOrderTypeApp drugOrderTypeApp = drugOrderTypeAppDAO.find(order
 					.getTypeApp().getId());
 			orderDTO.setDrugUseModeId(drugOrderTypeApp.getDrugUseMode().getId());
+			orderDTO.setDrugUseModeName(drugOrderTypeApp.getDrugUseMode().getName());
 		}
 
 		return orderDTO;
