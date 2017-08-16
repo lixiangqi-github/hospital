@@ -14,6 +14,8 @@ public class CreateOrderDTO {
 
 	private boolean isLong;
 
+	private String state;
+
 	private Boolean executeNeedSend;
 
 	private Date planStartDate;
@@ -64,6 +66,14 @@ public class CreateOrderDTO {
 
 	public void setLong(boolean isLong) {
 		this.isLong = isLong;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 
 	public Boolean getExecuteNeedSend() {
