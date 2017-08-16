@@ -56,9 +56,13 @@ public class LongDrugOrderBuilder extends AbstractOrderBuilder {
 			order.setPlanEndDate(planEndDate);
 			order.setFrequencyType(frequencyType);
 			order.setPlaceType(placeType);
-			
-			order.setExecuteDept(executeDept);
-			
+
+			if (executeDept != null) {
+				order.setExecuteDept(executeDept);
+			}else{
+				order.setExecuteDept(pharmacy);
+			}
+
 			order.setCount(counts.get(orderType));
 
 			order.setTypeApp(new DrugOrderTypeApp(pharmacy, drugUseMode));

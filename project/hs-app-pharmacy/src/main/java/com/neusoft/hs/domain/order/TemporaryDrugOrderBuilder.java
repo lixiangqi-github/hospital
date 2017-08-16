@@ -25,15 +25,21 @@ public class TemporaryDrugOrderBuilder extends AbstractOrderBuilder {
 	}
 
 	@Override
-	public OrderCreateCommand createCommand() throws OrderException{
-		
+	public OrderCreateCommand createCommand() throws OrderException {
+
 		TemporaryOrder order = new TemporaryOrder();
-		
+
 		order.setVisit(visit);
 		order.setName(orderType.getName());
 		order.setOrderType(orderType);
 		order.setPlanStartDate(getPlanStartDate());
 		order.setPlaceType(placeType);
+
+		if (executeDept != null) {
+			order.setExecuteDept(executeDept);
+		} else {
+			order.setExecuteDept(pharmacy);
+		}
 
 		order.setCount(count);
 
