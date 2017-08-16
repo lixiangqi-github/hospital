@@ -416,12 +416,17 @@ public abstract class OrderExecute extends IdEntity {
 	}
 
 	/**
-	 * 判断执行条目是否需要发送
+	 * 判断执行条目是否需要发送(仅在创建执行条目时使用)
 	 * 
 	 * @return
 	 */
 	public boolean needSend() {
-		return !this.executeDept.equals(this.order.getBelongDept());
+		if (this.order.getExecuteNeedSend() != null
+				&& !this.order.getExecuteNeedSend()) {
+			return false;
+		} else {
+			return !this.executeDept.equals(this.order.getBelongDept());
+		}
 	}
 
 	public OrderExecute() {

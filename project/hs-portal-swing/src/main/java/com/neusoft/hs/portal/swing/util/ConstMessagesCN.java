@@ -165,7 +165,7 @@ public interface ConstMessagesCN {
 		String FinishDate = "完成时间";
 
 		String CarNumber = "身份证号";
-		String Birthday = "生日";
+		String Birthday = "出生日期";
 		String Sex = "性别";
 		String VisitName = "患者姓名";
 		String IntoWardDate = "进入病房时间";

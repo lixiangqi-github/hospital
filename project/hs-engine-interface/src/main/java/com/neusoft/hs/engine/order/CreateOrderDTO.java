@@ -14,6 +14,8 @@ public class CreateOrderDTO {
 
 	private boolean isLong;
 
+	private Boolean executeNeedSend;
+
 	private Date planStartDate;
 
 	private Date planEndDate;
@@ -62,6 +64,14 @@ public class CreateOrderDTO {
 
 	public void setLong(boolean isLong) {
 		this.isLong = isLong;
+	}
+
+	public Boolean getExecuteNeedSend() {
+		return executeNeedSend;
+	}
+
+	public void setExecuteNeedSend(Boolean executeNeedSend) {
+		this.executeNeedSend = executeNeedSend;
 	}
 
 	public Date getPlanStartDate() {

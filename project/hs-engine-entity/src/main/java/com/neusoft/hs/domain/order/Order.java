@@ -73,6 +73,9 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 
 	private Integer count;
 
+	@Column(name = "execute_need_send")
+	private Boolean executeNeedSend;
+
 	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
 			CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "type_app_id")
@@ -363,6 +366,14 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public Boolean getExecuteNeedSend() {
+		return executeNeedSend;
+	}
+
+	public void setExecuteNeedSend(Boolean executeNeedSend) {
+		this.executeNeedSend = executeNeedSend;
 	}
 
 	public OrderTypeApp getTypeApp() {
