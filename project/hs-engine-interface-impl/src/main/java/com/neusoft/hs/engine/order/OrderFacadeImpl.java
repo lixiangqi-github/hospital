@@ -146,6 +146,9 @@ public class OrderFacadeImpl implements OrderFacade {
 			TemporaryOrder temporaryOrder = new TemporaryOrder();
 			order = temporaryOrder;
 		}
+		order.setState(createOrderDTO.getState());
+		order.setExecuteNeedSend(createOrderDTO.getExecuteNeedSend());
+		
 		order.setPlaceType(createOrderDTO.getPlaceType());
 		order.setPlanStartDate(createOrderDTO.getPlanStartDate());
 
