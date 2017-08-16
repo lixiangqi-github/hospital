@@ -35,7 +35,9 @@ public class OrderDTOUtil {
 			orderDTO.setLong(false);
 		}
 		orderDTO.setBelongDeptId(order.getBelongDept().getId());
-		orderDTO.setExecuteDeptId(order.getExecuteDept().getId());
+		if (order.getExecuteDept() != null) {
+			orderDTO.setExecuteDeptId(order.getExecuteDept().getId());
+		}
 		orderDTO.setCreatorId(order.getCreator().getId());
 		orderDTO.setCreatorName(order.getCreator().getName());
 
