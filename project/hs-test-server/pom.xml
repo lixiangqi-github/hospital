@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.neusoft.hospital</groupId>
-			<artifactId>hs-engine-interface-stub</artifactId>
+			<artifactId>hs-interface-stub</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
