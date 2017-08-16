@@ -30,6 +30,8 @@ spring:
             factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
 
       javax.persistence.sharedCache.mode: ENABLE_SELECTIVE
+  jackson: 
+    date-format: yyyy-MM-dd HH:mm:ss
 
 # Map the error path to error template (for Thymeleaf)
 error:
