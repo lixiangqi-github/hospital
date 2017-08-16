@@ -125,6 +125,24 @@ public class OrderFacadeImpl implements OrderFacade {
 		}
 	}
 
+	@Override
+	public OrderDTO find(String id) throws OrderDTOException {
+		Order order = this.orderDomainService.find(id);
+		if (order != null) {
+			try {
+				return OrderDTOUtil.convert(order);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				throw new OrderDTOException(e);
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+				throw new OrderDTOException(e);
+			}
+		} else {
+			return null;
+		}
+	}
+
 	private Order createOrder(CreateOrderDTO createOrderDTO,
 			CreateOrderItemDTO item) throws OrderDTOException {
 		Order order;
@@ -148,7 +166,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		}
 		order.setState(createOrderDTO.getState());
 		order.setExecuteNeedSend(createOrderDTO.getExecuteNeedSend());
-		
+
 		order.setPlaceType(createOrderDTO.getPlaceType());
 		order.setPlanStartDate(createOrderDTO.getPlanStartDate());
 

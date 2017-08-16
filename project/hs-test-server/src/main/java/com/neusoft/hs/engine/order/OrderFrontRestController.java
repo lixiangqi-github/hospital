@@ -3,6 +3,7 @@ package com.neusoft.hs.engine.order;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,5 +22,10 @@ public class OrderFrontRestController {
 	public List<OrderDTO> create(@RequestBody CreateOrderDTO createOrderDTO)
 			throws HsException, DTOException {
 		return orderFacade.create(createOrderDTO);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/order/{orderId}/find")
+	public OrderDTO find(@PathVariable("orderId") String orderId) throws OrderDTOException {
+		return orderFacade.find(orderId);
 	}
 }
