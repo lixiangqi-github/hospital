@@ -48,8 +48,6 @@ public class OrderDTO {
 
 	private String stateDesc;
 
-	private Date startDate;
-
 	private Date endDate;
 
 	private Date executeDate;
@@ -240,14 +238,6 @@ public class OrderDTO {
 
 	public void setStateDesc(String stateDesc) {
 		this.stateDesc = stateDesc;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
 	}
 
 	public Date getEndDate() {

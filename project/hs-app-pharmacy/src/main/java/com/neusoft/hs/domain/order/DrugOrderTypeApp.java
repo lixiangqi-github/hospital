@@ -35,14 +35,19 @@ public class DrugOrderTypeApp extends OrderTypeApp {
 	@OneToMany(mappedBy = "drugOrderTypeApp", cascade = { CascadeType.PERSIST,
 			CascadeType.MERGE, CascadeType.REMOVE })
 	private List<DrugTypeConsumeRecord> consumeRecords;
+	
+	public final static String Category = "Drug";
 
 	public DrugOrderTypeApp() {
 		super();
+		this.setCategory(Category);
 	}
 
 	public DrugOrderTypeApp(Pharmacy pharmacy, DrugUseMode drugUseMode) {
 		this.pharmacy = pharmacy;
 		this.drugUseMode = drugUseMode;
+		
+		this.setCategory(Category);
 	}
 
 	public DrugUseMode getDrugUseMode() {

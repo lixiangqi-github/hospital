@@ -8,8 +8,11 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("Sample")
 public class SampleOrderTypeApp extends OrderTypeApp {
+	
+	public final static String Category = "Sample";
 
 	public SampleOrderTypeApp() {
 		super();
+		this.setCategory(Category);
 	}
 }

@@ -53,6 +53,9 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Autowired
 	private PharmacyAdminService pharmacyAdminService;
 
+	@Autowired
+	private OrderDTOUtil orderDTOUtil;
+
 	@Override
 	public List<OrderDTO> create(CreateOrderDTO createOrderDTO)
 			throws OrderDTOException, OrderExecuteDTOException {
@@ -95,7 +98,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			List<OrderDTO> orderDTOs = new ArrayList<OrderDTO>();
 			for (Order order : orders) {
-				orderDTOs.add(OrderDTOUtil.convert(order));
+				orderDTOs.add(orderDTOUtil.convert(order));
 			}
 
 			return orderDTOs;
@@ -130,7 +133,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		Order order = this.orderDomainService.find(id);
 		if (order != null) {
 			try {
-				return OrderDTOUtil.convert(order);
+				return orderDTOUtil.convert(order);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 				throw new OrderDTOException(e);

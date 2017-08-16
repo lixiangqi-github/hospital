@@ -3,6 +3,7 @@
 package com.neusoft.hs.domain.order;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
@@ -29,8 +30,19 @@ public abstract class OrderTypeApp extends IdEntity {
 			CascadeType.MERGE, CascadeType.REMOVE })
 	private Order order;
 
+	@Column(length = 32)
+	protected String category;
+
 	public OrderTypeApp() {
 		super();
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	protected void setCategory(String category) {
+		this.category = category;
 	}
 
 	public Order getOrder() {
