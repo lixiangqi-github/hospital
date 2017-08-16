@@ -205,11 +205,12 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 * @throws OrderException
 	 * @throws OrderExecuteException
 	 */
-	public int verify(AbstractUser user) throws OrderException, OrderExecuteException {
+	public int verify(AbstractUser user) throws OrderException,
+			OrderExecuteException {
 		this.setState(State_Executing);
-		int count = this.resolve(user);
+		List<OrderExecute> orderExecutes = this.resolve(user);
 		this.orderType.verify(this);
-		return count;
+		return orderExecutes.size();
 	}
 
 	/**
@@ -219,7 +220,8 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 * @throws OrderExecuteException
 	 * @roseuid 584F494100C2
 	 */
-	public int resolve(AbstractUser user) throws OrderException, OrderExecuteException {
+	public List<OrderExecute> resolve(AbstractUser user) throws OrderException,
+			OrderExecuteException {
 		if (!this.state.equals(State_Executing)) {
 			throw new OrderException(this, "医嘱[%s]的状态为[%s],不能分解", this.getId(),
 					this.state);
@@ -257,7 +259,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 		LogUtil.log(this.getClass(), "系统分解了医嘱条目[{}],得到{}条执行条目", this.getId(),
 				resolveOrderExecutes.size());
 
-		return resolveOrderExecutes.size();
+		return resolveOrderExecutes;
 	}
 
 	protected abstract void setCategory(OrderExecute orderExecute);

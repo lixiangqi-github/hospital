@@ -12,12 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.neusoft.hs.domain.cost.CostException;
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.organization.Admin;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.organization.Doctor;
-import com.neusoft.hs.domain.organization.Nurse;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitDomainService;
 import com.neusoft.hs.platform.exception.HsException;
@@ -57,6 +55,7 @@ public class OrderDomainService {
 
 		// 更新为数据库最新的患者一次就诊信息
 		Visit visit = visitDomainService.find(orderCommand.getVisit().getId());
+		// 状态校验
 		if (visit.getState().equals(Visit.State_OutHospital)
 				|| visit.getState().equals(Visit.State_LeaveHospital)
 				|| visit.getState().equals(Visit.State_Archived)
@@ -68,23 +67,26 @@ public class OrderDomainService {
 		orderCommand.setVisit(visit);
 
 		for (Order order : orderCommand.getOrders()) {
+			// 计算创建时间
 			if (order.getCreateDate() == null) {
 				order.setCreateDate(DateUtil.getSysDate());
 			}
+			// 设置创建者
 			order.setCreator(doctor);
-			order.setBelongDept(orderCommand.getVisit().getDept());
-
+			// 根据患者所在部门计算医嘱所属部门
+			if (order.getBelongDept() == null) {
+				order.setBelongDept(orderCommand.getVisit().getDept());
+			}
+			// 根据患者状态计算医嘱开立位置
 			if (order.getPlaceType() == null) {
-				// 根据患者状态计算医嘱开立位置
 				if (order.getVisit().getState().equals(Visit.State_Diagnosing)) {
 					order.setPlaceType(Order.PlaceType_OutPatient);
 				} else {
 					order.setPlaceType(Order.PlaceType_InPatient);
 				}
 			}
-
+			// 根据医嘱placeType计算状态
 			if (order.getState() == null) {
-				// 根据医嘱placeType计算状态
 				if (order.isInPatient()) {
 					order.setState(Order.State_Created);
 				} else {
@@ -92,16 +94,17 @@ public class OrderDomainService {
 				}
 			}
 		}
+		// 计算创建时间
 		if (orderCommand.getCreateDate() == null) {
 			orderCommand.setCreateDate(DateUtil.getSysDate());
 		}
-		if (orderCommand.getCreator() == null) {
-			orderCommand.setCreator(doctor);
-		}
+		// 设置创建者
+		orderCommand.setCreator(doctor);
+		// 检查
 		orderCommand.check();
 		// 保存医嘱
 		orderCommand.save();
-
+		// 发送事件
 		applicationContext.publishEvent(new OrderCreatedEvent(orderCommand));
 
 		// 对于执行中的医嘱自动分解
@@ -111,7 +114,7 @@ public class OrderDomainService {
 			}
 		}
 
-		// 创建回调
+		// 创建操作回调
 		for (Order order : orderCommand.getOrders()) {
 			order.doCreate();
 		}
@@ -197,7 +200,8 @@ public class OrderDomainService {
 		int count = 0;
 		for (LongOrder longOrder : longOrders) {
 			try {
-				count += longOrder.resolve(admin);
+				List<OrderExecute> orderExecutes = longOrder.resolve(admin);
+				count += orderExecutes.size();
 			} catch (OrderException e) {
 				e.printStackTrace();
 			} catch (OrderExecuteException e) {
