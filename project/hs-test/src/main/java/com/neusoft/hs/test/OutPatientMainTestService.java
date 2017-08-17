@@ -274,7 +274,7 @@ public class OutPatientMainTestService extends AppTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-27 09:46"));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user301,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user301,
 				pageable);
 
 		assertTrue(executes.size() == 5);
@@ -313,7 +313,7 @@ public class OutPatientMainTestService extends AppTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-27 09:49"));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user801,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user801,
 				pageable);
 
 		assertTrue(executes.size() == 3);
@@ -491,7 +491,7 @@ public class OutPatientMainTestService extends AppTestService {
 		assertTrue(theVisit.getState().equals(Visit.State_WaitingEnterHospital));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user101,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user101,
 				pageable);
 
 		assertTrue(executes.size() == 1);

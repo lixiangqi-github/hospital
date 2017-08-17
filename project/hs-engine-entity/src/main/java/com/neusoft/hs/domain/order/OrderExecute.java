@@ -120,15 +120,6 @@ public abstract class OrderExecute extends IdEntity {
 	@JoinColumn(name = "order_id")
 	private Order order;
 
-	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REMOVE })
-	private List<OrderExecuteChargeItemRecord> chargeItemRecords;
-
-	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REMOVE })
-	@OrderBy("createDate DESC")
-	private List<ChargeRecord> chargeRecords;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "belong_dept_id")
 	private Dept belongDept;
@@ -159,6 +150,15 @@ public abstract class OrderExecute extends IdEntity {
 
 	@Column(name = "order_category", length = 8)
 	private String orderCategory;
+	
+	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REMOVE })
+	private List<OrderExecuteChargeItemRecord> chargeItemRecords;
+
+	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REMOVE })
+	@OrderBy("createDate DESC")
+	private List<ChargeRecord> chargeRecords;
 
 	public static final String State_NeedSend = "待发送";
 

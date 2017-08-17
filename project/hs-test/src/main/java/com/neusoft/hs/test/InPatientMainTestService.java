@@ -142,7 +142,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		}
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedSendOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -157,7 +157,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 11:15", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(userc01,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userc01,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -178,7 +178,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 11:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(userc03,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userc03,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -196,7 +196,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 11:32", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -281,7 +281,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -326,7 +326,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 11:05", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedSendOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 4);
@@ -363,7 +363,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 15:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -380,7 +380,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 08:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedSendOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 4);
@@ -414,7 +414,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 4);
@@ -448,7 +448,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 15:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -465,7 +465,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-31 08:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedSendOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 0);
@@ -476,7 +476,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		}
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(userb02,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userb02,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -505,7 +505,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-31 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 4);
@@ -522,7 +522,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -577,7 +577,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 09:45", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedSendOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -590,7 +590,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 10:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user401,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user401,
 				pageable);
 
 		assertTrue(executes.size() == 1);
@@ -602,7 +602,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 10:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user501,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user501,
 				pageable);
 
 		assertTrue(executes.size() == 1);
@@ -618,7 +618,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-02 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -631,7 +631,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-02 14:40", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user402,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user402,
 				pageable);
 
 		assertTrue(executes.size() == 1);
@@ -655,7 +655,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-03 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -669,7 +669,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		if (!(Boolean) choices.get(ChoiceItem.CancelHC)) {
 			pageable = new PageRequest(0, Integer.MAX_VALUE);
-			executes = orderExecuteAppService.getNeedExecuteOrderExecutes(
+			executes = orderExecuteAppService.findNeedExecuteOrderExecutes(
 					user502, pageable);
 
 			assertTrue(executes.size() == 1);
@@ -692,7 +692,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-04 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -740,7 +740,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-05 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -757,7 +757,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 2);
@@ -809,7 +809,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:35", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedSendOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 1);
@@ -825,7 +825,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:40", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 1);
@@ -871,7 +871,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:58", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(user003,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
 		assertTrue(executes.size() == 1);

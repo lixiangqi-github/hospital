@@ -47,7 +47,7 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedSendOrderExecutes(AbstractUser nurse,
+	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse,
 			Date planStartDate, Pageable pageable) {
 		return orderExecuteRepo
 				.findByStateAndBelongDeptInAndPlanStartDateLessThan(
@@ -63,7 +63,7 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedExecuteOrderExecutes(AbstractUser user,
+	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user,
 			Date planStartDate, Pageable pageable) {
 		return orderExecuteRepo
 				.findByStateAndExecuteDeptInAndPlanStartDateLessThan(
@@ -72,14 +72,14 @@ public class OrderExecuteDomainService {
 	}
 
 	/**
-	 * 得到需要执行的执行条目列表
+	 * 得到需要执行的全部执行条目列表
 	 * 
 	 * @param user
 	 * @param planStartDate
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getAllNeedExecuteOrderExecutes(AbstractUser user,
+	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user,
 			Pageable pageable) {
 		List<String> states = new ArrayList<String>();
 		states.add(OrderExecute.State_NeedExecute);
@@ -99,7 +99,7 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedExecuteOrderExecutes(Visit visit,
+	public List<OrderExecute> findNeedExecuteOrderExecutes(Visit visit,
 			String type, AbstractUser user, Date planStartDate,
 			Pageable pageable) {
 		return orderExecuteRepo
@@ -115,7 +115,7 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedBackChargeOrderExecutes(Staff user,
+	public List<OrderExecute> findNeedBackChargeOrderExecutes(Staff user,
 			Pageable pageable) {
 		return orderExecuteRepo.findByChargeState(
 				OrderExecute.ChargeState_NeedBackCharge, pageable);

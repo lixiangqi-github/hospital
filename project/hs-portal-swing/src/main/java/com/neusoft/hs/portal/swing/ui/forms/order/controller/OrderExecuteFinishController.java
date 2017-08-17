@@ -81,10 +81,10 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 					.getDisplayAllCB();
 			if (displayAllCB.isSelected()) {
 				entities = orderExecuteAppService
-						.getAllNeedExecuteOrderExecutes(UserUtil.getUser(),
+						.findAllNeedExecuteOrderExecutes(UserUtil.getUser(),
 								pageable);
 			} else {
-				entities = orderExecuteAppService.getNeedExecuteOrderExecutes(
+				entities = orderExecuteAppService.findNeedExecuteOrderExecutes(
 						UserUtil.getUser(), pageable);
 			}
 

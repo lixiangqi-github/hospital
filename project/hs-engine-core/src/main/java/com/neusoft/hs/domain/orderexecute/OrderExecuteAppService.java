@@ -36,21 +36,6 @@ public class OrderExecuteAppService {
 	public static final int NeedExecuteOrderMinute = 30;// 医嘱执行可提前分钟数
 
 	/**
-	 * 得到需要发送的执行条目集合
-	 * 
-	 * @param nurse
-	 * @param pageable
-	 * @return
-	 */
-	public List<OrderExecute> getNeedSendOrderExecutes(AbstractUser nurse,
-			Pageable pageable) {
-		Date date = DateUtil.addHour(DateUtil.getSysDateStart(),
-				NeedSendOrderExecuteHour);
-		return orderExecuteDomainService.getNeedSendOrderExecutes(nurse, date,
-				pageable);
-	}
-
-	/**
 	 * 发送执行条目
 	 * 
 	 * @param executeId
@@ -128,6 +113,21 @@ public class OrderExecuteAppService {
 			throws HsException {
 		return orderExecuteDomainService.find(filter, params, user, pageable);
 	}
+	
+	/**
+	 * 得到需要发送的执行条目集合
+	 * 
+	 * @param nurse
+	 * @param pageable
+	 * @return
+	 */
+	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse,
+			Pageable pageable) {
+		Date date = DateUtil.addHour(DateUtil.getSysDateStart(),
+				NeedSendOrderExecuteHour);
+		return orderExecuteDomainService.findNeedSendOrderExecutes(nurse, date,
+				pageable);
+	}
 
 	/**
 	 * 得到需要执行的执行条目
@@ -136,11 +136,11 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedExecuteOrderExecutes(AbstractUser user,
+	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user,
 			Pageable pageable) {
 		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(),
 				NeedExecuteOrderMinute);
-		return orderExecuteDomainService.getNeedExecuteOrderExecutes(user,
+		return orderExecuteDomainService.findNeedExecuteOrderExecutes(user,
 				planStartDate, pageable);
 	}
 
@@ -151,9 +151,9 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getAllNeedExecuteOrderExecutes(AbstractUser user,
+	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user,
 			Pageable pageable) {
-		return orderExecuteDomainService.getAllNeedExecuteOrderExecutes(user,
+		return orderExecuteDomainService.findAllNeedExecuteOrderExecutes(user,
 				pageable);
 	}
 
@@ -170,7 +170,7 @@ public class OrderExecuteAppService {
 			String type, AbstractUser user, Pageable pageable) {
 		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(),
 				NeedExecuteOrderMinute);
-		return orderExecuteDomainService.getNeedExecuteOrderExecutes(visit,
+		return orderExecuteDomainService.findNeedExecuteOrderExecutes(visit,
 				type, user, planStartDate, pageable);
 	}
 

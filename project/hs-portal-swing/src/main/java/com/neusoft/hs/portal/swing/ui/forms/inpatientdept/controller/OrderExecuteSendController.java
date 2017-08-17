@@ -46,7 +46,7 @@ public class OrderExecuteSendController extends AbstractFrameController {
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 
 		List<OrderExecute> entities = orderExecuteAppService
-				.getNeedSendOrderExecutes(UserUtil.getUser(), pageable);
+				.findNeedSendOrderExecutes(UserUtil.getUser(), pageable);
 		OrderExecuteTableModel orderExecuteTableModel = orderExecuteSendFrame
 				.getOrderExecuteTableModel();
 		orderExecuteTableModel.clear();
