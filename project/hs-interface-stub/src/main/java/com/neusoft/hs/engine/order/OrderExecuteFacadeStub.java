@@ -14,4 +14,8 @@ public interface OrderExecuteFacadeStub extends OrderExecuteFacade {
 	public List<OrderExecuteDTO> findNeedExecute(@PathVariable("userId") String userId,
 			@PathVariable("pageNumber") Integer pageNumber, @PathVariable("pageSize") Integer pageSize);
 
+	@RequestMapping(method = RequestMethod.POST, value = "/order/execute/{executeId}/userId/{userId}/finish")
+	public OrderExecuteDTO finish(@PathVariable("executeId") String executeId, @PathVariable("userId") String userId)
+			throws OrderExecuteDTOException;
+
 }
