@@ -31,7 +31,7 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 	private OrderExecuteDTOUtil orderExecuteDTOUtil;
 
 	@Override
-	public List<OrderExecuteDTO> findNeedExecute(String userId, int pageNumber, int pageSize)
+	public List<OrderExecuteDTO> findNeedExecute(String userId, Integer pageNumber, Integer pageSize)
 			throws OrderExecuteDTOException {
 		AbstractUser user = userAdminDomainService.find(userId);
 		if (user == null) {

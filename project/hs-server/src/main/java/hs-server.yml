@@ -1,12 +1,12 @@
 # Spring properties
 spring:
   application:
-     name: engine-service  # Service registers under this name
+     name: hs-service  # Service registers under this name
   freemarker:
     enabled: false           # Ignore Eureka dashboard FreeMarker templates
   thymeleaf:
     cache: false             # Allow Thymeleaf templates to be reloaded at runtime
-    prefix: classpath:/engine-server/templates/    # Trailing / mandatory
+    prefix: classpath:/hs-server/templates/    # Trailing / mandatory
                              # Template location for this application only
   datasource:
     url: jdbc:mysql://localhost:3306/hs?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
