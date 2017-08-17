@@ -43,12 +43,10 @@ public class OrderExecuteAppService {
 	 * @throws OrderExecuteException
 	 * @roseuid 584F6109005C
 	 */
-	public void send(String executeId, AbstractUser nurse)
-			throws OrderExecuteException {
+	public void send(String executeId, AbstractUser nurse) throws OrderExecuteException {
 		OrderExecute execute = orderExecuteDomainService.find(executeId);
 		if (execute == null) {
-			throw new OrderExecuteException(null, "executeId=[%s]不存在",
-					executeId);
+			throw new OrderExecuteException(null, "executeId=[%s]不存在", executeId);
 		}
 		orderExecuteDomainService.send(execute, nurse);
 	}
@@ -60,8 +58,7 @@ public class OrderExecuteAppService {
 	 * @param nurse
 	 * @throws OrderExecuteException
 	 */
-	public void send(List<String> executeIds, AbstractUser nurse)
-			throws OrderExecuteException {
+	public void send(List<String> executeIds, AbstractUser nurse) throws OrderExecuteException {
 		for (String executeId : executeIds) {
 			send(executeId, nurse);
 		}
@@ -81,16 +78,16 @@ public class OrderExecuteAppService {
 	 * 
 	 * @param user
 	 * @param executeId
+	 * @return 返回调一条执行条目
 	 * @roseuid 584FB68C010C
 	 */
-	public void finish(String executeId, Map<String, Object> params,
-			AbstractUser user) throws OrderExecuteException {
+	public OrderExecute finish(String executeId, Map<String, Object> params, AbstractUser user)
+			throws OrderExecuteException {
 		OrderExecute execute = orderExecuteDomainService.find(executeId);
 		if (execute == null) {
-			throw new OrderExecuteException(null, "executeId=[%s]不存在",
-					executeId);
+			throw new OrderExecuteException(null, "executeId=[%s]不存在", executeId);
 		}
-		orderExecuteDomainService.finish(execute, params, user);
+		return orderExecuteDomainService.finish(execute, params, user);
 	}
 
 	/**
@@ -101,19 +98,18 @@ public class OrderExecuteAppService {
 	 * @param user
 	 * @throws OrderExecuteException
 	 */
-	public void finish(List<String> executeIds, Map<String, Object> params,
-			AbstractUser user) throws OrderExecuteException {
+	public void finish(List<String> executeIds, Map<String, Object> params, AbstractUser user)
+			throws OrderExecuteException {
 		for (String executeId : executeIds) {
 			finish(executeId, params, user);
 		}
 	}
 
-	public List<OrderExecute> find(OrderExecuteFilter filter,
-			Map<String, Object> params, AbstractUser user, Pageable pageable)
-			throws HsException {
+	public List<OrderExecute> find(OrderExecuteFilter filter, Map<String, Object> params, AbstractUser user,
+			Pageable pageable) throws HsException {
 		return orderExecuteDomainService.find(filter, params, user, pageable);
 	}
-	
+
 	/**
 	 * 得到需要发送的执行条目集合
 	 * 
@@ -121,12 +117,9 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse,
-			Pageable pageable) {
-		Date date = DateUtil.addHour(DateUtil.getSysDateStart(),
-				NeedSendOrderExecuteHour);
-		return orderExecuteDomainService.findNeedSendOrderExecutes(nurse, date,
-				pageable);
+	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse, Pageable pageable) {
+		Date date = DateUtil.addHour(DateUtil.getSysDateStart(), NeedSendOrderExecuteHour);
+		return orderExecuteDomainService.findNeedSendOrderExecutes(nurse, date, pageable);
 	}
 
 	/**
@@ -136,12 +129,9 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user,
-			Pageable pageable) {
-		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(),
-				NeedExecuteOrderMinute);
-		return orderExecuteDomainService.findNeedExecuteOrderExecutes(user,
-				planStartDate, pageable);
+	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user, Pageable pageable) {
+		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), NeedExecuteOrderMinute);
+		return orderExecuteDomainService.findNeedExecuteOrderExecutes(user, planStartDate, pageable);
 	}
 
 	/**
@@ -151,10 +141,8 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user,
-			Pageable pageable) {
-		return orderExecuteDomainService.findAllNeedExecuteOrderExecutes(user,
-				pageable);
+	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user, Pageable pageable) {
+		return orderExecuteDomainService.findAllNeedExecuteOrderExecutes(user, pageable);
 	}
 
 	/**
@@ -166,12 +154,10 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedExecuteOrderExecutes(Visit visit,
-			String type, AbstractUser user, Pageable pageable) {
-		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(),
-				NeedExecuteOrderMinute);
-		return orderExecuteDomainService.findNeedExecuteOrderExecutes(visit,
-				type, user, planStartDate, pageable);
+	public List<OrderExecute> getNeedExecuteOrderExecutes(Visit visit, String type, AbstractUser user,
+			Pageable pageable) {
+		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), NeedExecuteOrderMinute);
+		return orderExecuteDomainService.findNeedExecuteOrderExecutes(visit, type, user, planStartDate, pageable);
 	}
 
 }

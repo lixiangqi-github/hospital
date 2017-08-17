@@ -20,4 +20,10 @@ public class OrderExecuteRestController {
 			throws OrderExecuteDTOException {
 		return orderExecuteFacade.findNeedExecute(userId, pageNumber, pageSize);
 	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/order/execute/{executeId}/userId/{userId}/finish")
+	public OrderExecuteDTO finish(@PathVariable("executeId") String executeId, @PathVariable("userId") String userId)
+			throws OrderExecuteDTOException {
+		return orderExecuteFacade.finish(executeId, userId);
+	}
 }
