@@ -1,5 +1,7 @@
 package com.neusoft.hs.engine.order;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 	@Autowired
 	private UserAdminDomainService userAdminDomainService;
 
+	@Autowired
+	private OrderExecuteDTOUtil orderExecuteDTOUtil;
+
 	@Override
 	public List<OrderExecuteDTO> findNeedExecute(String userId, int pageNumber, int pageSize)
 			throws OrderExecuteDTOException {
@@ -36,7 +41,20 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 		Pageable pageable = new PageRequest(pageNumber, pageSize, sort);
 
 		List<OrderExecute> executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user, pageable);
-		return null;
+
+		List<OrderExecuteDTO> executeDTOs = new ArrayList<OrderExecuteDTO>();
+		try {
+			for (OrderExecute execute : executes) {
+				executeDTOs.add(orderExecuteDTOUtil.convert(execute));
+			}
+			return executeDTOs;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			throw new OrderExecuteDTOException(e);
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			throw new OrderExecuteDTOException(e);
+		}
 	}
 
 	@Override

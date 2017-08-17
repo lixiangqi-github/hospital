@@ -1,9 +1,8 @@
 package com.neusoft.hs.engine.order;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.neusoft.hs.engine.cost.ChargeItemNameDTO;
 
 public class OrderExecuteDTO {
 
@@ -34,6 +33,8 @@ public class OrderExecuteDTO {
 	private String chargeState;
 
 	private String costState;
+
+	private Date createDate;
 
 	private Date planStartDate;
 
@@ -83,7 +84,7 @@ public class OrderExecuteDTO {
 
 	private String fluidOrderId;
 
-	private List<ChargeItemNameDTO> chargeItemIds;
+	private List<OrderExecuteChargeItemRecordDTO> chargeItemRecords;
 
 	private List<String> chargeRecordIds;
 
@@ -197,6 +198,14 @@ public class OrderExecuteDTO {
 
 	public void setCostState(String costState) {
 		this.costState = costState;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 	public Date getPlanStartDate() {
@@ -391,12 +400,12 @@ public class OrderExecuteDTO {
 		this.fluidOrderId = fluidOrderId;
 	}
 
-	public List<ChargeItemNameDTO> getChargeItemIds() {
-		return chargeItemIds;
+	public List<OrderExecuteChargeItemRecordDTO> getChargeItemRecords() {
+		return chargeItemRecords;
 	}
 
-	public void setChargeItemIds(List<ChargeItemNameDTO> chargeItemIds) {
-		this.chargeItemIds = chargeItemIds;
+	public void setChargeItemRecords(List<OrderExecuteChargeItemRecordDTO> chargeItemRecords) {
+		this.chargeItemRecords = chargeItemRecords;
 	}
 
 	public List<String> getChargeRecordIds() {
@@ -405,6 +414,13 @@ public class OrderExecuteDTO {
 
 	public void setChargeRecordIds(List<String> chargeRecordIds) {
 		this.chargeRecordIds = chargeRecordIds;
+	}
+
+	public void addChargeRecordId(String chargeRecordId) {
+		if (this.chargeRecordIds == null) {
+			this.chargeRecordIds = new ArrayList<String>();
+		}
+		this.chargeRecordIds.add(chargeRecordId);
 	}
 
 }

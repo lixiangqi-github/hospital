@@ -32,6 +32,7 @@ import com.neusoft.hs.domain.organization.Doctor;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.entity.IdEntity;
 import com.neusoft.hs.platform.log.LogUtil;
+import com.neusoft.hs.platform.util.DateUtil;
 
 /**
  * 一条抽象的医嘱条目 医嘱由医生创建，并关联患者一次就诊 每一条医嘱都有类型，医嘱的分解与类型有关
@@ -40,10 +41,8 @@ import com.neusoft.hs.platform.log.LogUtil;
  *
  */
 @Entity
-@Table(name = "domain_order", indexes = { @Index(columnList = "state"),
-		@Index(columnList = "belong_dept_id"),
-		@Index(columnList = "execute_dept_id"),
-		@Index(columnList = "plan_start_date"),
+@Table(name = "domain_order", indexes = { @Index(columnList = "state"), @Index(columnList = "belong_dept_id"),
+		@Index(columnList = "execute_dept_id"), @Index(columnList = "plan_start_date"),
 		@Index(columnList = "place_type") })
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Order extends IdEntity implements OrderCreateCommand {
@@ -76,13 +75,12 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	@Column(name = "execute_need_send")
 	private Boolean executeNeedSend;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "type_app_id")
 	private OrderTypeApp typeApp;
 
-	@OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = {
-			CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REMOVE })
 	private Apply apply;
 
 	@OneToMany(mappedBy = "order", cascade = { CascadeType.REMOVE })
@@ -208,8 +206,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 * @throws OrderException
 	 * @throws OrderExecuteException
 	 */
-	public int verify(AbstractUser user) throws OrderException,
-			OrderExecuteException {
+	public int verify(AbstractUser user) throws OrderException, OrderExecuteException {
 		this.setState(State_Executing);
 		List<OrderExecute> orderExecutes = this.resolve(user);
 		this.orderType.verify(this);
@@ -223,12 +220,11 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 * @throws OrderExecuteException
 	 * @roseuid 584F494100C2
 	 */
-	public List<OrderExecute> resolve(AbstractUser user) throws OrderException,
-			OrderExecuteException {
+	public List<OrderExecute> resolve(AbstractUser user) throws OrderException, OrderExecuteException {
 		if (!this.state.equals(State_Executing)) {
-			throw new OrderException(this, "医嘱[%s]的状态为[%s],不能分解", this.getId(),
-					this.state);
+			throw new OrderException(this, "医嘱[%s]的状态为[%s],不能分解", this.getId(), this.state);
 		}
+		Date createDate = DateUtil.getSysDate();
 		// 初始化
 		resolveFrequencyOrderExecutes = new ArrayList<OrderExecute>();
 		resolveOrderExecutes = new ArrayList<OrderExecute>();
@@ -240,8 +236,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 			for (OrderExecute orderExecute : resolveOrderExecutes) {
 				// 更新一组执行条目的首条目的状态
 				if (orderExecute.getPrevious() == null
-						&& !orderExecute.getState().equals(
-								OrderExecute.State_NeedSend)) {
+						&& !orderExecute.getState().equals(OrderExecute.State_NeedSend)) {
 					orderExecute.updateState(user);
 				}
 				orderExecute.updateChargeState();
@@ -250,17 +245,19 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 				if (this.getCompsiteOrder() != null) {
 					orderExecute.setCompsiteOrder(this.getCompsiteOrder());
 				}
+				// 设置创建时间
+				if (orderExecute.getCreateDate() == null) {
+					orderExecute.setCreateDate(createDate);
+				}
 				// 设置医嘱类型
 				this.setCategory(orderExecute);
 			}
 			this.getService(OrderExecuteTeamRepo.class).save(resolveTeams);
 			// 记录本次分解的最后一条执行条目
-			this.lastOrderExecute = resolveOrderExecutes
-					.get(resolveOrderExecutes.size() - 1);
+			this.lastOrderExecute = resolveOrderExecutes.get(resolveOrderExecutes.size() - 1);
 		}
 
-		LogUtil.log(this.getClass(), "系统分解了医嘱条目[{}],得到{}条执行条目", this.getId(),
-				resolveOrderExecutes.size());
+		LogUtil.log(this.getClass(), "系统分解了医嘱条目[{}],得到{}条执行条目", this.getId(), resolveOrderExecutes.size());
 
 		return resolveOrderExecutes;
 	}
@@ -288,8 +285,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 */
 	public void delete() throws OrderException {
 		if (!this.state.equals(State_Created)) {
-			throw new OrderException(this, "医嘱[%s]的状态为[%s],不能删除", this.getId(),
-					this.state);
+			throw new OrderException(this, "医嘱[%s]的状态为[%s],不能删除", this.getId(), this.state);
 		}
 
 		if (this.apply != null) {
@@ -315,8 +311,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 */
 	public void addExecuteTeam(OrderExecuteTeam orderExecuteTeam) {
 		this.resolveTeams.add(orderExecuteTeam);
-		this.resolveFrequencyOrderExecutes.addAll(orderExecuteTeam
-				.getExecutes());
+		this.resolveFrequencyOrderExecutes.addAll(orderExecuteTeam.getExecutes());
 		this.resolveOrderExecutes.addAll(orderExecuteTeam.getExecutes());
 	}
 

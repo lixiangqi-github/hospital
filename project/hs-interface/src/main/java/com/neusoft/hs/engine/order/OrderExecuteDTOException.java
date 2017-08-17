@@ -1,11 +1,21 @@
 package com.neusoft.hs.engine.order;
 
+import java.lang.reflect.InvocationTargetException;
+
 import com.neusoft.hs.engine.DTOException;
 
 
 public class OrderExecuteDTOException extends DTOException {
 
 	private String executeId;
+	
+	public OrderExecuteDTOException(IllegalAccessException e) {
+		super(e);
+	}
+
+	public OrderExecuteDTOException(InvocationTargetException e) {
+		super(e);
+	}
 
 	public OrderExecuteDTOException(String executeId, String arg0,
 			Throwable arg1, Object... params) {

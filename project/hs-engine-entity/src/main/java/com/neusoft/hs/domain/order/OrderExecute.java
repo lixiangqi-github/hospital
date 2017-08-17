@@ -38,10 +38,8 @@ import com.neusoft.hs.platform.util.DateUtil;
  *
  */
 @Entity
-@Table(name = "domain_order_execute", indexes = { @Index(columnList = "state"),
-		@Index(columnList = "belong_dept_id"),
-		@Index(columnList = "execute_dept_id"),
-		@Index(columnList = "plan_start_date"),
+@Table(name = "domain_order_execute", indexes = { @Index(columnList = "state"), @Index(columnList = "belong_dept_id"),
+		@Index(columnList = "execute_dept_id"), @Index(columnList = "plan_start_date"),
 		@Index(columnList = "charge_state") })
 public abstract class OrderExecute extends IdEntity {
 
@@ -89,6 +87,9 @@ public abstract class OrderExecute extends IdEntity {
 
 	@Column(name = "cost_state", length = 32)
 	private String costState;
+
+	@Column(name = "create_date")
+	private Date createDate;
 
 	@Column(name = "plan_start_date")
 	private Date planStartDate;
@@ -150,13 +151,11 @@ public abstract class OrderExecute extends IdEntity {
 
 	@Column(name = "order_category", length = 8)
 	private String orderCategory;
-	
-	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REMOVE })
+
+	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private List<OrderExecuteChargeItemRecord> chargeItemRecords;
 
-	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	@OrderBy("createDate DESC")
 	private List<ChargeRecord> chargeRecords;
 
@@ -227,8 +226,7 @@ public abstract class OrderExecute extends IdEntity {
 	 */
 	public void send(AbstractUser user) throws OrderExecuteException {
 		if (!this.state.equals(State_NeedSend)) {
-			throw new OrderExecuteException(this, "id=[%s]state=[%s]不是[%s]",
-					this.getId(), this.state, State_NeedSend);
+			throw new OrderExecuteException(this, "id=[%s]state=[%s]不是[%s]", this.getId(), this.state, State_NeedSend);
 		}
 		this.doSend(user);
 
@@ -258,12 +256,10 @@ public abstract class OrderExecute extends IdEntity {
 	 * @return 下一条执行条目
 	 * @roseuid 584FB6EB03E5
 	 */
-	public OrderExecute finish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	public OrderExecute finish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 
 		if (!this.state.equals(State_Executing)) {
-			throw new OrderExecuteException(this, "执行条目[%s]的状态为[%s]不能执行完成",
-					this.getId(), this.state);
+			throw new OrderExecuteException(this, "执行条目[%s]的状态为[%s]不能执行完成", this.getId(), this.state);
 		}
 
 		this.doFinish(params, user);
@@ -300,8 +296,7 @@ public abstract class OrderExecute extends IdEntity {
 	 * 
 	 * @throws OrderExecuteException
 	 */
-	protected void doExecuteBefore(AbstractUser user)
-			throws OrderExecuteException {
+	protected void doExecuteBefore(AbstractUser user) throws OrderExecuteException {
 	}
 
 	/**
@@ -311,8 +306,7 @@ public abstract class OrderExecute extends IdEntity {
 	 * @param user
 	 * @throws OrderExecuteException
 	 */
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 
 	}
 
@@ -350,8 +344,7 @@ public abstract class OrderExecute extends IdEntity {
 
 		doStop(user);
 
-		if (this.state.equals(State_NeedSend)
-				|| this.state.equals(State_NeedExecute)
+		if (this.state.equals(State_NeedSend) || this.state.equals(State_NeedExecute)
 				|| this.state.equals(State_Executing)) {
 			this.state = State_Stoped;
 		}
@@ -421,8 +414,7 @@ public abstract class OrderExecute extends IdEntity {
 	 * @return
 	 */
 	public boolean needSend() {
-		if (this.order.getExecuteNeedSend() != null
-				&& !this.order.getExecuteNeedSend()) {
+		if (this.order.getExecuteNeedSend() != null && !this.order.getExecuteNeedSend()) {
 			return false;
 		} else {
 			return !this.executeDept.equals(this.order.getBelongDept());
@@ -513,6 +505,14 @@ public abstract class OrderExecute extends IdEntity {
 		this.costState = costState;
 	}
 
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 	public Date getPlanStartDate() {
 		return planStartDate;
 	}
@@ -584,13 +584,11 @@ public abstract class OrderExecute extends IdEntity {
 		return chargeItemRecords;
 	}
 
-	public void setChargeItemRecords(
-			List<OrderExecuteChargeItemRecord> chargeItemRecords) {
+	public void setChargeItemRecords(List<OrderExecuteChargeItemRecord> chargeItemRecords) {
 		this.chargeItemRecords = chargeItemRecords;
 	}
 
-	public void addChargeItemRecord(
-			OrderExecuteChargeItemRecord chargeItemRecord) {
+	public void addChargeItemRecord(OrderExecuteChargeItemRecord chargeItemRecord) {
 		if (this.chargeItemRecords == null) {
 			this.chargeItemRecords = new ArrayList<OrderExecuteChargeItemRecord>();
 		}
@@ -755,8 +753,7 @@ public abstract class OrderExecute extends IdEntity {
 
 	void updateChargeState() {
 		if (this.chargeState == null) {
-			if (this.chargeItemRecords == null
-					|| this.chargeItemRecords.size() == 0) {
+			if (this.chargeItemRecords == null || this.chargeItemRecords.size() == 0) {
 				this.chargeState = ChargeState_NoApply;
 			} else {
 				this.chargeState = ChargeState_NoCharge;
@@ -766,8 +763,7 @@ public abstract class OrderExecute extends IdEntity {
 
 	void updateCostState() {
 		if (this.costState == null) {
-			if (this.chargeItemRecords == null
-					|| this.chargeItemRecords.size() == 0) {
+			if (this.chargeItemRecords == null || this.chargeItemRecords.size() == 0) {
 				this.costState = CostState_NoApply;
 			} else {
 				this.costState = CostState_NoCost;
@@ -776,12 +772,10 @@ public abstract class OrderExecute extends IdEntity {
 	}
 
 	private Float calAmout(OrderExecuteChargeItemRecord chargeItemRecord) {
-		if (chargeItemRecord.getCount() == null
-				|| chargeItemRecord.getCount() == 0) {
+		if (chargeItemRecord.getCount() == null || chargeItemRecord.getCount() == 0) {
 			return chargeItemRecord.getChargeItem().getPrice();
 		} else {
-			return chargeItemRecord.getChargeItem().getPrice()
-					* chargeItemRecord.getCount();
+			return chargeItemRecord.getChargeItem().getPrice() * chargeItemRecord.getCount();
 		}
 	}
 }
