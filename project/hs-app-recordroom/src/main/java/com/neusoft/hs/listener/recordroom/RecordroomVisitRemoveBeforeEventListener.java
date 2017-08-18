@@ -9,7 +9,7 @@ import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitRemoveBeforeEvent;
 
 @Service
-public class VisitRemoveBeforeEventListener implements ApplicationListener<VisitRemoveBeforeEvent> {
+public class RecordroomVisitRemoveBeforeEventListener implements ApplicationListener<VisitRemoveBeforeEvent> {
 
 	@Autowired
 	private MedicalCaseDAO medicalCaseDAO;
