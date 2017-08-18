@@ -1,5 +1,6 @@
 package com.neusoft.hs.data.history.visit;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +27,17 @@ public class VisitHistoryAppService {
 	@Autowired
 	private VisitHisUtil visitHisUtil;
 
-	public void archive(String cardNumber, AbstractUser user) {
+	public void archive(String cardNumber, AbstractUser user) throws IllegalAccessException, InvocationTargetException {
 
 		List<Visit> visits = visitAdminDomainService.findByCardNumber(cardNumber);
 		if (visits != null && visits.size() > 0) {
-			//复制患者一次就诊信息
+			// 复制患者一次就诊信息
 			List<VisitHis> VisitHises = new ArrayList<VisitHis>();
 			for (Visit visit : visits) {
 				VisitHises.add(visitHisUtil.convert(visit));
 			}
 			visitHisRepo.save(VisitHises);
-			
+
 		}
 
 		visitAdminDomainService.delete(cardNumber);
