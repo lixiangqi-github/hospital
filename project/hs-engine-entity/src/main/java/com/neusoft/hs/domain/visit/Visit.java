@@ -22,9 +22,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.neusoft.hs.domain.cost.ChargeBill;
+import com.neusoft.hs.domain.cost.ChargeBillDAO;
 import com.neusoft.hs.domain.cost.ChargeRecord;
 import com.neusoft.hs.domain.cost.VisitChargeItem;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
+import com.neusoft.hs.domain.medicalrecord.MedicalRecordClipDAO;
 import com.neusoft.hs.domain.order.Apply;
 import com.neusoft.hs.domain.order.Order;
 import com.neusoft.hs.domain.order.OrderExecute;
@@ -131,8 +133,7 @@ public class Visit extends IdEntity {
 	private ChargeBill chargeBill;
 
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = {
-			CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "clip_id")
 	private MedicalRecordClip medicalRecordClip;
 
@@ -260,8 +261,7 @@ public class Visit extends IdEntity {
 
 		visitLog.save();
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]初始化了收费单,金额为{}",
-				user.getId(), this.getName(), balance);
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]初始化了收费单,金额为{}", user.getId(), this.getName(), balance);
 
 		return chargeBill;
 	}
@@ -274,17 +274,14 @@ public class Visit extends IdEntity {
 	 * @throws HsException
 	 * @roseuid 5852526403A5
 	 */
-	public void intoWard(ReceiveVisitVO receiveVisitVO, AbstractUser user)
-			throws VisitException {
+	public void intoWard(ReceiveVisitVO receiveVisitVO, AbstractUser user) throws VisitException {
 		if (!State_NeedIntoWard.equals(this.getState())) {
-			throw new VisitException(this, "visit=[%s]的状态应为[%s]",
-					this.getName(), State_NeedIntoWard);
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_NeedIntoWard);
 		}
 
 		Date sysDate = DateUtil.getSysDate();
 
-		Nurse nurse = this.getService(AbstractUserDAO.class).findNurse(
-				receiveVisitVO.getNurse().getId());
+		Nurse nurse = this.getService(AbstractUserDAO.class).findNurse(receiveVisitVO.getNurse().getId());
 
 		this.setRespNurse(nurse);
 		this.setArea(nurse.getDept());
@@ -311,8 +308,7 @@ public class Visit extends IdEntity {
 	 */
 	public void leaveWard(AbstractUser user) throws VisitException {
 		if (!State_IntoWard.equals(this.getState())) {
-			throw new VisitException(this, "visit=[%s]的状态应为[%s]",
-					this.getName(), State_IntoWard);
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_IntoWard);
 		}
 
 		this.setState(State_NeedLeaveHospitalBalance);
@@ -337,8 +333,7 @@ public class Visit extends IdEntity {
 	 */
 	public void balance(AbstractUser user) throws VisitException {
 		if (!State_NeedLeaveHospitalBalance.equals(this.getState())) {
-			throw new VisitException(this, "visit=[%s]的状态应为[%s]",
-					this.getName(), State_NeedLeaveHospitalBalance);
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_NeedLeaveHospitalBalance);
 		}
 
 		this.setState(State_OutHospital);
@@ -364,8 +359,7 @@ public class Visit extends IdEntity {
 	public void transferDeptSend(AbstractUser user) throws VisitException {
 
 		if (!State_IntoWard.equals(this.getState())) {
-			throw new VisitException(this, "visit=[%s]的状态应为[%s]",
-					this.getName(), State_IntoWard);
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_IntoWard);
 		}
 
 		this.setState(State_TransferDepting);
@@ -388,12 +382,10 @@ public class Visit extends IdEntity {
 	 * @param user
 	 * @throws VisitException
 	 */
-	public void transferDeptConfirm(TransferDeptVO transferDeptVO,
-			AbstractUser user) throws VisitException {
+	public void transferDeptConfirm(TransferDeptVO transferDeptVO, AbstractUser user) throws VisitException {
 
 		if (!State_TransferDepting.equals(this.getState())) {
-			throw new VisitException(this, "visit=[%s]的状态应为[%s]",
-					this.getName(), State_TransferDepting);
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_TransferDepting);
 		}
 
 		this.setState(State_IntoWard);
@@ -423,8 +415,7 @@ public class Visit extends IdEntity {
 	public void leaveHospital(AbstractUser user) throws VisitException {
 
 		if (this.chargeBill.getBalance() < 0L) {
-			throw new VisitException(this, "visit=[%s]的收费单余额[%s]不能小于零",
-					this.getName(), this.chargeBill.getBalance());
+			throw new VisitException(this, "visit=[%s]的收费单余额[%s]不能小于零", this.getName(), this.chargeBill.getBalance());
 		}
 		this.setState(State_LeaveHospital);
 
@@ -446,11 +437,9 @@ public class Visit extends IdEntity {
 	 * @param user
 	 * @throws VisitException
 	 */
-	public void transferRecordRoom(Dept dept, AbstractUser user)
-			throws VisitException {
+	public void transferRecordRoom(Dept dept, AbstractUser user) throws VisitException {
 		if (!this.getState().equals(State_OutHospital)) {
-			throw new VisitException(this, "患者[%s]的状态[%s]不是[%s]不能移交档案室", name,
-					state, State_OutHospital);
+			throw new VisitException(this, "患者[%s]的状态[%s]不是[%s]不能移交档案室", name, state, State_OutHospital);
 		}
 		this.setDept(dept);
 		this.setState(Visit.State_IntoRecordRoom);
@@ -752,6 +741,13 @@ public class Visit extends IdEntity {
 	}
 
 	public void delete() {
+		if (this.chargeBill != null) {
+			this.getService(ChargeBillDAO.class).delete(this.chargeBill);
+		}
+		if (this.medicalRecordClip != null) {
+			this.getService(MedicalRecordClipDAO.class).delete(this.medicalRecordClip);
+		}
+
 		this.getService(VisitRepo.class).delete(this);
 	}
 

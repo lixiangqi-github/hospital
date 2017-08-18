@@ -33,9 +33,6 @@ public class VisitDomainService {
 	private VisitRepo visitRepo;
 
 	@Autowired
-	private VisitLogRepo visitLogRepo;
-
-	@Autowired
 	private PatientDomainService patientDomainService;
 
 	@Autowired
@@ -114,6 +111,8 @@ public class VisitDomainService {
 		visitLog.setCreateDate(DateUtil.getSysDate());
 
 		visitLog.save();
+		
+		applicationContext.publishEvent(new VisitCreatedEvent(visit));
 
 		LogUtil.log(this.getClass(), "用户[{}]创建了患者一次就诊[{}]", createVisitVO
 				.getOperator().getId(), visit.getName());

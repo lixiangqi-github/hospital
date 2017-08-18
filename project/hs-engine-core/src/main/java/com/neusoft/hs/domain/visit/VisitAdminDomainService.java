@@ -3,9 +3,12 @@ package com.neusoft.hs.domain.visit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.neusoft.hs.platform.log.LogUtil;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -16,6 +19,9 @@ public class VisitAdminDomainService {
 
 	@Autowired
 	private VisitLogRepo visitLogRepo;
+
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	public void clear() {
 		visitRepo.deleteAll();
@@ -40,9 +46,15 @@ public class VisitAdminDomainService {
 	public void delete(String cardNumber) {
 		Visit visit = this.visitRepo.findByCardNumber(cardNumber);
 		if (visit != null) {
+
+			applicationContext.publishEvent(new VisitRemoveBeforeEvent(visit));
+
 			visit.delete();
+
+			applicationContext.publishEvent(new VisitRemovedEvent(visit));
+
+			LogUtil.log(this.getClass(), "患者一次就诊[{}][{}]被删除", visit.getId(), visit.getName());
 		}
 
 	}
-
 }
