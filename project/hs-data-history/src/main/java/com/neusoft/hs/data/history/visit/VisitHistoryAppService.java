@@ -13,6 +13,7 @@ import com.neusoft.hs.domain.history.visit.VisitHisRepo;
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitAdminDomainService;
+import com.neusoft.hs.platform.exception.HsException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -27,21 +28,23 @@ public class VisitHistoryAppService {
 	@Autowired
 	private VisitHisUtil visitHisUtil;
 
-	public void archive(String cardNumber, AbstractUser user) throws IllegalAccessException, InvocationTargetException {
-
-		List<Visit> visits = visitAdminDomainService.findByCardNumber(cardNumber);
-		if (visits != null && visits.size() > 0) {
-			// 复制患者一次就诊信息
-			List<VisitHis> VisitHises = new ArrayList<VisitHis>();
-			for (Visit visit : visits) {
-				VisitHises.add(visitHisUtil.convert(visit));
+	public void archive(String cardNumber, AbstractUser user) throws HsException {
+		try {
+			List<Visit> visits = visitAdminDomainService.findByCardNumber(cardNumber);
+			if (visits != null && visits.size() > 0) {
+				// 复制患者一次就诊信息
+				List<VisitHis> VisitHises = new ArrayList<VisitHis>();
+				for (Visit visit : visits) {
+					VisitHises.add(visitHisUtil.convert(visit));
+				}
+				visitHisRepo.save(VisitHises);
 			}
-			visitHisRepo.save(VisitHises);
 
+			visitAdminDomainService.delete(cardNumber);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+			throw new HsException(e);
 		}
-
-		visitAdminDomainService.delete(cardNumber);
-
 	}
 
 }
