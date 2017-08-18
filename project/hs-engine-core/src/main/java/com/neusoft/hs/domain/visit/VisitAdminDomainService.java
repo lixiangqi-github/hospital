@@ -34,6 +34,10 @@ public class VisitAdminDomainService {
 	public Visit find(String visitId) {
 		return visitRepo.findOne(visitId);
 	}
+	
+	public List<Visit> findByCardNumber(String cardNumber) {
+		return this.visitRepo.findByCardNumber(cardNumber);
+	}
 
 	public List<Visit> find(Pageable pageable) {
 		return visitRepo.findAll(pageable).getContent();
@@ -44,16 +48,19 @@ public class VisitAdminDomainService {
 	}
 
 	public void delete(String cardNumber) {
-		Visit visit = this.visitRepo.findByCardNumber(cardNumber);
-		if (visit != null) {
+		List<Visit> visits = this.visitRepo.findByCardNumber(cardNumber);
+		if (visits != null) {
 
-			applicationContext.publishEvent(new VisitRemoveBeforeEvent(visit));
+			for (Visit visit : visits) {
 
-			visit.delete();
+				applicationContext.publishEvent(new VisitRemoveBeforeEvent(visit));
 
-			applicationContext.publishEvent(new VisitRemovedEvent(visit));
+				visit.delete();
 
-			LogUtil.log(this.getClass(), "患者一次就诊[{}][{}]被删除", visit.getId(), visit.getName());
+				applicationContext.publishEvent(new VisitRemovedEvent(visit));
+
+				LogUtil.log(this.getClass(), "患者一次就诊[{}][{}]被删除", visit.getId(), visit.getName());
+			}
 		}
 
 	}

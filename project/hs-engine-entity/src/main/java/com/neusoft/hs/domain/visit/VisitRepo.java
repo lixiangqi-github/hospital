@@ -44,6 +44,6 @@ interface VisitRepo extends PagingAndSortingRepository<Visit, String> {
 
 	Visit findByLastAndCardNumber(Boolean last, String cardNumber);
 
-	Visit findByCardNumber(String cardNumber);
+	List<Visit> findByCardNumber(String cardNumber);
 
 }
