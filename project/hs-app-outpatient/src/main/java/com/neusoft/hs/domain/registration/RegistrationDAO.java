@@ -1,4 +1,4 @@
-package com.neusoft.hs.domain.pharmacy;
+package com.neusoft.hs.domain.registration;
 
 import java.util.List;
 
@@ -10,15 +10,15 @@ import com.neusoft.hs.domain.visit.Visit;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class PrescriptionDAO {
+public class RegistrationDAO {
 
 	@Autowired
-	private PrescriptionRepo prescriptionRepo;
+	private VoucherRepo voucherRepo;
 
 	public void delete(Visit visit) {
-		List<Prescription> prescriptions = prescriptionRepo.findByVisit(visit);
-		if (prescriptions != null) {
-			prescriptionRepo.delete(prescriptions);
+		List<Voucher> vouchers = voucherRepo.findByVisit(visit);
+		if (vouchers != null) {
+			voucherRepo.delete(vouchers);
 		}
 	}
 }

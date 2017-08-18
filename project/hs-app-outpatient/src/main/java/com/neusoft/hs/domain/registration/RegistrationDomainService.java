@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.neusoft.hs.domain.cost.ChargeBill;
 import com.neusoft.hs.domain.cost.CostDomainService;
 import com.neusoft.hs.domain.cost.CostException;
 import com.neusoft.hs.domain.organization.AbstractUser;
@@ -17,7 +16,6 @@ import com.neusoft.hs.domain.visit.CreateVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitDomainService;
 import com.neusoft.hs.domain.visit.VisitException;
-import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.log.LogUtil;
 import com.neusoft.hs.platform.util.DateUtil;
 
