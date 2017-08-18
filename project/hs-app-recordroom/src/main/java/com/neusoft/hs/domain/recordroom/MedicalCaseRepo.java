@@ -4,6 +4,10 @@ package com.neusoft.hs.domain.recordroom;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import com.neusoft.hs.domain.visit.Visit;
+
 interface MedicalCaseRepo extends PagingAndSortingRepository<MedicalCase, String> {
+
+	MedicalCase findByVisit(Visit visit);
 
 }

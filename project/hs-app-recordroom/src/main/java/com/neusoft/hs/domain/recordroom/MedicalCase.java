@@ -3,7 +3,6 @@ package com.neusoft.hs.domain.recordroom;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +15,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
 import com.neusoft.hs.domain.organization.AbstractUser;
+import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.entity.IdEntity;
 
 /**
@@ -35,6 +35,13 @@ public class MedicalCase extends IdEntity {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "clip_id")
 	private MedicalRecordClip clip;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "visit_id")
+	private Visit visit;
+
+	@Column(name = "visit_name", length = 16)
+	private String visitName;
 
 	@Column(length = 32)
 	private String position;
@@ -59,6 +66,9 @@ public class MedicalCase extends IdEntity {
 
 		this.caseNumber = UUID.randomUUID().toString();
 		this.clip = clip;
+		this.visit = clip.getVisit();
+		this.visitName = clip.getVisitName();
+		
 		this.state = State_InRoom;
 	}
 
@@ -92,6 +102,22 @@ public class MedicalCase extends IdEntity {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public Visit getVisit() {
+		return visit;
+	}
+
+	public void setVisit(Visit visit) {
+		this.visit = visit;
+	}
+
+	public String getVisitName() {
+		return visitName;
+	}
+
+	public void setVisitName(String visitName) {
+		this.visitName = visitName;
 	}
 
 	public AbstractUser getCreator() {
