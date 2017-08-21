@@ -25,7 +25,7 @@ public class VisitHistoryArchiver implements HistoryArchiver{
 	private VisitHisUtil visitHisUtil;
 
 	public void archive(Visit visit) throws IllegalAccessException, InvocationTargetException {
-
+		//复制患者一次就诊信息
 		VisitHis visitHis = visitHisUtil.convert(visit);
 		visitHis.setCreateHistoryDate(DateUtil.getSysDate());
 

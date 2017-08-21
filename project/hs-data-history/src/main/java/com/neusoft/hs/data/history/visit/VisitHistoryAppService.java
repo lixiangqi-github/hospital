@@ -1,6 +1,7 @@
 package com.neusoft.hs.data.history.visit;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,7 @@ public class VisitHistoryAppService {
 	private VisitAdminDomainService visitAdminDomainService;
 
 	@Autowired
-	private VisitHistoryArchiver visitHistoryArchiver;
-
-	@Autowired
-	private VisitLogHistoryArchiver visitLogHistoryArchiver;
+	private List<HistoryArchiver> historyArchivers;
 
 	public void archive(String visitId, AbstractUser user) throws HsException {
 		try {
@@ -32,10 +30,9 @@ public class VisitHistoryAppService {
 
 			Visit visit = visitAdminDomainService.find(visitId);
 			if (visit != null) {
-				// 复制患者一次就诊信息
-				visitHistoryArchiver.archive(visit);
-				// 复制患者一次就诊日志信息
-				visitLogHistoryArchiver.archive(visit);
+				for (HistoryArchiver historyArchiver : historyArchivers) {
+					historyArchiver.archive(visit);
+				}
 			}
 
 			// 删除原数据
