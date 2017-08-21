@@ -59,10 +59,12 @@ public class MedicalRecordType extends SuperEntity {
 	private List<MedicalRecord> records;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "domain_medical_record_type_item", joinColumns = { @JoinColumn(name = "type_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "item_id", referencedColumnName = "id") })
+	@JoinTable(name = "domain_medical_record_type_item", joinColumns = {
+			@JoinColumn(name = "type_id", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "item_id", referencedColumnName = "id") })
 	private List<TreatmentItemSpec> items;
 
-	@OneToOne(mappedBy = "type", cascade = { CascadeType.REMOVE })
+	@OneToOne(mappedBy = "type", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private MedicalRecordRender render;
 
 	public final static String IntoWardRecord = "入院记录";
