@@ -35,7 +35,10 @@
       <archive location="/lib/assertj-core-2.6.0.jar" failOnError="false" />
       <archive location="/lib/byte-buddy-1.6.6.jar" failOnError="false" />
       <archive location="/lib/classmate-1.3.0.jar" failOnError="false" />
+      <archive location="/lib/commons-beanutils-1.9.3.jar" failOnError="false" />
+      <archive location="/lib/commons-collections-3.2.2.jar" failOnError="false" />
       <archive location="/lib/commons-lang3-3.4.jar" failOnError="false" />
+      <archive location="/lib/commons-logging-1.2.jar" failOnError="false" />
       <archive location="/lib/dom4j-1.6.1.jar" failOnError="false" />
       <archive location="/lib/ehcache-2.10.2.jar" failOnError="false" />
       <archive location="/lib/h2-1.4.184.jar" failOnError="false" />
@@ -53,9 +56,11 @@
       <archive location="/lib/hs-app-outpatient-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-app-pharmacy-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-app-recordroom-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-data-history-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-data-init-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-core-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-entity-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-engine-history-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-listener-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-interface-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-interface-impl-0.0.1-SNAPSHOT.jar" failOnError="false" />
