@@ -7,13 +7,13 @@ import java.util.Date;
 public class VersionUtil {
 
 	public static String getVersion() {
-		return "0.9.4_08";
+		return "0.9.4_09";
 	}
 
 	public static Date getBuildDate() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			return new Date(sdf.parse("2017-08-15").getTime()) {
+			return new Date(sdf.parse("2017-08-21").getTime()) {
 				@Override
 				public String toString() {
 					return (new SimpleDateFormat("yyyy-MM-dd")).format(this);
