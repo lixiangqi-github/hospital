@@ -25,26 +25,19 @@ public class VisitHistoryAppService {
 	private List<HistoryArchiver> historyArchivers;
 
 	public void archive(String visitId, AbstractUser user) throws HsException {
-		try {
 
-			LogUtil.log(this.getClass(), "开始visitId=[{}]的数据迁移", visitId);
+		LogUtil.log(this.getClass(), "开始visitId=[{}]的数据迁移", visitId);
 
-			Visit visit = visitAdminDomainService.find(visitId);
-			if (visit != null) {
-				for (HistoryArchiver historyArchiver : historyArchivers) {
-					historyArchiver.archive(visit);
-				}
+		Visit visit = visitAdminDomainService.find(visitId);
+		if (visit != null) {
+			for (HistoryArchiver historyArchiver : historyArchivers) {
+				historyArchiver.archive(visit);
 			}
-
-			// 删除原数据
-			visitAdminDomainService.delete(visitId);
-
-			LogUtil.log(this.getClass(), "完成visitId=[{}]的数据迁移", visitId);
-
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-			throw new HsException(e);
 		}
-	}
 
+		// 删除原数据
+		visitAdminDomainService.delete(visitId);
+
+		LogUtil.log(this.getClass(), "完成visitId=[{}]的数据迁移", visitId);
+	}
 }

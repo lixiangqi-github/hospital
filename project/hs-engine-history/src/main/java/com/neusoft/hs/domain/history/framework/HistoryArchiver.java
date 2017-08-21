@@ -1,11 +1,21 @@
 package com.neusoft.hs.domain.history.framework;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.neusoft.hs.domain.visit.Visit;
 
+/**
+ * 业务数据归档器
+ * 
+ * @author kingbox
+ *
+ */
 public interface HistoryArchiver {
 
-	public void archive(Visit visit) throws IllegalAccessException, InvocationTargetException;
+	/**
+	 * 归档业务数据
+	 * 
+	 * @param visit
+	 * @throws HistoryArchiveExecution
+	 */
+	public void archive(Visit visit) throws HistoryArchiveExecution;
 
 }

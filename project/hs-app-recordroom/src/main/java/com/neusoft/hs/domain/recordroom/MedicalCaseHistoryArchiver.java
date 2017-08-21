@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.neusoft.hs.domain.history.framework.HistoryArchiveExecution;
 import com.neusoft.hs.domain.history.framework.HistoryArchiver;
-import com.neusoft.hs.domain.history.visit.VisitHis;
-import com.neusoft.hs.domain.history.visit.VisitHisUtil;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.log.LogUtil;
 import com.neusoft.hs.platform.util.DateUtil;
@@ -26,16 +25,20 @@ public class MedicalCaseHistoryArchiver implements HistoryArchiver {
 	@Autowired
 	private MedicalCaseHisUtil medicalCaseHisUtil;
 
-	public void archive(Visit visit) throws IllegalAccessException, InvocationTargetException {
+	public void archive(Visit visit) throws HistoryArchiveExecution {
+		try {
+			MedicalCase medicalCase = medicalCaseRepo.findByVisit(visit);
+			if (medicalCase != null) {
+				MedicalCaseHis medicalCaseHis = medicalCaseHisUtil.convert(medicalCase);
+				medicalCaseHis.setCreateHistoryDate(DateUtil.getSysDate());
 
-		MedicalCase medicalCase = medicalCaseRepo.findByVisit(visit);
-		if (medicalCase != null) {
-			MedicalCaseHis medicalCaseHis = medicalCaseHisUtil.convert(medicalCase);
-			medicalCaseHis.setCreateHistoryDate(DateUtil.getSysDate());
+				medicalCaseHisRepo.save(medicalCaseHis);
 
-			medicalCaseHisRepo.save(medicalCaseHis);
-
-			LogUtil.log(this.getClass(), "复制患者一次就诊[{}]病案信息[{}]", visit.getId(), medicalCase.getId());
+				LogUtil.log(this.getClass(), "复制患者一次就诊[{}]病案信息[{}]", visit.getId(), medicalCase.getId());
+			}
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+			throw new HistoryArchiveExecution(e);
 		}
 	}
 
