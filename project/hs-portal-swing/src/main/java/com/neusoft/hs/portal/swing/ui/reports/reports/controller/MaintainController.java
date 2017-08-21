@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 import com.neusoft.hs.portal.swing.init.TestDataInitService;
+import com.neusoft.hs.portal.swing.ui.reports.archive.controller.VisitArchiveController;
 import com.neusoft.hs.portal.swing.ui.reports.cost.controller.ChargeRecordReportController;
 import com.neusoft.hs.portal.swing.ui.reports.medicalrecord.controller.MedicalRecordReportController;
 import com.neusoft.hs.portal.swing.ui.reports.order.controller.OrderController;
@@ -18,7 +19,6 @@ import com.neusoft.hs.portal.swing.ui.reports.treatment.controller.TreatmentRepo
 import com.neusoft.hs.portal.swing.ui.reports.visit.controller.VisitLogController;
 import com.neusoft.hs.portal.swing.ui.shared.controller.AbstractFrameController;
 import com.neusoft.hs.portal.swing.util.Notifications;
-import com.neusoft.hs.test.PatientMainTestService;
 
 @Controller
 public class MaintainController extends AbstractFrameController {
@@ -43,6 +43,9 @@ public class MaintainController extends AbstractFrameController {
 
 	@Autowired
 	private MedicalRecordReportController medicalrecordReportController;
+	
+	@Autowired
+	private VisitArchiveController visitArchiveController;
 
 	@Autowired
 	private OutPatientPlanRecordController outPatientPlanRecordController;
@@ -62,6 +65,8 @@ public class MaintainController extends AbstractFrameController {
 				(e) -> openTreatmentWindow());
 		registerAction(mainMenuFrame.getMedicalrecordBtn(),
 				(e) -> openMedicalrecordWindow());
+		registerAction(mainMenuFrame.getArchiveVisitBtn(),
+				(e) -> openArchiveVisitWindow());		
 		registerAction(mainMenuFrame.getCreateOutPatientPlanRecordBtn(),
 				(e) -> openOutPatientPlanRecordWindow());
 		registerAction(mainMenuFrame.getRunTestBtn(), (e) -> runTest());
@@ -117,6 +122,15 @@ public class MaintainController extends AbstractFrameController {
 	private void openMedicalrecordWindow() {
 		try {
 			medicalrecordReportController.prepareAndOpenFrame();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Notifications.showFormValidationAlert(e.getMessage());
+		}
+	}
+	
+	private void openArchiveVisitWindow() {
+		try {
+			visitArchiveController.prepareAndOpenFrame();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Notifications.showFormValidationAlert(e.getMessage());

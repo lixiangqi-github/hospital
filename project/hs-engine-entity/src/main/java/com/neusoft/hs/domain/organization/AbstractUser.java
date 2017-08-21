@@ -69,6 +69,8 @@ public abstract class AbstractUser extends SuperEntity implements User {
 	}
 
 	public void doLoad() {
-		this.getDept().doLoad();
+		if (this.getDept() != null) {
+			this.getDept().doLoad();
+		}
 	}
 }

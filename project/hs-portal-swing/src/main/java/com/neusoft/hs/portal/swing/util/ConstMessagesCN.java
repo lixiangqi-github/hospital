@@ -60,6 +60,7 @@ public interface ConstMessagesCN {
 		String SEND_BTN = "发送";
 		String RESET_BTN = "重置";
 		String NextPage_BTN = "下一页";
+		String ArchiveVisit_BTN = "归档患者一次就诊";
 
 		String REMOVE_BTN = "删除";
 
@@ -169,6 +170,8 @@ public interface ConstMessagesCN {
 		String Sex = "性别";
 		String VisitName = "患者姓名";
 		String IntoWardDate = "进入病房时间";
+		
+		String CreateHistoryDate = "归档时间";
 
 		String Visit = "患者";
 		String VoucherNumber = "诊号";
