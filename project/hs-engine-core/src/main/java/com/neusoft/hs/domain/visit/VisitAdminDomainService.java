@@ -34,7 +34,7 @@ public class VisitAdminDomainService {
 	public Visit find(String visitId) {
 		return visitRepo.findOne(visitId);
 	}
-	
+
 	public List<Visit> findByCardNumber(String cardNumber) {
 		return this.visitRepo.findByCardNumber(cardNumber);
 	}
@@ -47,21 +47,17 @@ public class VisitAdminDomainService {
 		return visitLogRepo.findByVisit(visit, pageable);
 	}
 
-	public void delete(String cardNumber) {
-		List<Visit> visits = this.visitRepo.findByCardNumber(cardNumber);
-		if (visits != null) {
+	public void delete(String visitId) {
+		Visit visit = this.visitRepo.findOne(visitId);
+		if (visit != null) {
 
-			for (Visit visit : visits) {
+			applicationContext.publishEvent(new VisitRemoveBeforeEvent(visit));
 
-				applicationContext.publishEvent(new VisitRemoveBeforeEvent(visit));
+			visit.delete();
 
-				visit.delete();
+			applicationContext.publishEvent(new VisitRemovedEvent(visit));
 
-				applicationContext.publishEvent(new VisitRemovedEvent(visit));
-
-				LogUtil.log(this.getClass(), "患者一次就诊[{}][{}]被删除", visit.getId(), visit.getName());
-			}
+			LogUtil.log(this.getClass(), "患者一次就诊[{}][{}]被删除", visit.getId(), visit.getName());
 		}
-
 	}
 }

@@ -22,7 +22,7 @@ import com.neusoft.hs.platform.entity.HisEntity;
  *
  */
 @Entity
-@Table(name = "domain_visit_his", indexes = { @Index(columnList = "card_number") })
+@Table(name = "his_domain_visit", indexes = { @Index(columnList = "card_number") })
 public class VisitHis extends HisEntity {
 
 	@Column(name = "card_number", length = 64)

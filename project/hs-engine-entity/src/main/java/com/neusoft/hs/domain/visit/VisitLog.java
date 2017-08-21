@@ -23,6 +23,9 @@ public class VisitLog extends IdEntity {
 	@JoinColumn(name = "visit_id")
 	private Visit visit;
 
+	@Column(name = "visit_name", length = 16)
+	private String visitName;
+
 	@Column(length = 16)
 	private String type;
 
@@ -59,6 +62,15 @@ public class VisitLog extends IdEntity {
 
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+		this.visitName = visit.getName();
+	}
+
+	public String getVisitName() {
+		return visitName;
+	}
+
+	public void setVisitName(String visitName) {
+		this.visitName = visitName;
 	}
 
 	public String getType() {
