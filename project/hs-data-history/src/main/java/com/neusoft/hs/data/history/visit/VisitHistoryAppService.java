@@ -1,6 +1,5 @@
 package com.neusoft.hs.data.history.visit;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ public class VisitHistoryAppService {
 
 		LogUtil.log(this.getClass(), "开始visitId=[{}]的数据迁移", visitId);
 
+		// 归档数据
 		Visit visit = visitAdminDomainService.find(visitId);
 		if (visit != null) {
 			for (HistoryArchiver historyArchiver : historyArchivers) {

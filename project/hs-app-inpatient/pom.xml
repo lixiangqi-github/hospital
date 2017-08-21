@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.neusoft.hospital</groupId>
-			<artifactId>hs-data-history</artifactId>
+			<artifactId>hs-engine-history</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

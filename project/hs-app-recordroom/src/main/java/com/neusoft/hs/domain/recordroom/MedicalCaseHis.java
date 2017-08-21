@@ -1,7 +1,6 @@
 package com.neusoft.hs.domain.recordroom;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +8,6 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
-import com.neusoft.hs.domain.organization.AbstractUser;
-import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.entity.HisEntity;
 
 /**
