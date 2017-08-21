@@ -16,7 +16,7 @@ import com.neusoft.hs.platform.util.DateUtil;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class VisitHistoryArchiver {
+public class VisitHistoryArchiver implements HistoryArchiver{
 
 	@Autowired
 	private VisitHisRepo visitHisRepo;

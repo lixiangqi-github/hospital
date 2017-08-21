@@ -20,7 +20,7 @@ import com.neusoft.hs.platform.util.DateUtil;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class VisitLogHistoryArchiver {
+public class VisitLogHistoryArchiver implements HistoryArchiver {
 
 	@Autowired
 	private VisitLogHisRepo visitLogHisRepo;
@@ -34,7 +34,7 @@ public class VisitLogHistoryArchiver {
 		VisitLogHis visitLogHis;
 
 		Date sysDate = DateUtil.getSysDate();
-		
+
 		List<VisitLog> logs = visit.getLogs();
 		if (logs != null) {
 			for (VisitLog log : logs) {
