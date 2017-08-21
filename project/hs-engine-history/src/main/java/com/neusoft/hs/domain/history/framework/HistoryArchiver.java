@@ -1,4 +1,4 @@
-package com.neusoft.hs.data.history.visit;
+package com.neusoft.hs.domain.history.framework;
 
 import java.lang.reflect.InvocationTargetException;
 

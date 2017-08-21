@@ -18,5 +18,4 @@ public class RegistrationVisitRemoveBeforeEventListener implements ApplicationLi
 	public void onApplicationEvent(VisitRemoveBeforeEvent event) {
 		registrationDAO.delete((Visit) event.getSource());
 	}
-
 }

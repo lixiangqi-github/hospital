@@ -39,7 +39,7 @@ public class DataArchiveVisitTest {
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		AbstractUser user = userAdminDomainService.findAdmin(pageable).get(0);
 
-		visitHistoryAppService.archive("402812e45e028dad015e028e3ad00015", user);
+		visitHistoryAppService.archive("402812e45e036dba015e036e427e000c", user);
 	}
 
 }

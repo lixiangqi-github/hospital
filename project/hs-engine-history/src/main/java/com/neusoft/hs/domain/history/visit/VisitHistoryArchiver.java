@@ -1,4 +1,4 @@
-package com.neusoft.hs.data.history.visit;
+package com.neusoft.hs.domain.history.visit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.neusoft.hs.domain.history.visit.VisitHis;
-import com.neusoft.hs.domain.history.visit.VisitHisRepo;
+import com.neusoft.hs.domain.history.framework.HistoryArchiver;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.log.LogUtil;
 import com.neusoft.hs.platform.util.DateUtil;

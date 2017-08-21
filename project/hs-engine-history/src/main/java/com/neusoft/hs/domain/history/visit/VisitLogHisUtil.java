@@ -1,11 +1,10 @@
-package com.neusoft.hs.data.history.visit;
+package com.neusoft.hs.domain.history.visit;
 
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.neusoft.hs.domain.history.visit.VisitLogHis;
 import com.neusoft.hs.domain.visit.VisitLog;
 
 @Service
