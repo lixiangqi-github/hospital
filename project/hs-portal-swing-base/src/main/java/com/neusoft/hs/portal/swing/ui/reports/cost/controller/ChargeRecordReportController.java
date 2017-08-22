@@ -50,6 +50,8 @@ public class ChargeRecordReportController extends AbstractFrameController {
 
 	@Override
 	public void prepareAndOpenFrame() throws HsException {
+		
+		this.chargeRecordReportFrame.setPageNumber(0);
 
 		loadVisits();
 

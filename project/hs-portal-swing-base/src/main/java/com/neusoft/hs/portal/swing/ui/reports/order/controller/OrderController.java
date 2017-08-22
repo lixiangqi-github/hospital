@@ -46,6 +46,9 @@ public class OrderController extends AbstractFrameController {
 
 	@Override
 	public void prepareAndOpenFrame() throws HsException {
+		
+		this.orderFrame.setPageNumber(0);
+		
 		loadVisits();
 		
 		orderTableModel = this.orderFrame.getOrderTableModel();

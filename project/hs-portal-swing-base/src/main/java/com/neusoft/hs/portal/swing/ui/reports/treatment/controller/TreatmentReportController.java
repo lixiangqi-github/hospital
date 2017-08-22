@@ -45,7 +45,11 @@ public class TreatmentReportController extends AbstractFrameController {
 
 	@Override
 	public void prepareAndOpenFrame() throws HsException {
+		
+		this.treamentReportFrame.setPageNumber(0);
+		
 		loadVisits();
+		
 		loadTreatmentSpecs();
 		treamentReportFrame.setVisible(true);
 	}

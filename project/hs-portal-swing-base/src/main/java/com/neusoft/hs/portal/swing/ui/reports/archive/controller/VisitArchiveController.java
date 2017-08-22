@@ -48,6 +48,8 @@ public class VisitArchiveController extends AbstractFrameController {
 
 	@Override
 	public void prepareAndOpenFrame() throws HsException {
+		
+		this.visitArchiveReportFrame.setPageNumber(0);
 
 		loadVisits();
 

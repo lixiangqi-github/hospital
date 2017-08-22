@@ -344,7 +344,7 @@ public class CreateOrderController extends AbstractFrameController {
 
 		inspectApply.setInspectApplyItems(inspectApplyItems);
 		
-		createOrderFrame.dispose();
+		inspectApplyDialog.dispose();
 	}
 
 	private void closeInspectApplyDialog() {

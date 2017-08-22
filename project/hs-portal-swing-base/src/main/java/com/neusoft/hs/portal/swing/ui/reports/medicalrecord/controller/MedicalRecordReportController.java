@@ -58,6 +58,8 @@ public class MedicalRecordReportController extends AbstractFrameController {
 	@Override
 	public void prepareAndOpenFrame() throws HsException {
 
+		this.medicalRecordReportFrame.setPageNumber(0);
+		
 		loadVisits();
 
 		medicalRecordReportFrame.setVisible(true);
