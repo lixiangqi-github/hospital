@@ -63,7 +63,7 @@ public class InspectApplyDialog extends JDialog {
 		JLabel goalJL = new JLabel(ConstMessagesCN.Labels.GOAL);
 		goalPanel.add(goalJL);
 
-		goalTA = new JTextArea();
+		goalTA = new JTextArea(3, 30);
 		goalPanel.add(goalTA);
 
 		add(goalPanel, BorderLayout.NORTH);
@@ -110,6 +110,10 @@ public class InspectApplyDialog extends JDialog {
 
 		return selectedItems;
 
+	}
+
+	public JTextArea getGoalTA() {
+		return goalTA;
 	}
 
 	public JButton getConfirmBtn() {

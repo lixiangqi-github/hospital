@@ -333,6 +333,8 @@ public class CreateOrderController extends AbstractFrameController {
 			return;
 		}
 		inspectApply = new InspectApply();
+		inspectApply.setGoal(inspectApplyDialog.getGoalTA().getText());
+		
 		List<InspectApplyItem> inspectApplyItems = new ArrayList<InspectApplyItem>();
 		InspectApplyItem inspectApplyItem;
 		for (InspectItem inspectItem : inspectItems) {
@@ -341,7 +343,8 @@ public class CreateOrderController extends AbstractFrameController {
 		}
 
 		inspectApply.setInspectApplyItems(inspectApplyItems);
-
+		
+		createOrderFrame.dispose();
 	}
 
 	private void closeInspectApplyDialog() {
