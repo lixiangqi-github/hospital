@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +37,6 @@ public class InspectDomainService {
 	private InspectResultRepo inspectResultRepo;
 
 	@Autowired
-	private OrderExecuteDomainService orderExecuteDomainService;
-
-	@Autowired
-	private ApplyDomainService applyDomainService;
-
-	@Autowired
 	private ApplicationContext applicationContext;
 
 	/**
@@ -52,8 +47,7 @@ public class InspectDomainService {
 	 * @param user
 	 * @throws InspectException
 	 */
-	public void confirm(OrderExecute orderExecute,
-			Map<InspectApplyItem, String> results, AbstractUser user)
+	public void confirm(OrderExecute orderExecute, Map<InspectApplyItem, String> results, AbstractUser user)
 			throws InspectException {
 
 		Order order = orderExecute.getOrder();
@@ -64,8 +58,7 @@ public class InspectDomainService {
 
 		InspectApply inspectApply = (InspectApply) apply;
 
-		List<InspectApplyItem> inspectApplyItems = inspectApply
-				.getInspectApplyItems();
+		List<InspectApplyItem> inspectApplyItems = inspectApply.getInspectApplyItems();
 		// lazy load
 		List<String> inspectApplyItemIds = new ArrayList<String>();
 		for (InspectApplyItem inspectApplyItem : inspectApplyItems) {
@@ -73,8 +66,7 @@ public class InspectDomainService {
 		}
 		for (InspectApplyItem item : results.keySet()) {
 			if (!inspectApplyItemIds.contains(item.getId())) {
-				throw new InspectException("检查项目["
-						+ item.getInspectItem().getCode() + "]不在申请单中");
+				throw new InspectException("检查项目[" + item.getInspectItem().getCode() + "]不在申请单中");
 			}
 			InspectResult inspectResult = new InspectResult();
 			inspectResult.setInspectDept((InspectDept) user.getDept());
@@ -85,8 +77,7 @@ public class InspectDomainService {
 			inspectApply.addInspectResult(inspectResult);
 		}
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]确认检查结果[{}]",
-				user.getId(), orderExecute.getVisit().getName(),
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]确认检查结果[{}]", user.getId(), orderExecute.getVisit().getName(),
 				inspectApply.getId());
 	}
 
@@ -97,18 +88,15 @@ public class InspectDomainService {
 	 * @param user
 	 * @throws InspectException
 	 */
-	public void cancel(InspectApplyItem inspectApplyItem, AbstractUser user)
-			throws InspectException {
+	public void cancel(InspectApplyItem inspectApplyItem, AbstractUser user) throws InspectException {
 
 		if (inspectApplyItem.getState().equals(InspectApplyItem.State_Finished)) {
-			throw new InspectException("检查项目[%s]已完成", inspectApplyItem
-					.getInspectItem().getCode());
+			throw new InspectException("检查项目[%s]已完成", inspectApplyItem.getInspectItem().getCode());
 		}
 
 		inspectApplyItem.setState(InspectApplyItem.State_Canceled);
 
-		InspectArrangeOrderExecute arrange = inspectApplyItem
-				.getInspectArrangeOrderExecute();
+		InspectArrangeOrderExecute arrange = inspectApplyItem.getInspectArrangeOrderExecute();
 		if (arrange != null) {
 			try {
 				arrange.cancel(user);
@@ -116,8 +104,7 @@ public class InspectDomainService {
 				throw new InspectException(e);
 			}
 		}
-		InspectConfirmOrderExecute confirm = inspectApplyItem
-				.getInspectConfirmOrderExecute();
+		InspectConfirmOrderExecute confirm = inspectApplyItem.getInspectConfirmOrderExecute();
 		if (confirm != null) {
 			try {
 				confirm.cancel(user);
@@ -128,11 +115,9 @@ public class InspectDomainService {
 
 		inspectApplyItem.save();
 
-		applicationContext.publishEvent(new InspectApplyItemCanceledEvent(
-				inspectApplyItem));
+		applicationContext.publishEvent(new InspectApplyItemCanceledEvent(inspectApplyItem));
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]取消检查项目[{}]",
-				user.getId(), arrange.getVisit().getName(),
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]取消检查项目[{}]", user.getId(), arrange.getVisit().getName(),
 				inspectApplyItem.getId());
 	}
 
@@ -142,6 +127,10 @@ public class InspectDomainService {
 
 	public void createInspectItems(List<InspectItem> inspectItems) {
 		inspectItemRepo.save(inspectItems);
+	}
+
+	public List<InspectItem> findInspectItem(Pageable pageable) {
+		return inspectItemRepo.findAll(pageable).getContent();
 	}
 
 	public List<InspectResult> findInspectResults(Visit visit) {

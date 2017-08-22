@@ -11,7 +11,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -25,7 +24,8 @@ import com.neusoft.hs.platform.entity.IdEntity;
  *
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "domain_order_apply")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Apply extends IdEntity {
 
 	@Column(length = 256)

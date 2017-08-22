@@ -20,7 +20,6 @@ import com.neusoft.hs.portal.swing.ui.shared.model.DeptComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.DrugUseModeComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.OrderFrequencyTypeComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.OrderTypeComboBoxModel;
-import com.neusoft.hs.portal.swing.ui.shared.model.PharmacyComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.VisitComboBoxModel;
 import com.neusoft.hs.portal.swing.util.Borders;
 import com.neusoft.hs.portal.swing.util.ConstMessagesCN;
@@ -82,16 +81,13 @@ public class CreateOrderPanel extends JPanel {
 		this.orderUseModeComboBoxModel = new DrugUseModeComboBoxModel();
 		this.executeDeptComboBoxModel = new DeptComboBoxModel();
 
-		setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS, HORIZONTAL_GAP,
-				VERTICAL_GAP));
+		setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS, HORIZONTAL_GAP, VERTICAL_GAP));
 
 		JLabel visitLbl = new JLabel(ConstMessagesCN.Labels.Visit);
 		JLabel orderTypeLbl = new JLabel(ConstMessagesCN.Labels.OrderType);
-		JLabel planStartDateLbl = new JLabel(
-				ConstMessagesCN.Labels.PlanStartDate);
+		JLabel planStartDateLbl = new JLabel(ConstMessagesCN.Labels.PlanStartDate);
 		JLabel executeDayLbl = new JLabel(ConstMessagesCN.Labels.ExecuteDay);
-		JLabel frequencyTypeLbl = new JLabel(
-				ConstMessagesCN.Labels.FrequencyType);
+		JLabel frequencyTypeLbl = new JLabel(ConstMessagesCN.Labels.FrequencyType);
 		JLabel orderUseModeLbl = new JLabel(ConstMessagesCN.Labels.OrderUseMode);
 		JLabel countLbl = new JLabel(ConstMessagesCN.Labels.Count);
 		JLabel pharmacyLbl = new JLabel(ConstMessagesCN.Labels.ExecuteDept);
@@ -153,5 +149,13 @@ public class CreateOrderPanel extends JPanel {
 
 	public DeptComboBoxModel getExecuteDeptComboBoxModel() {
 		return executeDeptComboBoxModel;
+	}
+
+	public JComboBox<Visit> getVisitCB() {
+		return visitCB;
+	}
+
+	public JComboBox<OrderType> getOrderTypeCB() {
+		return orderTypeCB;
 	}
 }

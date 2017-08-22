@@ -134,6 +134,7 @@ public interface ConstMessagesCN {
 		String Balance = "余额";
 
 		String CreateOrder = "开立医嘱";
+		String InspectApply = "检查申请单";
 		String CreateMedicalRecord = "编写病历";
 		String VerifyOrder = "核对医嘱";
 		String SendOrderExecute = "发送医嘱执行条目";
