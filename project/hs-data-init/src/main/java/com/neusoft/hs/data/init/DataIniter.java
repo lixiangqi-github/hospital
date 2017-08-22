@@ -166,6 +166,8 @@ public class DataIniter {
 	protected ChargeItem secondNursingChargeItem;// 二级护理计费项目
 
 	protected ChargeItem brainCTChargeItem;// 脑CT计费项目
+	
+	protected ChargeItem spineCTChargeItem;// 脊柱CT计费项目
 
 	protected ChargeItem brainHCChargeItem;// 脑核磁计费项目
 
@@ -214,6 +216,8 @@ public class DataIniter {
 	protected DrugOrderType drugOrderType006;// 药品医嘱类型006
 
 	protected InspectItem brainCTInspectItem;// 脑CT检查项目
+	
+	protected InspectItem spineCTInspectItem;// 脊柱CT检查项目
 
 	protected InspectItem brainHCInspectItem;// 脑核磁检查项目
 
@@ -423,6 +427,7 @@ public class DataIniter {
 		firstNursingChargeItem = dataIniter.firstNursingChargeItem;
 		secondNursingChargeItem = dataIniter.secondNursingChargeItem;
 		brainCTChargeItem = dataIniter.brainCTChargeItem;
+		spineCTChargeItem = dataIniter.spineCTChargeItem;
 		brainHCChargeItem = dataIniter.brainHCChargeItem;
 		ordinaryVoucherTypeChargeItem = dataIniter.ordinaryVoucherTypeChargeItem;
 
@@ -454,6 +459,7 @@ public class DataIniter {
 		drugOrderType006 = dataIniter.drugOrderType006;
 
 		brainCTInspectItem = dataIniter.brainCTInspectItem;
+		spineCTInspectItem = dataIniter.spineCTInspectItem;
 		brainHCInspectItem = dataIniter.brainHCInspectItem;
 
 		enterHospitalOrderType = dataIniter.enterHospitalOrderType;
@@ -1119,6 +1125,16 @@ public class DataIniter {
 		brainCTChargeItem.setChargingMode(ChargeItem.ChargingMode_Amount);
 
 		chargeItems.add(brainCTChargeItem);
+		
+		spineCTChargeItem = new ChargeItem();
+		spineCTChargeItem.setId("spineCTChargeItem");
+		spineCTChargeItem.setCode("spineCTChargeItem");
+		spineCTChargeItem.setName("脊柱CT");
+		spineCTChargeItem.setPrice(180);
+		spineCTChargeItem.setUnit("次");
+		spineCTChargeItem.setChargingMode(ChargeItem.ChargingMode_Amount);
+
+		chargeItems.add(spineCTChargeItem);
 
 		brainHCChargeItem = new ChargeItem();
 		brainHCChargeItem.setId("brainHCChargeItem");
@@ -1275,6 +1291,14 @@ public class DataIniter {
 		brainCTInspectItem.setChargeItem(brainCTChargeItem);
 
 		inspectItems.add(brainCTInspectItem);
+		
+		spineCTInspectItem = new InspectItem();
+		spineCTInspectItem.setId("spineCTInspectItem");
+		spineCTInspectItem.setCode("spineCTInspectItem");
+		spineCTInspectItem.setName("脊柱CT");
+		spineCTInspectItem.setChargeItem(spineCTChargeItem);
+
+		inspectItems.add(spineCTInspectItem);
 
 		brainHCInspectItem = new InspectItem();
 		brainHCInspectItem.setId("brainHCInspectItem");

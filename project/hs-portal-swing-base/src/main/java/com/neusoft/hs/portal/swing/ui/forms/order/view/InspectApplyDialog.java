@@ -1,6 +1,7 @@
 package com.neusoft.hs.portal.swing.ui.forms.order.view;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +11,9 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
 import org.springframework.stereotype.Component;
@@ -25,6 +28,8 @@ public class InspectApplyDialog extends JDialog {
 
 	Map<JCheckBox, InspectItem> inspectItemCBs;
 
+	JTextArea goalTA;
+
 	JButton confirmBtn;
 
 	JButton closeBtn;
@@ -36,7 +41,7 @@ public class InspectApplyDialog extends JDialog {
 	public InspectApplyDialog() {
 
 		this.setModal(true);
-		
+
 		setFrameUp();
 		initComponents();
 	}
@@ -53,7 +58,17 @@ public class InspectApplyDialog extends JDialog {
 
 		setLayout(new BorderLayout());
 
-		inspectItemPanelWarpper = new JPanel();
+		JPanel goalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		JLabel goalJL = new JLabel(ConstMessagesCN.Labels.GOAL);
+		goalPanel.add(goalJL);
+
+		goalTA = new JTextArea();
+		goalPanel.add(goalTA);
+
+		add(goalPanel, BorderLayout.NORTH);
+
+		inspectItemPanelWarpper = new JPanel(new BorderLayout());
 
 		add(inspectItemPanelWarpper, BorderLayout.CENTER);
 

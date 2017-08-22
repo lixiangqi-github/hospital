@@ -210,6 +210,8 @@ public interface ConstMessagesCN {
 		String CurrentAllotNumber = "当前挂号值";
 		String CurrentEncounterNumber = "当前就诊值";
 		String MaxAllotNumber = "最大挂号值";
+		
+		String GOAL = "目标";
 
 		String createInWardRecord = "创建入院记录";
 		String createTemporaryOrderListMR = "创建临时医嘱单";
