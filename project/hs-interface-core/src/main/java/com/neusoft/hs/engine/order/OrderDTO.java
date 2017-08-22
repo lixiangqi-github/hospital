@@ -58,7 +58,7 @@ public class OrderDTO {
 
 	private Date createDate;
 
-	private CreateOrderApplyDTO apply;
+	private OrderApplyDTO apply;
 
 	public OrderDTO() {
 
@@ -280,12 +280,11 @@ public class OrderDTO {
 		this.createDate = createDate;
 	}
 
-	public CreateOrderApplyDTO getApply() {
+	public OrderApplyDTO getApply() {
 		return apply;
 	}
 
-	public void setApply(CreateOrderApplyDTO apply) {
+	public void setApply(OrderApplyDTO apply) {
 		this.apply = apply;
 	}
-
 }
