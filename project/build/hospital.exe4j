@@ -62,13 +62,13 @@
       <archive location="/lib/hs-engine-entity-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-history-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-listener-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-interface-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-interface-core-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-interface-impl-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-platform-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-portal-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-portal-swing-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-platform-core-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-portal-base-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-portal-swing-base-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-portal-swing-h2-0.0.1-SNAPSHOT.jar" failOnError="false" />
-      <archive location="/lib/hs-test-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-test-base-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/jackson-annotations-2.9.0.jar" failOnError="false" />
       <archive location="/lib/jackson-core-2.9.0.jar" failOnError="false" />
       <archive location="/lib/jackson-databind-2.9.0.jar" failOnError="false" />
