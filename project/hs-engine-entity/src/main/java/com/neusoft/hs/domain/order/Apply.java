@@ -45,6 +45,9 @@ public abstract class Apply extends IdEntity {
 	@JoinColumn(name = "visit_id")
 	private Visit visit;
 
+	@Column(name = "visit_name", length = 16)
+	private String visitName;
+
 	public Order getOrder() {
 		return order;
 	}
@@ -67,6 +70,15 @@ public abstract class Apply extends IdEntity {
 
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+		this.visitName = visit.getName();
+	}
+
+	public String getVisitName() {
+		return visitName;
+	}
+
+	public void setVisitName(String visitName) {
+		this.visitName = visitName;
 	}
 
 	public Date getPlanExecuteDate() {

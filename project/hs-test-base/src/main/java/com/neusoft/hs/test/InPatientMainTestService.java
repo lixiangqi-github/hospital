@@ -636,6 +636,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		assertTrue(executes.size() == 1);
 
+		//确认CT检查结果
 		Map<InspectApplyItem, String> CTResults = new HashMap<InspectApplyItem, String>();
 		CTResults.put(brainCTInspectApplyItem, "没啥问题");
 		inspectAppService.confirm(executes.get(0).getId(), CTResults, user402);
