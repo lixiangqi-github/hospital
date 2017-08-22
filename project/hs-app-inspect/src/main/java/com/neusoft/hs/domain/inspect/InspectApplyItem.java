@@ -42,7 +42,7 @@ public class InspectApplyItem extends IdEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "inspect_dept_id")
-	private InspectDept inspectDept;
+	private Dept inspectDept;
 
 	@Column(name = "inspect_place", length = 64)
 	private String inspectPlace;
@@ -97,11 +97,11 @@ public class InspectApplyItem extends IdEntity {
 		this.arrangeDept = arrangeDept;
 	}
 
-	public InspectDept getInspectDept() {
+	public Dept getInspectDept() {
 		return inspectDept;
 	}
 
-	public void setInspectDept(InspectDept inspectDept) {
+	public void setInspectDept(Dept inspectDept) {
 		this.inspectDept = inspectDept;
 	}
 
@@ -133,8 +133,7 @@ public class InspectApplyItem extends IdEntity {
 		return inspectArrangeOrderExecute;
 	}
 
-	public void setInspectArrangeOrderExecute(
-			InspectArrangeOrderExecute inspectArrangeOrderExecute) {
+	public void setInspectArrangeOrderExecute(InspectArrangeOrderExecute inspectArrangeOrderExecute) {
 		this.inspectArrangeOrderExecute = inspectArrangeOrderExecute;
 	}
 
@@ -142,8 +141,7 @@ public class InspectApplyItem extends IdEntity {
 		return inspectConfirmOrderExecute;
 	}
 
-	public void setInspectConfirmOrderExecute(
-			InspectConfirmOrderExecute inspectConfirmOrderExecute) {
+	public void setInspectConfirmOrderExecute(InspectConfirmOrderExecute inspectConfirmOrderExecute) {
 		this.inspectConfirmOrderExecute = inspectConfirmOrderExecute;
 	}
 

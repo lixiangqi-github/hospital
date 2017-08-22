@@ -35,6 +35,8 @@ public class InspectApplyDialog extends JDialog {
 
 	public InspectApplyDialog() {
 
+		this.setModal(true);
+		
 		setFrameUp();
 		initComponents();
 	}

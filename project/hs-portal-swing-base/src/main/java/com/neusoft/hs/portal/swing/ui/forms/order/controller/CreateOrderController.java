@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 
 import com.neusoft.hs.application.order.OrderAppService;
 import com.neusoft.hs.application.outpatientdept.OutPatientDeptAppService;
+import com.neusoft.hs.domain.inspect.InspectApply;
+import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.inspect.InspectDomainService;
 import com.neusoft.hs.domain.inspect.InspectItem;
 import com.neusoft.hs.domain.order.DrugOrderType;
@@ -61,7 +63,7 @@ public class CreateOrderController extends AbstractFrameController {
 
 	@Autowired
 	private CreateOrderFrame createOrderFrame;
-	
+
 	@Autowired
 	private InspectApplyDialog inspectApplyDialog;
 
@@ -96,12 +98,17 @@ public class CreateOrderController extends AbstractFrameController {
 
 	private DeptComboBoxModel executeDeptComboBoxModel;
 
+	private InspectApply inspectApply;
+
 	@PostConstruct
 	private void prepareListeners() {
 		registerAction(createOrderFrame.getCreateOrderPanel().getOrderTypeCB(), (e) -> changeOrderType(e));
 		registerAction(createOrderFrame.getCompsiteBtn(), (e) -> compsite());
 		registerAction(createOrderFrame.getConfirmBtn(), (e) -> create());
 		registerAction(createOrderFrame.getCloseBtn(), (e) -> closeWindow());
+
+		registerAction(inspectApplyDialog.getConfirmBtn(), (e) -> createInspectApply());
+		registerAction(inspectApplyDialog.getCloseBtn(), (e) -> closeInspectApplyDialog());
 
 	}
 
@@ -114,6 +121,7 @@ public class CreateOrderController extends AbstractFrameController {
 		loadDepts();
 		loadOrderUseModes();
 
+		inspectApply = null;
 		createOrderFrame.setVisible(true);
 	}
 
@@ -259,6 +267,20 @@ public class CreateOrderController extends AbstractFrameController {
 					throw new UIException("请选择转科科室");
 				}
 				order.setExecuteDept(dept);
+			} else if (orderType instanceof InspectOrderType) {
+				if (inspectApply == null) {
+					throw new UIException("请创建检查申请单");
+				}
+				Dept dept = executeDeptComboBoxModel.getSelectedItem();
+				if (dept == null) {
+					throw new UIException("请选择执行科室");
+				}
+				for (InspectApplyItem item : inspectApply.getInspectApplyItems()) {
+					item.setArrangeDept(dept);
+					item.setInspectDept(dept);
+				}
+				order.setExecuteDept(dept);
+				order.setApply(inspectApply);
 			}
 
 			orderAppService.create(order, (Doctor) UserUtil.getUser());
@@ -295,12 +317,35 @@ public class CreateOrderController extends AbstractFrameController {
 			if (orderType instanceof InspectOrderType) {
 				Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 				List<InspectItem> items = inspectDomainService.findInspectItem(pageable);
-				
+
 				inspectApplyDialog.refreshItems(items);
 				inspectApplyDialog.setVisible(true);
 			}
 		}
 
+	}
+
+	private void createInspectApply() {
+
+		List<InspectItem> inspectItems = inspectApplyDialog.getSelectedInspectItems();
+		if (inspectItems == null || inspectItems.size() == 0) {
+			Notifications.showFormValidationAlert("请选择检查项目");
+			return;
+		}
+		inspectApply = new InspectApply();
+		List<InspectApplyItem> inspectApplyItems = new ArrayList<InspectApplyItem>();
+		InspectApplyItem inspectApplyItem;
+		for (InspectItem inspectItem : inspectItems) {
+			inspectApplyItem = new InspectApplyItem();
+			inspectApplyItem.setInspectItem(inspectItem);
+		}
+
+		inspectApply.setInspectApplyItems(inspectApplyItems);
+
+	}
+
+	private void closeInspectApplyDialog() {
+		inspectApplyDialog.dispose();
 	}
 
 	private void closeWindow() {
