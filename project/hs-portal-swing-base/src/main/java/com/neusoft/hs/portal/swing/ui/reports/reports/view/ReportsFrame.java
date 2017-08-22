@@ -13,6 +13,8 @@ import java.awt.*;
 @Component
 public class ReportsFrame extends JFrame {
 
+	private JButton loginBtn;
+
 	private JButton chargeRecordReportBtn;
 
 	private JButton orderBtn;
@@ -57,8 +59,9 @@ public class ReportsFrame extends JFrame {
 		setLayout(new BorderLayout());
 
 		JPanel menuPanel = new JPanel();
-		menuPanel.setLayout(new GridLayout(9, 2, 20, 20));
+		menuPanel.setLayout(new GridLayout(10, 2, 20, 20));
 
+		loginBtn = new JButton(ConstMessagesCN.Labels.Login);
 		visitLogBtn = new JButton(ConstMessagesCN.Labels.VisitLog);
 		chargeRecordReportBtn = new JButton(ConstMessagesCN.Labels.ChargeRecord);
 		orderBtn = new JButton(ConstMessagesCN.Labels.OrderList);
@@ -69,6 +72,7 @@ public class ReportsFrame extends JFrame {
 		createOutPatientPlanRecordBtn = new JButton(ConstMessagesCN.Labels.CreateOutPatientPlanRecord);
 		runTestBtn = new JButton(ConstMessagesCN.Labels.RunTest);
 
+		menuPanel.add(loginBtn);
 		menuPanel.add(visitLogBtn);
 		menuPanel.add(chargeRecordReportBtn);
 		menuPanel.add(orderBtn);
@@ -91,6 +95,10 @@ public class ReportsFrame extends JFrame {
 
 	public JLabel getTipLbl() {
 		return tipLbl;
+	}
+
+	public JButton getLoginBtn() {
+		return loginBtn;
 	}
 
 	public JButton getVisitLogBtn() {

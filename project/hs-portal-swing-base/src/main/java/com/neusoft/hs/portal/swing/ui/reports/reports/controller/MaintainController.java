@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 import com.neusoft.hs.portal.swing.init.TestDataInitService;
+import com.neusoft.hs.portal.swing.ui.forms.login.controller.LoginController;
 import com.neusoft.hs.portal.swing.ui.reports.archive.controller.VisitArchiveController;
 import com.neusoft.hs.portal.swing.ui.reports.cost.controller.ChargeRecordReportController;
 import com.neusoft.hs.portal.swing.ui.reports.medicalrecord.controller.MedicalRecordReportController;
@@ -25,6 +26,9 @@ public class MaintainController extends AbstractFrameController {
 
 	@Autowired
 	private ReportsFrame mainMenuFrame;
+	
+	@Autowired
+	private LoginController loginController;
 
 	@Autowired
 	private VisitLogController visitLogController;
@@ -43,7 +47,7 @@ public class MaintainController extends AbstractFrameController {
 
 	@Autowired
 	private MedicalRecordReportController medicalrecordReportController;
-	
+
 	@Autowired
 	private VisitArchiveController visitArchiveController;
 
@@ -54,24 +58,27 @@ public class MaintainController extends AbstractFrameController {
 	private TestDataInitService dataService;
 
 	public void prepareAndOpenFrame() {
-		registerAction(mainMenuFrame.getVisitLogBtn(),
-				(e) -> openVisitLogWindow());
-		registerAction(mainMenuFrame.getChargeRecordReportBtn(),
-				(e) -> openChargeRecordReportWindow());
+		registerAction(mainMenuFrame.getLoginBtn(), (e) -> openLoginWindow());
+		registerAction(mainMenuFrame.getVisitLogBtn(), (e) -> openVisitLogWindow());
+		registerAction(mainMenuFrame.getChargeRecordReportBtn(), (e) -> openChargeRecordReportWindow());
 		registerAction(mainMenuFrame.getOrderBtn(), (e) -> openOrderWindow());
-		registerAction(mainMenuFrame.getOrderExecuteBtn(),
-				(e) -> openOrderExecuteWindow());
-		registerAction(mainMenuFrame.getTreatmentBtn(),
-				(e) -> openTreatmentWindow());
-		registerAction(mainMenuFrame.getMedicalrecordBtn(),
-				(e) -> openMedicalrecordWindow());
-		registerAction(mainMenuFrame.getArchiveVisitBtn(),
-				(e) -> openArchiveVisitWindow());		
-		registerAction(mainMenuFrame.getCreateOutPatientPlanRecordBtn(),
-				(e) -> openOutPatientPlanRecordWindow());
+		registerAction(mainMenuFrame.getOrderExecuteBtn(), (e) -> openOrderExecuteWindow());
+		registerAction(mainMenuFrame.getTreatmentBtn(), (e) -> openTreatmentWindow());
+		registerAction(mainMenuFrame.getMedicalrecordBtn(), (e) -> openMedicalrecordWindow());
+		registerAction(mainMenuFrame.getArchiveVisitBtn(), (e) -> openArchiveVisitWindow());
+		registerAction(mainMenuFrame.getCreateOutPatientPlanRecordBtn(), (e) -> openOutPatientPlanRecordWindow());
 		registerAction(mainMenuFrame.getRunTestBtn(), (e) -> runTest());
 
 		mainMenuFrame.setVisible(true);
+	}
+	
+	private void openLoginWindow() {
+		try {
+			loginController.prepareAndOpenFrame();
+		} catch (HsException e) {
+			e.printStackTrace();
+			Notifications.showFormValidationAlert(e.getMessage());
+		}
 	}
 
 	private void openVisitLogWindow() {
@@ -127,7 +134,7 @@ public class MaintainController extends AbstractFrameController {
 			Notifications.showFormValidationAlert(e.getMessage());
 		}
 	}
-	
+
 	private void openArchiveVisitWindow() {
 		try {
 			visitArchiveController.prepareAndOpenFrame();
@@ -147,8 +154,7 @@ public class MaintainController extends AbstractFrameController {
 	}
 
 	private void runTest() {
-		int result = JOptionPane.showConfirmDialog(null,
-				"该操作将清空已有数据，按着测试场景生成一份新数据", "标题", JOptionPane.YES_NO_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, "该操作将清空已有数据，按着测试场景生成一份新数据", "标题", JOptionPane.YES_NO_OPTION);
 
 		if (result == JOptionPane.YES_OPTION) {
 			try {
