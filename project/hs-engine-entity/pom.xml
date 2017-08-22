@@ -13,7 +13,7 @@
   <dependencies>
 		<dependency>
 			<groupId>com.neusoft.hospital</groupId>
-			<artifactId>hs-platform</artifactId>
+			<artifactId>hs-platform-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

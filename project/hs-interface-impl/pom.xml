@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.neusoft.hospital</groupId>
-			<artifactId>hs-interface</artifactId>
+			<artifactId>hs-interface-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
