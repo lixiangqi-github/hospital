@@ -1372,9 +1372,9 @@ public class DataIniter {
 		orderTypes.add(firstNursingOrderType);
 
 		inspectOrderType = new InspectOrderType();
-		inspectOrderType.setId("brainCTInspectOrderType");
-		inspectOrderType.setCode("brainCTInspectOrderType");
-		inspectOrderType.setName("脑CT");
+		inspectOrderType.setId("inspectOrderType");
+		inspectOrderType.setCode("inspectOrderType");
+		inspectOrderType.setName("检查");
 
 		orderTypes.add(inspectOrderType);
 
