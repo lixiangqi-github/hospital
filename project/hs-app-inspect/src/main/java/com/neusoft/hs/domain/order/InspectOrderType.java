@@ -1,5 +1,7 @@
 package com.neusoft.hs.domain.order;
 
+import java.util.List;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -22,8 +24,15 @@ public class InspectOrderType extends OrderType {
 		Order order = orderTypeApp.getOrder();
 
 		InspectApply inspectApply = (InspectApply) order.getApply();
-		for (InspectApplyItem inspectApplyItem : inspectApply
-				.getInspectApplyItems()) {
+		if (inspectApply == null) {
+			throw new OrderException(order, "医嘱[%s]没有申请单", order.getId());
+		}
+
+		List<InspectApplyItem> inspectApplyItems = inspectApply.getInspectApplyItems();
+		if (inspectApplyItems == null || inspectApplyItems.size() == 0) {
+			throw new OrderException(order, "申请单[%s]没有申请检查项目", inspectApply.getId());
+		}
+		for (InspectApplyItem inspectApplyItem : inspectApply.getInspectApplyItems()) {
 			OrderExecuteTeam team = new OrderExecuteTeam();
 			// 安排检查
 			InspectArrangeOrderExecute arrange = new InspectArrangeOrderExecute();
@@ -58,8 +67,7 @@ public class InspectOrderType extends OrderType {
 			confirm.setChargeDept(inspectApplyItem.getInspectDept());
 			confirm.setState(OrderExecute.State_NeedExecute);
 
-			confirm.addChargeItem(inspectApplyItem.getInspectItem()
-					.getChargeItem());
+			confirm.addChargeItem(inspectApplyItem.getInspectItem().getChargeItem());
 
 			team.addOrderExecute(confirm);
 
