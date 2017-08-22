@@ -36,6 +36,10 @@ public class InspectApply extends Apply {
 
 	public void setInspectApplyItems(List<InspectApplyItem> inspectApplyItems) {
 		this.inspectApplyItems = inspectApplyItems;
+		
+		for(InspectApplyItem inspectApplyItem : this.inspectApplyItems){
+			inspectApplyItem.setInspectApply(this);
+		}
 	}
 
 	public void addInspectApplyItem(InspectApplyItem inspectApplyItem) {

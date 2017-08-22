@@ -334,16 +334,15 @@ public class CreateOrderController extends AbstractFrameController {
 		}
 		inspectApply = new InspectApply();
 		inspectApply.setGoal(inspectApplyDialog.getGoalTA().getText());
-		
-		List<InspectApplyItem> inspectApplyItems = new ArrayList<InspectApplyItem>();
+
 		InspectApplyItem inspectApplyItem;
 		for (InspectItem inspectItem : inspectItems) {
 			inspectApplyItem = new InspectApplyItem();
 			inspectApplyItem.setInspectItem(inspectItem);
+
+			inspectApply.addInspectApplyItem(inspectApplyItem);
 		}
 
-		inspectApply.setInspectApplyItems(inspectApplyItems);
-		
 		inspectApplyDialog.dispose();
 	}
 
