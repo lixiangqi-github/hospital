@@ -103,11 +103,11 @@ public class InPatientFrame extends JFrame {
 		menuPanel.add(cashierBtn);
 		menuPanel.add(receiveBtn);
 		menuPanel.add(createOrderBtn);
-		menuPanel.add(maintainTreatmentBtn);
-		menuPanel.add(createMedicalRecordBtn);
 		menuPanel.add(verifyOrderBtn);
 		menuPanel.add(sendOrderExecuteBtn);
 		menuPanel.add(finishOrderExecuteBtn);
+		menuPanel.add(maintainTreatmentBtn);
+		menuPanel.add(createMedicalRecordBtn);
 		menuPanel.add(arrangementMedicalRecordBtn);
 		menuPanel.add(transferMedicalRecordBtn);
 		menuPanel.add(configureFluidExecuteBtn);
