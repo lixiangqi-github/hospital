@@ -211,6 +211,7 @@ public interface ConstMessagesCN {
 		String CurrentAllotNumber = "当前挂号值";
 		String CurrentEncounterNumber = "当前就诊值";
 		String MaxAllotNumber = "最大挂号值";
+		String PlanInspectDate = "计划检查时间";
 
 		String GOAL = "目标";
 

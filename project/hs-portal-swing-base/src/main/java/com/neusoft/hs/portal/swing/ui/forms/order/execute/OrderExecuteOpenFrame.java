@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.neusoft.hs.domain.order.EnterHospitalIntoWardOrderExecute;
 import com.neusoft.hs.domain.order.EnterHospitalSupplyCostOrderExecute;
+import com.neusoft.hs.domain.order.InspectArrangeOrderExecute;
 import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.TransferDeptConfirmOrderExecute;
 import com.neusoft.hs.platform.exception.HsException;
@@ -39,6 +40,8 @@ public class OrderExecuteOpenFrame extends JFrame {
 			panel = new EnterHospitalIntoWardOrderExecutePanel(orderExecute);
 		} else if (orderExecute instanceof TransferDeptConfirmOrderExecute) {
 			panel = new TransferDeptConfirmOrderExecutePanel(orderExecute);
+		} else if (orderExecute instanceof InspectArrangeOrderExecute) {
+			panel = new InspectArrangeOrderExecutePanel(orderExecute);
 		} else {
 			throw new HsException("该执行条目可以直接完成");
 		}
