@@ -190,7 +190,7 @@ public class OrderDomainService {
 		List<LongOrder> longOrders = orderRepo.findLongOrder(Order.State_Executing);
 
 		resolveOrderCount = 0;
-		// 采用并行计算处理医嘱分解(连带产生的共享资源的处理需要多线程保护，如：药品库存量等)
+		// 采用并行计算处理医嘱分解
 		longOrders.parallelStream().forEach(longOrder -> {
 			resolveOrderCount += orderResolver.resolve(longOrder.getId(), admin);
 		});
