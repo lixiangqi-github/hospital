@@ -39,11 +39,9 @@ public class DispensingDrugOrderExecute extends DrugOrderExecute {
 	}
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 		try {
-			List<DrugTypeConsumeRecord> consumeRecords = this.getPharmacy()
-					.send(this.getDrugTypeSpec(), getCount());
+			List<DrugTypeConsumeRecord> consumeRecords = this.getPharmacy().send(this.getDrugTypeSpec(), getCount());
 			this.setConsumeRecords(consumeRecords);
 		} catch (HsException e) {
 			throw new OrderExecuteException(this, e);
@@ -57,6 +55,21 @@ public class DispensingDrugOrderExecute extends DrugOrderExecute {
 		} catch (HsException e) {
 			throw new OrderExecuteException(this, e);
 		}
+	}
+
+	@Override
+	protected void calTip() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(this.getDrugTypeSpec().getName());
+		builder.append("(");
+		builder.append(this.getCount());
+		if (this.getDrugTypeSpec().getChargeItem() != null) {
+			builder.append(this.getDrugTypeSpec().getChargeItem().getUnit());
+		}
+		builder.append(")");
+
+		this.setTip(builder.toString());
 	}
 
 	public DispenseDrugWin getDispenseDrugWin() {
