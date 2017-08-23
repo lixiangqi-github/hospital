@@ -51,6 +51,9 @@ public abstract class OrderExecute extends IdEntity {
 	@Column(length = 32)
 	private String type;
 
+	@Column(length = 64)
+	private String tip;
+
 	private Integer count;
 
 	@NotNull(message = "执行组不能为空")
@@ -421,6 +424,9 @@ public abstract class OrderExecute extends IdEntity {
 		}
 	}
 
+	protected void calTip() {
+	}
+
 	public OrderExecute() {
 		super();
 	}
@@ -431,6 +437,14 @@ public abstract class OrderExecute extends IdEntity {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getTip() {
+		return tip;
+	}
+
+	public void setTip(String tip) {
+		this.tip = tip;
 	}
 
 	public Integer getCount() {
@@ -588,9 +602,19 @@ public abstract class OrderExecute extends IdEntity {
 		this.chargeItemRecords = chargeItemRecords;
 	}
 
+	public void addChargeItemRecord(ChargeItem chargeItem) {
+		OrderExecuteChargeItemRecord record = new OrderExecuteChargeItemRecord();
+		record.setChargeItem(chargeItem);
+
+		this.addChargeItemRecord(record);
+	}
+
 	public void addChargeItemRecord(OrderExecuteChargeItemRecord chargeItemRecord) {
 		if (this.chargeItemRecords == null) {
 			this.chargeItemRecords = new ArrayList<OrderExecuteChargeItemRecord>();
+		}
+		if (chargeItemRecord.getOrderExecute() == null) {
+			chargeItemRecord.setOrderExecute(this);
 		}
 		this.chargeItemRecords.add(chargeItemRecord);
 	}

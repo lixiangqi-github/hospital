@@ -26,7 +26,4 @@ public class ChargeOrderExecute extends OrderExecute {
 		}
 		return chargeRecords;
 	}
-
-	
-
 }

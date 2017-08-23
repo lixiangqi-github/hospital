@@ -137,6 +137,10 @@ public class InspectDomainService {
 		return inspectResultRepo.findByVisit(visit);
 	}
 
+	public void clearInspectApplyItems() {
+		inspectApplyItemRepo.deleteAll();
+	}
+
 	public void clearInspectItems() {
 		inspectItemRepo.deleteAll();
 	}

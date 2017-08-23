@@ -251,6 +251,8 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 				}
 				// 设置医嘱类型
 				this.setCategory(orderExecute);
+				// 计算提示信息
+				orderExecute.calTip();
 			}
 			this.getService(OrderExecuteTeamRepo.class).save(resolveTeams);
 			// 记录本次分解的最后一条执行条目

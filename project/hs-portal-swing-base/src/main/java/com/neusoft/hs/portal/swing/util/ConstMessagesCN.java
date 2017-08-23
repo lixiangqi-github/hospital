@@ -154,6 +154,7 @@ public interface ConstMessagesCN {
 		String Name = "名称";
 		String State = "状态";
 		String Type = "类型";
+		String Tip = "提示";
 		String Info = "信息";
 		String Doctor = "医生";
 		String VoucherType = "挂号类型";
@@ -171,7 +172,7 @@ public interface ConstMessagesCN {
 		String Sex = "性别";
 		String VisitName = "患者姓名";
 		String IntoWardDate = "进入病房时间";
-		
+
 		String CreateHistoryDate = "归档时间";
 
 		String Visit = "患者";
@@ -210,7 +211,7 @@ public interface ConstMessagesCN {
 		String CurrentAllotNumber = "当前挂号值";
 		String CurrentEncounterNumber = "当前就诊值";
 		String MaxAllotNumber = "最大挂号值";
-		
+
 		String GOAL = "目标";
 
 		String createInWardRecord = "创建入院记录";
@@ -220,7 +221,6 @@ public interface ConstMessagesCN {
 
 		String transferMedicalRecord = "移交档案室";
 
-		
 		String DisplayAll = "显示全部";
 		String position = "位置";
 	}
