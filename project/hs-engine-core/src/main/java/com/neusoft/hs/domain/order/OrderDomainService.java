@@ -186,7 +186,7 @@ public class OrderDomainService {
 	 * @roseuid 584F49010391
 	 */
 	public int resolve(Admin admin) {
-		// 获得执行中的住院长嘱
+		// 获得执行中的长嘱
 		List<LongOrder> longOrders = orderRepo.findLongOrder(Order.State_Executing);
 
 		resolveOrderCount = 0;
