@@ -68,6 +68,7 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 		transportFluidExecute.setVisit(order.getVisit());
 		transportFluidExecute.setBelongDept(order.getBelongDept());
 		transportFluidExecute.setType(OrderExecute.Type_Transport_Fluid);
+		transportFluidExecute.setCount(order.getCount());
 
 		// 处理辅材产生的费用
 		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this.getTheOrderUseModeChargeItem(transportFluid);

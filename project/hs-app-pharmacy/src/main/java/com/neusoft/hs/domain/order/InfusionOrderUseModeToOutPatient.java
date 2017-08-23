@@ -117,8 +117,10 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		transportFluidExecute.setVisit(order.getVisit());
 		transportFluidExecute.setBelongDept(order.getBelongDept());
 		transportFluidExecute.setType(OrderExecute.Type_Transport_Fluid);
+		transportFluidExecute.setCount(order.getCount());
+		
 		if (assistMaterialChargeItem != null) {
-			transportFluidExecute.addChargeItem(assistMaterialChargeItem);
+			transportFluidExecute.addChargeItemRecord(assistMaterialChargeItem);
 		}
 		transportFluidExecute.setExecuteDept(order.getExecuteDept());
 		transportFluidExecute.setChargeDept(order.getBelongDept());
