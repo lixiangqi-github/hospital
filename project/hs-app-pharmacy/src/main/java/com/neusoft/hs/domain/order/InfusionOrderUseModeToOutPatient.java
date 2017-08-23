@@ -25,8 +25,8 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 	public void resolve(Order order) {
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
-		DrugOrderTypeApp drugOrderTypeApp = this.getService(
-				DrugOrderTypeAppRepo.class).findOne(order.getTypeApp().getId());
+		DrugOrderTypeApp drugOrderTypeApp = this.getService(DrugOrderTypeAppRepo.class)
+				.findOne(order.getTypeApp().getId());
 
 		Visit visit = order.getVisit();
 		Pharmacy pharmacy = drugOrderTypeApp.getPharmacy();
@@ -36,21 +36,17 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		OrganizationAdminDomainService organizationAdminDomainService = this
 				.getService(OrganizationAdminDomainService.class);
 
-		Dept chargeDept = organizationAdminDomainService.getOutChargeDept(visit
-				.getDept());
+		Dept chargeDept = organizationAdminDomainService.getOutChargeDept(visit.getDept());
 		// 药品费用
-		ChargeItem chargeItem = drugOrderTypeApp.getDrugTypeSpec()
-				.getChargeItem();
+		ChargeItem chargeItem = drugOrderTypeApp.getDrugTypeSpec().getChargeItem();
 		// 辅材费用
 		ChargeItem assistMaterialChargeItem = null;
-		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this
-				.getTheOrderUseModeChargeItem(transportFluid);
+		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this.getTheOrderUseModeChargeItem(transportFluid);
 		if (orderUseModeAssistMaterial != null) {
 			// 判断在指定药品规格上绑定材料费进行收费
 			if (drugOrderTypeApp.getDrugTypeSpec().isTransportFluidCharge()) {
 				// 记录辅材收费项目
-				assistMaterialChargeItem = orderUseModeAssistMaterial
-						.getAssistMaterial().getChargeItem();
+				assistMaterialChargeItem = orderUseModeAssistMaterial.getAssistMaterial().getChargeItem();
 			}
 		}
 
@@ -74,36 +70,6 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 
 		team.addOrderExecute(chargeOrderExecute);
 
-		// 收辅材费执行条目
-		if (assistMaterialChargeItem != null) {
-			ChargeOrderExecute assistMaterialChargeOrderExecute = null;
-			// 判断在指定药品规格上绑定材料费进行收费
-			if (drugOrderTypeApp.getDrugTypeSpec().isTransportFluidCharge()) {
-				assistMaterialChargeOrderExecute = new ChargeOrderExecute();
-				assistMaterialChargeOrderExecute.setOrder(order);
-				assistMaterialChargeOrderExecute.setVisit(visit);
-				assistMaterialChargeOrderExecute.setBelongDept(order
-						.getBelongDept());
-				assistMaterialChargeOrderExecute
-						.setType(OrderExecute.Type_Change);
-				// 记录辅材收费项目
-				assistMaterialChargeItem = orderUseModeAssistMaterial
-						.getAssistMaterial().getChargeItem();
-				assistMaterialChargeOrderExecute.setExecuteDept(chargeDept);
-				assistMaterialChargeOrderExecute.setChargeDept(pharmacy);
-				assistMaterialChargeOrderExecute
-						.setState(OrderExecute.State_Executing);
-				// 统一缴费
-				assistMaterialChargeOrderExecute.setPlanStartDate(sysDate);
-				assistMaterialChargeOrderExecute.setPlanEndDate(sysDate);
-
-				// 不隶属于执行链中
-				assistMaterialChargeOrderExecute.setAlone(true);
-
-				team.addOrderExecute(assistMaterialChargeOrderExecute);
-			}
-		}
-
 		// 摆药执行条目
 		DispensingDrugOrderExecute dispensingDrugExecute = new DispensingDrugOrderExecute();
 		dispensingDrugExecute.setOrder(order);
@@ -119,8 +85,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		dispensingDrugExecute.setState(OrderExecute.State_NeedExecute);
 
 		dispensingDrugExecute.setPharmacy(pharmacy);
-		dispensingDrugExecute.setDrugTypeSpec(drugOrderTypeApp
-				.getDrugTypeSpec());
+		dispensingDrugExecute.setDrugTypeSpec(drugOrderTypeApp.getDrugTypeSpec());
 		// 统一摆药
 		dispensingDrugExecute.setPlanStartDate(sysDate);
 		dispensingDrugExecute.setPlanEndDate(sysDate);
@@ -158,8 +123,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		transportFluidExecute.setMain(true);
 
 		transportFluidExecute.setPharmacy(pharmacy);
-		transportFluidExecute.setDrugTypeSpec(drugOrderTypeApp
-				.getDrugTypeSpec());
+		transportFluidExecute.setDrugTypeSpec(drugOrderTypeApp.getDrugTypeSpec());
 
 		team.addOrderExecute(transportFluidExecute);
 

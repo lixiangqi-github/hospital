@@ -258,7 +258,7 @@ public class OutPatientMainTestService extends AppTestService {
 		executes = cashierAppService.getNeedChageExecutes(visit002, user701,
 				pageable);
 
-		assertTrue(executes.size() == 6);
+		assertTrue(executes.size() == 4);
 
 		// 完成输液费统一收费医嘱执行条目
 		for (OrderExecute execute : executes) {
