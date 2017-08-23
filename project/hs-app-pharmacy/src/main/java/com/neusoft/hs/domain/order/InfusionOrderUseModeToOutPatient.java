@@ -100,6 +100,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		distributeDrugExecute.setType(OrderExecute.Type_Distribute_Drug);
 		distributeDrugExecute.setExecuteDept(pharmacy);
 		distributeDrugExecute.setState(OrderExecute.State_NeedExecute);
+		distributeDrugExecute.setCount(order.getCount());
 
 		// 统一发药
 		distributeDrugExecute.setPlanStartDate(sysDate);

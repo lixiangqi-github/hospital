@@ -26,9 +26,26 @@ public abstract class DrugOrderExecute extends OrderExecute {
 	private DrugTypeSpec drugTypeSpec;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "drugOrderExecute", cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "drugOrderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 	private List<DrugTypeConsumeRecord> consumeRecords;
+
+	@Override
+	protected void calTip() {
+
+		if (this.getDrugTypeSpec() != null) {
+			StringBuilder builder = new StringBuilder();
+
+			builder.append(this.getDrugTypeSpec().getName());
+			builder.append("(");
+			builder.append(this.getCount());
+			if (this.getDrugTypeSpec().getChargeItem() != null) {
+				builder.append(this.getDrugTypeSpec().getChargeItem().getUnit());
+			}
+			builder.append(")");
+
+			this.setTip(builder.toString());
+		}
+	}
 
 	public DrugTypeSpec getDrugTypeSpec() {
 		return drugTypeSpec;

@@ -81,6 +81,7 @@ public class OralOrderUseMode extends DrugUseMode {
 		distributeDrugExecute.setExecuteDept(pharmacy);
 		distributeDrugExecute.setMain(true);
 		distributeDrugExecute.setState(OrderExecute.State_NeedExecute);
+		distributeDrugExecute.setCount(order.getCount());
 
 		distributeDrugExecute.setPharmacy(pharmacy);
 		distributeDrugExecute.setDrugTypeSpec(drugOrderTypeApp

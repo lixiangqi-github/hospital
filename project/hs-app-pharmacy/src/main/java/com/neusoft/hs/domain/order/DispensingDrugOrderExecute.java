@@ -57,21 +57,6 @@ public class DispensingDrugOrderExecute extends DrugOrderExecute {
 		}
 	}
 
-	@Override
-	protected void calTip() {
-		StringBuilder builder = new StringBuilder();
-
-		builder.append(this.getDrugTypeSpec().getName());
-		builder.append("(");
-		builder.append(this.getCount());
-		if (this.getDrugTypeSpec().getChargeItem() != null) {
-			builder.append(this.getDrugTypeSpec().getChargeItem().getUnit());
-		}
-		builder.append(")");
-
-		this.setTip(builder.toString());
-	}
-
 	public DispenseDrugWin getDispenseDrugWin() {
 		return dispenseDrugWin;
 	}
