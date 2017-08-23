@@ -56,6 +56,9 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 		distributeDrugExecute.setCount(order.getCount());
 		distributeDrugExecute.setState(OrderExecute.State_NeedExecute);
 		distributeDrugExecute.setCount(order.getCount());
+		
+		distributeDrugExecute.setPharmacy(pharmacy);
+		distributeDrugExecute.setDrugTypeSpec(drugOrderTypeApp.getDrugTypeSpec());
 
 		team.addOrderExecute(distributeDrugExecute);
 

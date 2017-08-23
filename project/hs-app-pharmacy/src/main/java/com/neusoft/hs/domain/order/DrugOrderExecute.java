@@ -32,19 +32,17 @@ public abstract class DrugOrderExecute extends OrderExecute {
 	@Override
 	protected void calTip() {
 
-		if (this.getDrugTypeSpec() != null) {
-			StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 
-			builder.append(this.getDrugTypeSpec().getName());
-			builder.append("(");
-			builder.append(this.getCount());
-			if (this.getDrugTypeSpec().getChargeItem() != null) {
-				builder.append(this.getDrugTypeSpec().getChargeItem().getUnit());
-			}
-			builder.append(")");
-
-			this.setTip(builder.toString());
+		builder.append(this.getDrugTypeSpec().getName());
+		builder.append("(");
+		builder.append(this.getCount());
+		if (this.getDrugTypeSpec().getChargeItem() != null) {
+			builder.append(this.getDrugTypeSpec().getChargeItem().getUnit());
 		}
+		builder.append(")");
+
+		this.setTip(builder.toString());
 	}
 
 	public DrugTypeSpec getDrugTypeSpec() {
