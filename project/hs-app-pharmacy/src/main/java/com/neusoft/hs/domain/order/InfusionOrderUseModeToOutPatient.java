@@ -58,7 +58,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		chargeOrderExecute.setType(OrderExecute.Type_Change);
 		chargeOrderExecute.addChargeItem(chargeItem);
 		if (assistMaterialChargeItem != null) {
-			chargeOrderExecute.addChargeItem(assistMaterialChargeItem);
+			chargeOrderExecute.addChargeItemRecord(assistMaterialChargeItem);
 		}
 
 		chargeOrderExecute.setExecuteDept(chargeDept);
