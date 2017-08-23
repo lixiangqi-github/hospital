@@ -18,6 +18,8 @@ import javax.swing.WindowConstants;
 
 import org.springframework.stereotype.Component;
 
+import com.neusoft.hs.domain.inspect.InspectApply;
+import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.inspect.InspectItem;
 import com.neusoft.hs.portal.swing.util.ConstMessagesCN;
 
@@ -33,6 +35,8 @@ public class InspectApplyDialog extends JDialog {
 	JButton confirmBtn;
 
 	JButton closeBtn;
+
+	InspectApply inspectApply;
 
 	private static final int DEFAULT_WIDTH = 300;
 
@@ -90,6 +94,20 @@ public class InspectApplyDialog extends JDialog {
 		inspectItemCBs = new LinkedHashMap<JCheckBox, InspectItem>();
 		for (InspectItem item : items) {
 			JCheckBox inspectItemCB = new JCheckBox(item.getName());
+
+			boolean isSelected = false;
+			if (inspectApply != null) {
+				for (InspectApplyItem applyItem : inspectApply.getInspectApplyItems()) {
+					if (applyItem.getInspectItem().equals(item)) {
+						isSelected = true;
+						break;
+					}
+				}
+			}
+			if (isSelected) {
+				inspectItemCB.setSelected(true);
+			}
+
 			inspectItemPanel.add(inspectItemCB);
 
 			inspectItemCBs.put(inspectItemCB, item);
@@ -97,6 +115,12 @@ public class InspectApplyDialog extends JDialog {
 
 		inspectItemPanelWarpper.removeAll();
 		inspectItemPanelWarpper.add(inspectItemPanel);
+	}
+
+	public void load() {
+		if (inspectApply != null) {
+			goalTA.setText(inspectApply.getGoal());
+		}
 	}
 
 	public List<InspectItem> getSelectedInspectItems() {
@@ -110,6 +134,10 @@ public class InspectApplyDialog extends JDialog {
 
 		return selectedItems;
 
+	}
+
+	public void setInspectApply(InspectApply inspectApply) {
+		this.inspectApply = inspectApply;
 	}
 
 	public JTextArea getGoalTA() {

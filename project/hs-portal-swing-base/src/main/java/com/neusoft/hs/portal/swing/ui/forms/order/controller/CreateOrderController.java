@@ -318,7 +318,10 @@ public class CreateOrderController extends AbstractFrameController {
 				Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 				List<InspectItem> items = inspectDomainService.findInspectItem(pageable);
 
+				inspectApplyDialog.setInspectApply(inspectApply);
 				inspectApplyDialog.refreshItems(items);
+				inspectApplyDialog.load();
+
 				inspectApplyDialog.setVisible(true);
 			}
 		}
