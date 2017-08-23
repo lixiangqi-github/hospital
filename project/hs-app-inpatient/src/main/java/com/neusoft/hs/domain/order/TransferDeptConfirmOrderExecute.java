@@ -28,8 +28,7 @@ public class TransferDeptConfirmOrderExecute extends OrderExecute {
 	protected void doSend(AbstractUser user) throws OrderExecuteException {
 		Visit visit = this.getVisit();
 		try {
-			this.getService(VisitDomainService.class).transferDeptSend(visit,
-					this.getOrder(), user);
+			this.getService(VisitDomainService.class).transferDeptSend(visit, this.getOrder(), user);
 		} catch (VisitException e) {
 			e.printStackTrace();
 			throw new OrderExecuteException(this, e);
@@ -37,20 +36,16 @@ public class TransferDeptConfirmOrderExecute extends OrderExecute {
 	}
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 		if (params == null) {
-			throw new OrderExecuteException(this,
-					"params需设置Key为[%s][%s][%s]的参数", RespDoctor, RespNurse, Bed);
+			throw new OrderExecuteException(this, "params需设置Key为[%s][%s][%s]的参数", RespDoctor, RespNurse, Bed);
 		}
 
 		if (!params.containsKey(RespDoctor)) {
-			throw new OrderExecuteException(this, "params没有设置Key为[%s]的责任医生",
-					RespDoctor);
+			throw new OrderExecuteException(this, "params没有设置Key为[%s]的责任医生", RespDoctor);
 		}
 		if (!params.containsKey(RespNurse)) {
-			throw new OrderExecuteException(this, "params没有设置Key为[%s]的责任护士",
-					RespNurse);
+			throw new OrderExecuteException(this, "params没有设置Key为[%s]的责任护士", RespNurse);
 		}
 		if (!params.containsKey(Bed)) {
 			throw new OrderExecuteException(this, "params没有设置Key为[%s]的床位号", Bed);
@@ -66,21 +61,29 @@ public class TransferDeptConfirmOrderExecute extends OrderExecute {
 		transferDeptVO.setBed((String) params.get(Bed));
 
 		if (!params.containsKey(Area)) {
-			Nurse nurse = this.getService(UserAdminAppService.class).findNurse(
-					transferDeptVO.getNurse().getId());
+			Nurse nurse = this.getService(UserAdminAppService.class).findNurse(transferDeptVO.getNurse().getId());
 			transferDeptVO.setArea(nurse.getDept());
 		} else {
 			transferDeptVO.setArea((Dept) params.get(Area));
 		}
 
 		try {
-			this.getService(VisitDomainService.class).transferDeptConfirm(
-					transferDeptVO, user);
+			this.getService(VisitDomainService.class).transferDeptConfirm(transferDeptVO, user);
 		} catch (VisitException e) {
 			e.printStackTrace();
 			throw new OrderExecuteException(this, e);
 		}
+	}
 
+	@Override
+	protected void calTip() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("来自");
+		builder.append(this.getVisit().getDeptName());
+
+		this.setTip(builder.toString());
 	}
 
 }

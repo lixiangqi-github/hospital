@@ -24,23 +24,17 @@ public class InspectArrangeOrderExecute extends OrderExecute {
 	public static final String PlanExecuteDate = "PlanExecuteDate";
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 
-		if (params == null
-				|| !params
-						.containsKey(InspectArrangeOrderExecute.PlanExecuteDate)) {
-			throw new OrderExecuteException(this, "params没有设置Key为[%s]计划检查时间",
-					PlanExecuteDate);
+		if (params == null || !params.containsKey(InspectArrangeOrderExecute.PlanExecuteDate)) {
+			throw new OrderExecuteException(this, "params没有设置Key为[%s]计划检查时间", PlanExecuteDate);
 
 		}
-		Date planExecuteDate = (Date) params
-				.get(InspectArrangeOrderExecute.PlanExecuteDate);
+		Date planExecuteDate = (Date) params.get(InspectArrangeOrderExecute.PlanExecuteDate);
 
 		inspectApplyItem.setPlanExecuteDate(planExecuteDate);
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]安排检查[{}]时间为[{}]",
-				user.getId(), this.getVisit().getName(),
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]安排检查[{}]时间为[{}]", user.getId(), this.getVisit().getName(),
 				inspectApplyItem.getId(), planExecuteDate);
 
 		OrderExecute next = this.getNext();
@@ -48,6 +42,19 @@ public class InspectArrangeOrderExecute extends OrderExecute {
 		next.setPlanEndDate(planExecuteDate);
 
 		next.save();
+	}
+
+	@Override
+	protected void calTip() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(inspectApplyItem.getInspectItem().getName());
+		builder.append("(");
+		builder.append(inspectApplyItem.getInspectDept().getName());
+		builder.append(")");
+
+		this.setTip(builder.toString());
 	}
 
 	public InspectApplyItem getInspectApplyItem() {

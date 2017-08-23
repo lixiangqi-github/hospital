@@ -22,8 +22,7 @@ public class EnterHospitalIntoWardOrderExecute extends OrderExecute {
 	public final static String RespNurse = "RespNurse";
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 
 		String bed = (String) params.get(Bed);
 		if (bed == null) {
@@ -31,12 +30,10 @@ public class EnterHospitalIntoWardOrderExecute extends OrderExecute {
 		}
 		Nurse nurse = (Nurse) params.get(RespNurse);
 		if (nurse == null) {
-			throw new OrderExecuteException(this, "没有向params.[%s]设置责任护士",
-					RespNurse);
+			throw new OrderExecuteException(this, "没有向params.[%s]设置责任护士", RespNurse);
 		}
-		//重新获取护士实体
-		nurse = (Nurse) this.getService(UserAdminDomainService.class).find(
-				nurse.getId());
+		// 重新获取护士实体
+		nurse = (Nurse) this.getService(UserAdminDomainService.class).find(nurse.getId());
 
 		Visit visit = this.getVisit();
 		ReceiveVisitVO receiveVisitVO = new ReceiveVisitVO();
@@ -44,8 +41,7 @@ public class EnterHospitalIntoWardOrderExecute extends OrderExecute {
 		receiveVisitVO.setBed(bed);
 		receiveVisitVO.setNurse(nurse);
 		try {
-			this.getService(VisitDomainService.class).intoWard(receiveVisitVO,
-					user);
+			this.getService(VisitDomainService.class).intoWard(receiveVisitVO, user);
 		} catch (HsException e) {
 			e.printStackTrace();
 			throw new OrderExecuteException(this, e);

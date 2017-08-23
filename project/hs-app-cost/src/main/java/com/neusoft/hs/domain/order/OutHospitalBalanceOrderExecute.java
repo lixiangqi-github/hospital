@@ -15,17 +15,26 @@ import com.neusoft.hs.domain.visit.VisitException;
 public class OutHospitalBalanceOrderExecute extends OrderExecute {
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 		super.doFinish(params, user);
 
 		Visit visit = this.getVisit();
 		try {
-			this.getService(VisitDomainService.class).outHospitalBalance(
-					visit, user);
+			this.getService(VisitDomainService.class).outHospitalBalance(visit, user);
 		} catch (VisitException e) {
 			e.printStackTrace();
 			throw new OrderExecuteException(this, e);
 		}
+	}
+
+	@Override
+	protected void calTip() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("当前余额:");
+		builder.append(this.getVisit().getChargeBill().getBalance());
+
+		this.setTip(builder.toString());
 	}
 }

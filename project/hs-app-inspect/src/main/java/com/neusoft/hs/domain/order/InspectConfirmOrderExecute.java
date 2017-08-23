@@ -25,11 +25,17 @@ public class InspectConfirmOrderExecute extends OrderExecute {
 	private InspectApplyItem inspectApplyItem;
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user)
-			throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
 		super.doFinish(params, user);
 		inspectApplyItem.setExecuteDate(DateUtil.getSysDate());
 		inspectApplyItem.setState(InspectApplyItem.State_Finished);
+	}
+
+	@Override
+	protected void calTip() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(inspectApplyItem.getInspectItem().getName());
+		this.setTip(builder.toString());
 	}
 
 	public InspectApplyItem getInspectApplyItem() {
