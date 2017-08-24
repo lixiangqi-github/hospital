@@ -51,7 +51,7 @@ public class InPatientDeleteOrderTestService extends InPatientTestService {
 		orderAppService.delete(drug001Order.getId(), user002);
 
 		pageable = new PageRequest(0, 15);
-		orders = orderAppService.getNeedVerifyOrders(user003, pageable);
+		orders = orderAppService.findNeedVerifyOrders(user003, pageable);
 
 		assertTrue(orders.size() == 0);
 

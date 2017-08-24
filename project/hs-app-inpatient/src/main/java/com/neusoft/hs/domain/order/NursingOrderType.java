@@ -60,11 +60,9 @@ public class NursingOrderType extends OrderType {
 
 	private OrderExecuteTeam create(Order order, Date startDate) {
 
-		NursingOrderExecute execute = new NursingOrderExecute();
-
 		OrderExecuteTeam team = new OrderExecuteTeam();
-		team.addOrderExecute(execute);
-
+		
+		NursingOrderExecute execute = new NursingOrderExecute();
 		execute.setOrder(order);
 		execute.setVisit(order.getVisit());
 		execute.setBelongDept(order.getBelongDept());
@@ -75,6 +73,8 @@ public class NursingOrderType extends OrderType {
 		execute.setChargeDept(order.getBelongDept());
 		execute.setState(OrderExecute.State_NeedExecute);
 
+		team.addOrderExecute(execute);
+		
 		return team;
 	}
 

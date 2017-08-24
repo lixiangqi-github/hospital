@@ -72,6 +72,9 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 
 	private Integer count;
 
+	@Column(name = "order_describe", length = 128)
+	private String describe;
+
 	@Column(name = "execute_need_send")
 	private Boolean executeNeedSend;
 
@@ -171,6 +174,10 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 
 		if (this.orderType == null) {
 			throw new OrderException(this, "orderType不能为空");
+		}
+
+		if (this.planStartDate == null) {
+			throw new OrderException(this, "计划开始时间不能为空");
 		}
 
 		this.orderType.check(this);
@@ -363,6 +370,14 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public String getDescribe() {
+		return describe;
+	}
+
+	public void setDescribe(String describe) {
+		this.describe = describe;
 	}
 
 	public Boolean getExecuteNeedSend() {

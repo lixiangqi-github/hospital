@@ -220,6 +220,8 @@ public abstract class OrderExecute extends IdEntity {
 
 	public static final String Type_Change = "收费";
 
+	public static final String Type_Describe = "描述";
+
 	/**
 	 * 发送执行条目 当执行条目由其他科室执行时需要通过发送才可以使其执行
 	 * 

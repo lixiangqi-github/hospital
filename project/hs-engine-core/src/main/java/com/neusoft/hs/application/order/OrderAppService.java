@@ -197,7 +197,7 @@ public class OrderAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<Order> getNeedVerifyOrders(AbstractUser nurse, Pageable pageable) {
+	public List<Order> findNeedVerifyOrders(AbstractUser nurse, Pageable pageable) {
 		List<Order> orders = orderDomainService.getNeedVerifyOrders(nurse,
 				pageable);
 		for (Order order : orders) {

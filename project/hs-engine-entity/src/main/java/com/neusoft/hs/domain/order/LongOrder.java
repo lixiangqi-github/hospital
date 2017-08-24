@@ -70,6 +70,23 @@ public class LongOrder extends Order {
 		this.endDate = endDate;
 	}
 
+	/**
+	 * 创建医嘱条目前的检查回调函数 该回调函数将职责委托给医嘱类型@OrderType完成
+	 * 
+	 * @throws OrderExecuteException
+	 * @throws OrderException
+	 * 
+	 * @roseuid 584E6696009D
+	 */
+	public void check() throws OrderException, OrderExecuteException {
+		super.check();
+
+		if (this.planEndDate != null && this.getPlanStartDate() != null
+				&& this.planEndDate.before(this.getPlanStartDate())) {
+			throw new OrderException(this, "长嘱计划结束时间[%s]不能早于计划开始时间[%s]", this.planEndDate, this.getPlanStartDate());
+		}
+	}
+
 	@Override
 	public void doFinish(OrderExecute orderExecute) {
 		if (orderExecute.isLast()) {
@@ -108,17 +125,14 @@ public class LongOrder extends Order {
 		Date currentDate = DateUtil.addDay(sysDateStart, numDays);
 		Visit visit = (Visit) this.getVisit();
 		// 如果分解时间大于患者计划出院时间将不分解医嘱
-		if (visit.getPlanLeaveWardDate() != null
-				&& (visit.getPlanLeaveWardDate().compareTo(currentDate) == 0 || visit
-						.getPlanLeaveWardDate().before(currentDate))) {
+		if (visit.getPlanLeaveWardDate() != null && (visit.getPlanLeaveWardDate().compareTo(currentDate) == 0
+				|| visit.getPlanLeaveWardDate().before(currentDate))) {
 			return new ArrayList<Date>();
 		}
 		// 如果已分解完毕就不再分解
 		OrderExecute lastOrderExecute = this.getLastOrderExecute();
 		if (lastOrderExecute != null) {
-			if (lastOrderExecute.isLast()
-					|| lastOrderExecute.getPlanStartDate().compareTo(
-							currentDate) == 0
+			if (lastOrderExecute.isLast() || lastOrderExecute.getPlanStartDate().compareTo(currentDate) == 0
 					|| lastOrderExecute.getPlanStartDate().after(currentDate)) {
 				return new ArrayList<Date>();
 			}

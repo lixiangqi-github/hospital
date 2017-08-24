@@ -44,7 +44,7 @@ public class VerifyOrderController extends AbstractFrameController {
 	private void loadOrders() throws HsException {
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 
-		List<Order> entities = orderAppService.getNeedVerifyOrders(
+		List<Order> entities = orderAppService.findNeedVerifyOrders(
 				UserUtil.getUser(), pageable);
 
 		OrderTableModel orderTableModel = orderVerifyFrame.getOrderTableModel();

@@ -256,7 +256,7 @@ public abstract class InPatientTestService extends AppTestService {
 		orderAppService.create(leaveHospitalOrder001, user002);
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		orders = orderAppService.getNeedVerifyOrders(user003, pageable);
+		orders = orderAppService.findNeedVerifyOrders(user003, pageable);
 
 		assertTrue(orders.size() == 1);
 		assertTrue(orders.get(0).getId().equals(leaveHospitalOrder001.getId()));
@@ -265,12 +265,14 @@ public abstract class InPatientTestService extends AppTestService {
 
 		// 核对医嘱
 		orderAppService.verify(leaveHospitalOrder001.getId(), user003);
+		
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 10:40", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
 		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
 				pageable);
 
-		assertTrue(executes.size() == 2);
+		assertTrue(executes.size() == 3);
 
 		// 完成医嘱执行条目
 		for (OrderExecute execute : executes) {
@@ -348,7 +350,7 @@ public abstract class InPatientTestService extends AppTestService {
 		orderAppService.create(leaveHospitalOrder002, userd02);
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		orders = orderAppService.getNeedVerifyOrders(user003, pageable);
+		orders = orderAppService.findNeedVerifyOrders(user003, pageable);
 
 		assertTrue(orders.size() == 1);
 		assertTrue(orders.get(0).getId().equals(leaveHospitalOrder002.getId()));

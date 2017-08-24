@@ -20,6 +20,7 @@ import com.neusoft.hs.domain.inspect.InspectItem;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordAdminService;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordDomainService;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordType;
+import com.neusoft.hs.domain.order.DescribeOrderType;
 import com.neusoft.hs.domain.order.DrugOrderType;
 import com.neusoft.hs.domain.order.EnterHospitalOrderType;
 import com.neusoft.hs.domain.order.InfusionOrderUseModeToInPatient;
@@ -232,6 +233,8 @@ public class DataIniter {
 	protected InspectOrderType inspectOrderType;// 检查医嘱类型
 
 	protected TransferDeptOrderType transferDeptOrderType;// 转科医嘱类型
+
+	protected DescribeOrderType describeOrderType;// 描述医嘱类型
 
 	protected OralOrderUseMode oralOrderUseMode;// 口服用法
 
@@ -468,6 +471,7 @@ public class DataIniter {
 		leaveHospitalOrderType = dataIniter.leaveHospitalOrderType;
 		inspectOrderType = dataIniter.inspectOrderType;
 		transferDeptOrderType = dataIniter.transferDeptOrderType;
+		describeOrderType = dataIniter.describeOrderType;
 
 		oralOrderUseMode = dataIniter.oralOrderUseMode;
 		infusionOrderUseModeToInPatient = dataIniter.infusionOrderUseModeToInPatient;
@@ -1400,6 +1404,13 @@ public class DataIniter {
 		transferDeptOrderType.setName("转科");
 
 		orderTypes.add(transferDeptOrderType);
+
+		describeOrderType = new DescribeOrderType();
+		describeOrderType.setId("describeOrderType");
+		describeOrderType.setCode("describeOrderType");
+		describeOrderType.setName("描述");
+
+		orderTypes.add(describeOrderType);
 
 		orderAdminDomainService.createOrderTypes(orderTypes);
 	}

@@ -52,6 +52,9 @@ public class OrderDomainService {
 	public List<Order> create(OrderCreateCommand orderCommand, Doctor doctor)
 			throws OrderException, OrderExecuteException {
 
+		if (orderCommand.getVisit() == null) {
+			throw new OrderException(null, "没有患者一次就诊信息");
+		}
 		// 更新为数据库最新的患者一次就诊信息
 		Visit visit = visitDomainService.find(orderCommand.getVisit().getId());
 		// 状态校验
