@@ -19,6 +19,7 @@ import com.neusoft.hs.domain.cost.ChargeRecord;
 import com.neusoft.hs.domain.inspect.InspectApply;
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecord;
+import com.neusoft.hs.domain.order.InspectConfirmOrderExecute;
 import com.neusoft.hs.domain.order.LongDrugOrderBuilder;
 import com.neusoft.hs.domain.order.NursingOrderBuilder;
 import com.neusoft.hs.domain.order.Order;
@@ -58,6 +59,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		TreatmentItem item;
 		Visit visit;
 		ConfigureFluidOrder fluidOrder;
+		Map<String, Object> params;
 
 		NursingOrderBuilder nursingOrderBuilder;
 		TemporaryDrugOrderBuilder drugOrderBuilder;
@@ -142,8 +144,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		}
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -157,8 +158,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 11:15", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userc01,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userc01, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -178,8 +178,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 11:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userc03,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userc03, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -196,8 +195,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 11:32", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -214,8 +212,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 13:45", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = costDomainService.getNeedBackChargeOrderExecutes(user201,
-				pageable);
+		executes = costDomainService.getNeedBackChargeOrderExecutes(user201, pageable);
 
 		assertTrue(executes.size() == 1);
 
@@ -225,8 +222,8 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		Visit currentVisit = visitDomainService.find(visit001.getId());
 
-		List<TreatmentItemSpec> treatmentItemSpecs = treatmentAppService
-				.getShouldTreatmentItemSpecs(currentVisit, user002);
+		List<TreatmentItemSpec> treatmentItemSpecs = treatmentAppService.getShouldTreatmentItemSpecs(currentVisit,
+				user002);
 
 		assertTrue(treatmentItemSpecs.size() == 1);
 
@@ -234,24 +231,20 @@ public class InPatientMainTestService extends InPatientTestService {
 		SimpleTreatmentItemValue value = new SimpleTreatmentItemValue();
 		value.setInfo("患者咳嗽发烧三天");
 
-		treatmentAppService.create(visit001, mainDescribeTreatmentItemSpec,
-				value, user002);
+		treatmentAppService.create(visit001, mainDescribeTreatmentItemSpec, value, user002);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 14:20", dayCount));
 
 		// 创建入院记录
-		MedicalRecord intoWardRecord = medicalRecordTestService
-				.createIntoWardRecord(visit001,
-						intoWardRecordMedicalRecordType, user002);
+		MedicalRecord intoWardRecord = medicalRecordTestService.createIntoWardRecord(visit001,
+				intoWardRecordMedicalRecordType, user002);
 
 		intoWardRecord = medicalRecordAppService.find(intoWardRecord.getId());
 
 		Map<String, Itemable> datas = intoWardRecord.getDatas();
 
-		assertTrue(datas.get("患者姓名").getValues().get(0).toString()
-				.equals("测试患者001"));
-		assertTrue(datas.get("主诉").getValues().get(0).toString()
-				.equals("患者咳嗽发烧三天，体温38.5"));
+		assertTrue(datas.get("患者姓名").getValues().get(0).toString().equals("测试患者001"));
+		assertTrue(datas.get("主诉").getValues().get(0).toString().equals("患者咳嗽发烧三天，体温38.5"));
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 15:00", dayCount));
 
@@ -259,10 +252,8 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 17:00", dayCount));
 
-		item = treatmentDomainService.getTheTreatmentItem(visit001,
-				mainDescribeTreatmentItemSpec);
-		((SimpleTreatmentItemValue) item.getValues().get(0))
-				.setInfo("患者咳嗽发烧三天，体温38.5，嗜睡");
+		item = treatmentDomainService.getTheTreatmentItem(visit001, mainDescribeTreatmentItemSpec);
+		((SimpleTreatmentItemValue) item.getValues().get(0)).setInfo("患者咳嗽发烧三天，体温38.5，嗜睡");
 		treatmentDomainService.update(item, user002);
 
 		intoWardRecord = medicalRecordAppService.find(intoWardRecord.getId());
@@ -270,8 +261,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		datas = intoWardRecord.getDatas();
 
 		assertTrue(intoWardRecord.getState().equals(MedicalRecord.State_Signed));
-		assertTrue(datas.get("主诉").getValues().get(0).toString()
-				.equals("患者咳嗽发烧三天，体温38.5"));
+		assertTrue(datas.get("主诉").getValues().get(0).toString().equals("患者咳嗽发烧三天，体温38.5"));
 
 		// 2016-12-29
 		DateUtil.setSysDate(DateUtil.createDay("2016-12-29", dayCount));
@@ -281,8 +271,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -299,8 +288,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		longDrugOrderBuilder = new LongDrugOrderBuilder();
 		longDrugOrderBuilder.setVisit(visit001);
-		longDrugOrderBuilder
-				.setPlaceType(OrderCreateCommand.PlaceType_InPatient);
+		longDrugOrderBuilder.setPlaceType(OrderCreateCommand.PlaceType_InPatient);
 		longDrugOrderBuilder.setFrequencyType(orderFrequencyType_9H15H);
 		longDrugOrderBuilder.setPlanEndDate(DateUtil.addDay(sysDate, 2));
 		longDrugOrderBuilder.setPharmacy(deptbbb);
@@ -326,8 +314,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 11:05", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 4);
 
@@ -339,32 +326,28 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 14:00", dayCount));
 
 		// 打印配液单
-		fluidOrder = configureFluidAppService.print(dept000n,
-				afternoonConfigureFluidBatch, userb02);
+		fluidOrder = configureFluidAppService.print(dept000n, afternoonConfigureFluidBatch, userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 14:30", dayCount));
 
 		// 配液完成
-		fluidOrder = configureFluidAppService.finish(fluidOrder.getId(),
-				userb02);
+		fluidOrder = configureFluidAppService.finish(fluidOrder.getId(), userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 14:35", dayCount));
 
 		// 发送配液单
-		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(),
-				userb03);
+		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(), userb03);
 
 		assertTrue(fluidOrder.getDistributeDrugExecutes().size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 15:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -380,8 +363,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 08:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 4);
 
@@ -393,8 +375,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 08:50", dayCount));
 
 		// 打印配液单
-		fluidOrder = configureFluidAppService.print(dept000n,
-				morningConfigureFluidBatch, userb02);
+		fluidOrder = configureFluidAppService.print(dept000n, morningConfigureFluidBatch, userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
@@ -406,16 +387,14 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 09:00", dayCount));
 
 		// 发送配液单
-		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(),
-				userb03);
+		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(), userb03);
 
 		assertTrue(fluidOrder.getDistributeDrugExecutes().size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 4);
 
@@ -427,8 +406,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 14:00", dayCount));
 
 		// 打印配液单
-		fluidOrder = configureFluidAppService.print(dept000n,
-				afternoonConfigureFluidBatch, userb02);
+		fluidOrder = configureFluidAppService.print(dept000n, afternoonConfigureFluidBatch, userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
@@ -440,16 +418,14 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 14:35", dayCount));
 
 		// 发送配液单
-		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(),
-				userb03);
+		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(), userb03);
 
 		assertTrue(fluidOrder.getDistributeDrugExecutes().size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 15:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -465,8 +441,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-31 08:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 0);
 
@@ -476,16 +451,14 @@ public class InPatientMainTestService extends InPatientTestService {
 		}
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userb02,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(userb02, pageable);
 
 		assertTrue(executes.size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-31 08:50", dayCount));
 
 		// 打印配液单
-		fluidOrder = configureFluidAppService.print(dept000n,
-				morningConfigureFluidBatch, userb02);
+		fluidOrder = configureFluidAppService.print(dept000n, morningConfigureFluidBatch, userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
@@ -497,16 +470,14 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-31 09:05", dayCount));
 
 		// 发送配液单
-		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(),
-				userb03);
+		fluidOrder = configureFluidAppService.distribute(fluidOrder.getId(), userb03);
 
 		assertTrue(fluidOrder.getDistributeDrugExecutes().size() == 2);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-31 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 4);
 
@@ -522,8 +493,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -577,8 +547,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 09:45", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -590,26 +559,24 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 10:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user401,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user401, pageable);
 
 		assertTrue(executes.size() == 1);
 
 		// 安排检查时间
-		inspectAppService.arrange(executes.get(0).getId(),
-				DateUtil.createMinute("2017-01-02 14:00", dayCount), user401);
+		inspectAppService.arrange(executes.get(0).getId(), DateUtil.createMinute("2017-01-02 14:00", dayCount),
+				user401);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 10:30", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user501,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user501, pageable);
 
 		assertTrue(executes.size() == 1);
 
 		// 安排检查时间
-		inspectAppService.arrange(executes.get(0).getId(),
-				DateUtil.createMinute("2017-01-03 14:00", dayCount), user501);
+		inspectAppService.arrange(executes.get(0).getId(), DateUtil.createMinute("2017-01-03 14:00", dayCount),
+				user501);
 
 		// 2017-01-02
 		DateUtil.setSysDate(DateUtil.createDay("2017-01-02", dayCount));
@@ -618,8 +585,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-02 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -631,15 +597,19 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-02 14:40", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user402,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user402, pageable);
 
 		assertTrue(executes.size() == 1);
 
-		//确认CT检查结果
+		// 确认CT检查结果
 		Map<InspectApplyItem, String> CTResults = new HashMap<InspectApplyItem, String>();
 		CTResults.put(brainCTInspectApplyItem, "没啥问题");
+
 		inspectAppService.confirm(executes.get(0).getId(), CTResults, user402);
+		// params = new HashMap<String, Object>();
+		// params.put(InspectConfirmOrderExecute.InspectResultKey, CTResults);
+		// orderExecuteAppService.finish(executes.get(0).getId(), params ,
+		// user402);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-02 15:00", dayCount));
 
@@ -656,8 +626,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-03 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -670,18 +639,15 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		if (!(Boolean) choices.get(ChoiceItem.CancelHC)) {
 			pageable = new PageRequest(0, Integer.MAX_VALUE);
-			executes = orderExecuteAppService.findNeedExecuteOrderExecutes(
-					user502, pageable);
+			executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user502, pageable);
 
 			assertTrue(executes.size() == 1);
 
 			Map<InspectApplyItem, String> HCResults = new HashMap<InspectApplyItem, String>();
 			HCResults.put(brainHCInspectApplyItem, "没啥问题");
-			inspectAppService.confirm(executes.get(0).getId(), HCResults,
-					user502);
+			inspectAppService.confirm(executes.get(0).getId(), HCResults, user502);
 
-			DateUtil.setSysDate(DateUtil.createMinute("2017-01-03 16:00",
-					dayCount));
+			DateUtil.setSysDate(DateUtil.createMinute("2017-01-03 16:00", dayCount));
 
 			testUtil.testInspectResult(brainInspectOrder.getId(), 2);
 		}
@@ -693,8 +659,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-04 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -709,8 +674,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-05 08:20", dayCount));
 
-		orders = this.orderDAO.findExecutingByVisitAndOrderType(visit001,
-				firstNursingOrderType);
+		orders = this.orderDAO.findExecutingByVisitAndOrderType(visit001, firstNursingOrderType);
 
 		assertTrue(orders.size() == 1);
 
@@ -741,8 +705,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-05 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -758,8 +721,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:10", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 2);
 
@@ -793,13 +755,11 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:33", dayCount));
 
 		// 将当天已收的二级护理给退了费
-		List<ChargeRecord> records = costDomainService.getChargeRecords(
-				visit004, user003.getOperationDepts(), pageable);
+		List<ChargeRecord> records = costDomainService.getChargeRecords(visit004, user003.getOperationDepts(),
+				pageable);
 
-		List<ChargeRecord> theRecords = records
-				.stream()
-				.filter(record -> DateUtil.isDayIn(record.getCreateDate(),
-						DateUtil.getDateStart(DateUtil.getSysDate()))
+		List<ChargeRecord> theRecords = records.stream()
+				.filter(record -> DateUtil.isDayIn(record.getCreateDate(), DateUtil.getDateStart(DateUtil.getSysDate()))
 						&& record.getChargeItemName().equals("二级护理"))
 				.collect(Collectors.toList());
 
@@ -810,8 +770,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:35", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 1);
 
@@ -826,13 +785,12 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:40", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 1);
 
 		// 完成转科确认
-		Map<String, Object> params = new HashMap<String, Object>();
+		params = new HashMap<String, Object>();
 		params.put(TransferDeptConfirmOrderExecute.RespDoctor, userd02);
 		params.put(TransferDeptConfirmOrderExecute.RespNurse, user003);
 		params.put(TransferDeptConfirmOrderExecute.Bed, "bedd04");
@@ -872,8 +830,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:58", dayCount));
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
-		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003,
-				pageable);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 1);
 
