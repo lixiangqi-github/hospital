@@ -26,42 +26,23 @@ public class NursingOrderType extends OrderType {
 
 	@Override
 	protected void check(Order order) throws OrderException {
-		List<Order> orders = this.getService(OrderDAO.class)
-				.findExecutingByVisitAndOrderType(order.getVisit(), this);
+		List<Order> orders = this.getService(OrderDAO.class).findExecutingByVisitAndOrderType(order.getVisit(), this);
 
 		if (orders.size() > 0) {
-			throw new OrderException(order, "患者[%s]有在执行的护理医嘱[%s]", order
-					.getVisit().getName(), orders.get(0).getId());
+			throw new OrderException(order, "患者[%s]有在执行的护理医嘱[%s]", order.getVisit().getName(), orders.get(0).getId());
 		}
 	}
 
 	@Override
-	public void resolveOrder(OrderTypeApp orderTypeApp) {
-
-		Order order = orderTypeApp.getOrder();
-		// 分解两天的护理执行条目
-		LongOrder longOrder = (LongOrder) order;
-		for (int day = 0; day < LongOrder.ResolveDays; day++) {
-			// 计算执行时间
-			List<Date> executeDates = longOrder.calExecuteDates(day);
-
-			for (Date executeDate : executeDates) {
-				OrderExecuteTeam executeTeam = this.create(order, executeDate);
-				// 设置执行时间
-				for (OrderExecute execute : executeTeam.getExecutes()) {
-					execute.fillPlanDate(executeDate, executeDate);
-				}
-				// 收集执行条目
-				order.addExecuteTeam(executeTeam);
-			}
-		}
-
+	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
+		orderTypeApp.doResolve();
 	}
 
-	private OrderExecuteTeam create(Order order, Date startDate) {
+	@Override
+	protected OrderExecuteTeam createExecuteTeam(Order order, Date planExecuteDate) throws OrderException {
 
 		OrderExecuteTeam team = new OrderExecuteTeam();
-		
+
 		NursingOrderExecute execute = new NursingOrderExecute();
 		execute.setOrder(order);
 		execute.setVisit(order.getVisit());
@@ -74,7 +55,7 @@ public class NursingOrderType extends OrderType {
 		execute.setState(OrderExecute.State_NeedExecute);
 
 		team.addOrderExecute(execute);
-		
+
 		return team;
 	}
 

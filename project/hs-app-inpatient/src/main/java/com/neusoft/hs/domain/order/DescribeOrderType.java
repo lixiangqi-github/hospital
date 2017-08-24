@@ -19,31 +19,11 @@ public class DescribeOrderType extends OrderType {
 
 	@Override
 	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
-		Order order = orderTypeApp.getOrder();
-
-		if (order instanceof TemporaryOrder) {
-			OrderExecuteTeam team = this.create(order, order.getCreateDate());
-			order.addExecuteTeam(team);
-		} else {
-			LongOrder longOrder = (LongOrder) order;
-			for (int day = 0; day < LongOrder.ResolveDays; day++) {
-				// 计算执行时间
-				List<Date> executeDates = longOrder.calExecuteDates(day);
-
-				for (Date executeDate : executeDates) {
-					OrderExecuteTeam executeTeam = this.create(order, executeDate);
-					// 设置执行时间
-					for (OrderExecute execute : executeTeam.getExecutes()) {
-						execute.fillPlanDate(executeDate, executeDate);
-					}
-					// 收集执行条目
-					order.addExecuteTeam(executeTeam);
-				}
-			}
-		}
+		orderTypeApp.doResolve();
 	}
 
-	private OrderExecuteTeam create(Order order, Date startDate) {
+	@Override
+	protected OrderExecuteTeam createExecuteTeam(Order order, Date planExecuteDate) throws OrderException {
 
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
@@ -54,8 +34,8 @@ public class DescribeOrderType extends OrderType {
 		execute.setBelongDept(order.getBelongDept());
 		execute.setType(OrderExecute.Type_Describe);
 
-		execute.setPlanStartDate(startDate);
-		execute.setPlanEndDate(startDate);
+		execute.setPlanStartDate(planExecuteDate);
+		execute.setPlanEndDate(planExecuteDate);
 
 		execute.setExecuteDept(order.getExecuteDept());
 		if (execute.needSend()) {
@@ -63,7 +43,7 @@ public class DescribeOrderType extends OrderType {
 		} else {
 			execute.setState(OrderExecute.State_NeedExecute);
 		}
-		
+
 		team.addOrderExecute(execute);
 
 		return team;

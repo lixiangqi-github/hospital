@@ -2,6 +2,7 @@
 
 package com.neusoft.hs.domain.order;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Cacheable;
@@ -73,8 +74,7 @@ public abstract class OrderType extends SuperEntity {
 	 * @throws OrderExecuteException
 	 * @roseuid 584E66D50265
 	 */
-	protected void check(Order order) throws OrderException,
-			OrderExecuteException {
+	protected void check(Order order) throws OrderException, OrderExecuteException {
 
 	}
 
@@ -95,8 +95,19 @@ public abstract class OrderType extends SuperEntity {
 	 * @throws OrderException
 	 * @roseuid 584F4A3201B9
 	 */
-	public abstract void resolveOrder(OrderTypeApp orderTypeApp)
-			throws OrderException;
+	public abstract void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException;
+
+	/**
+	 * 在医嘱分解时创建一组执行条目组
+	 * 
+	 * @param order
+	 * @param planExecuteDate
+	 * @return
+	 * @throws OrderException
+	 */
+	protected OrderExecuteTeam createExecuteTeam(Order order, Date planExecuteDate) throws OrderException {
+		throw new OrderException(order, "该方法没有被子类实现");
+	}
 
 	/**
 	 * 医嘱核对后的回调函数
