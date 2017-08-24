@@ -36,6 +36,9 @@ public class InspectResult extends IdEntity {
 	@JoinColumn(name = "visit_id")
 	private Visit visit;
 
+	@Column(name = "visit_name", length = 16)
+	private String visitName;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "inspect_dept_id")
 	private InspectDept inspectDept;
@@ -74,6 +77,15 @@ public class InspectResult extends IdEntity {
 
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+		this.visitName = visit.getName();
+	}
+
+	public String getVisitName() {
+		return visitName;
+	}
+
+	public void setVisitName(String visitName) {
+		this.visitName = visitName;
 	}
 
 	public InspectDept getInspectDept() {

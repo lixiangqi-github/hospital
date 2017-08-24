@@ -54,9 +54,6 @@ public class OrderBatchDataService {
 	private OrderAppService orderAppService;
 
 	@Autowired
-	private OrderDomainService orderDomainService;
-
-	@Autowired
 	private OrderExecuteAppService orderExecuteAppService;
 
 	@Autowired
