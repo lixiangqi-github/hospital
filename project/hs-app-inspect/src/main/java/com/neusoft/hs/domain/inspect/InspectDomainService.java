@@ -113,8 +113,6 @@ public class InspectDomainService {
 			}
 		}
 
-		inspectApplyItem.save();
-
 		applicationContext.publishEvent(new InspectApplyItemCanceledEvent(inspectApplyItem));
 
 		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]取消检查项目[{}]", user.getId(), arrange.getVisit().getName(),
