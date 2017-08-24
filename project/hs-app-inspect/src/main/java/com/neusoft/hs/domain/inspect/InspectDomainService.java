@@ -96,27 +96,10 @@ public class InspectDomainService {
 
 		inspectApplyItem.setState(InspectApplyItem.State_Canceled);
 
-		InspectArrangeOrderExecute arrange = inspectApplyItem.getInspectArrangeOrderExecute();
-		if (arrange != null) {
-			try {
-				arrange.cancel(user);
-			} catch (OrderExecuteException e) {
-				throw new InspectException(e);
-			}
-		}
-		InspectConfirmOrderExecute confirm = inspectApplyItem.getInspectConfirmOrderExecute();
-		if (confirm != null) {
-			try {
-				confirm.cancel(user);
-			} catch (OrderExecuteException e) {
-				throw new InspectException(e);
-			}
-		}
-
 		applicationContext.publishEvent(new InspectApplyItemCanceledEvent(inspectApplyItem));
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]取消检查项目[{}]", user.getId(), arrange.getVisit().getName(),
-				inspectApplyItem.getId());
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]取消检查项目[{}]", user.getId(),
+				inspectApplyItem.getInspectApply().getVisitName(), inspectApplyItem.getId());
 	}
 
 	public InspectApplyItem findInspectApplyItem(String inspectApplyItemId) {

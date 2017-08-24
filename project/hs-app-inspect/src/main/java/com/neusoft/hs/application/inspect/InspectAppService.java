@@ -14,6 +14,7 @@ import com.neusoft.hs.domain.inspect.InspectDomainService;
 import com.neusoft.hs.domain.inspect.InspectException;
 import com.neusoft.hs.domain.order.ApplyDomainService;
 import com.neusoft.hs.domain.order.InspectArrangeOrderExecute;
+import com.neusoft.hs.domain.order.InspectConfirmOrderExecute;
 import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.OrderExecuteDomainService;
 import com.neusoft.hs.domain.order.OrderExecuteException;
@@ -36,13 +37,12 @@ public class InspectAppService {
 		return (InspectApply) applyDomainService.find(applyId);
 	}
 
-	public void arrange(String executeId, Date planExecuteDate,
-			AbstractUser user) throws InspectException, OrderExecuteException {
+	public void arrange(String executeId, Date planExecuteDate, AbstractUser user)
+			throws InspectException, OrderExecuteException {
 
 		OrderExecute execute = orderExecuteDomainService.find(executeId);
 		if (execute == null) {
-			throw new OrderExecuteException(null, "executeId=[%s]不存在",
-					executeId);
+			throw new OrderExecuteException(null, "executeId=[%s]不存在", executeId);
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -51,28 +51,41 @@ public class InspectAppService {
 		orderExecuteDomainService.finish(execute, params, user);
 	}
 
-	public void confirm(String executeId,
-			Map<InspectApplyItem, String> results, AbstractUser user)
+	public void confirm(String executeId, Map<InspectApplyItem, String> results, AbstractUser user)
 			throws InspectException, OrderExecuteException {
 
 		OrderExecute execute = orderExecuteDomainService.find(executeId);
 		if (execute == null) {
-			throw new OrderExecuteException(null, "executeId=[%s]不存在",
-					executeId);
+			throw new OrderExecuteException(null, "executeId=[%s]不存在", executeId);
 		}
 
 		inspectDomainService.confirm(execute, results, user);
 		orderExecuteDomainService.finish(execute, null, user);
 	}
 
-	public void cancel(String inspectApplyItemId, AbstractUser user)
-			throws InspectException {
-		InspectApplyItem inspectApplyItem = inspectDomainService
-				.findInspectApplyItem(inspectApplyItemId);
+	public void cancel(String inspectApplyItemId, AbstractUser user) throws InspectException {
+		InspectApplyItem inspectApplyItem = inspectDomainService.findInspectApplyItem(inspectApplyItemId);
 		if (inspectApplyItem == null) {
-			throw new InspectException("检查项目inspectApplyItemId=[%s]不存在",
-					inspectApplyItemId);
+			throw new InspectException("检查项目inspectApplyItemId=[%s]不存在", inspectApplyItemId);
 		}
 		inspectDomainService.cancel(inspectApplyItem, user);
+
+		InspectArrangeOrderExecute arrange = inspectApplyItem.getInspectArrangeOrderExecute();
+		if (arrange != null) {
+			try {
+				orderExecuteDomainService.cancel(arrange, user);
+			} catch (OrderExecuteException e) {
+				throw new InspectException(e);
+			}
+		}
+		InspectConfirmOrderExecute confirm = inspectApplyItem.getInspectConfirmOrderExecute();
+		if (confirm != null) {
+			try {
+				orderExecuteDomainService.cancel(confirm, user);
+			} catch (OrderExecuteException e) {
+				throw new InspectException(e);
+			}
+		}
+
 	}
 }
