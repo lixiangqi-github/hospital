@@ -59,22 +59,21 @@ public class InspectDomainService {
 		InspectApply inspectApply = (InspectApply) apply;
 
 		List<InspectApplyItem> inspectApplyItems = inspectApply.getInspectApplyItems();
-		// lazy load
-		List<String> inspectApplyItemIds = new ArrayList<String>();
-		for (InspectApplyItem inspectApplyItem : inspectApplyItems) {
-			inspectApplyItemIds.add(inspectApplyItem.getId());
-		}
-		for (InspectApplyItem item : results.keySet()) {
-			if (!inspectApplyItemIds.contains(item.getId())) {
-				throw new InspectException("检查项目[" + item.getInspectItem().getCode() + "]不在申请单中");
-			}
-			InspectResult inspectResult = new InspectResult();
-			inspectResult.setInspectDept((InspectDept) user.getDept());
-			inspectResult.setInspectApplyItem(item);
-			inspectResult.setResult(results.get(item));
-			inspectResult.setCreateDate(DateUtil.getSysDate());
 
-			inspectApply.addInspectResult(inspectResult);
+		for (InspectApplyItem item : inspectApplyItems) {
+			String resultStr = results.get(item);
+			if (resultStr != null) {
+				InspectResult inspectResult = new InspectResult();
+				inspectResult.setInspectDept((InspectDept) user.getDept());
+				inspectResult.setInspectApplyItem(item);
+				inspectResult.setResult(resultStr);
+				inspectResult.setCreateDate(DateUtil.getSysDate());
+
+				inspectApply.addInspectResult(inspectResult);
+
+				item.setExecuteDate(DateUtil.getSysDate());
+				item.setState(InspectApplyItem.State_Finished);
+			}
 		}
 
 		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]确认检查结果[{}]", user.getId(), orderExecute.getVisit().getName(),
