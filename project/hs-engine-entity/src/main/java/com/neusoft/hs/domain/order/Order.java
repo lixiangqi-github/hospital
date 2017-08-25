@@ -237,7 +237,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 		resolveOrderExecutes = new ArrayList<OrderExecute>();
 		resolveTeams = new ArrayList<OrderExecuteTeam>();
 		// 委托给type进行分解
-		this.orderType.resolveOrder(this.typeApp);
+		this.orderType.resolveOrder(this);
 		// 对分解结果进行后处理
 		if (resolveOrderExecutes.size() > 0) {
 			for (OrderExecute orderExecute : resolveOrderExecutes) {

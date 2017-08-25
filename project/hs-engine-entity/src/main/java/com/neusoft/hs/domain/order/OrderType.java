@@ -89,16 +89,14 @@ public abstract class OrderType extends SuperEntity {
 	}
 
 	/**
-	 * 医嘱分解逻辑
+	 * 医嘱分解核心逻辑
 	 * 
 	 * @param order
 	 * @return
 	 * @throws OrderException
 	 * @roseuid 584F4A3201B9
 	 */
-	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
-
-		Order order = orderTypeApp.getOrder();
+	public void resolveOrder(Order order) throws OrderException {
 
 		if (order instanceof TemporaryOrder) {
 			List<OrderExecuteTeam> teams = this.createExecuteTeams(order);

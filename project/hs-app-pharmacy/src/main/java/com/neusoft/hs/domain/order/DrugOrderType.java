@@ -2,7 +2,6 @@
 
 package com.neusoft.hs.domain.order;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
@@ -11,12 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.neusoft.hs.domain.pharmacy.DrugTypeConsumeRecord;
 import com.neusoft.hs.domain.pharmacy.DrugTypeSpec;
 import com.neusoft.hs.domain.pharmacy.DrugUseMode;
 import com.neusoft.hs.domain.pharmacy.PharmacyException;
-import com.neusoft.hs.platform.exception.HsException;
-import com.neusoft.hs.platform.util.DateUtil;
 
 /**
  * 药品医嘱类型
