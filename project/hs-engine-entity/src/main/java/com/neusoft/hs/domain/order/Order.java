@@ -41,9 +41,9 @@ import com.neusoft.hs.platform.util.DateUtil;
  *
  */
 @Entity
-@Table(name = "domain_order", indexes = { @Index(columnList = "state"), @Index(columnList = "belong_dept_id"),
-		@Index(columnList = "execute_dept_id"), @Index(columnList = "plan_start_date"),
-		@Index(columnList = "place_type") })
+@Table(name = "domain_order", indexes = { @Index(columnList = "state"),
+		@Index(columnList = "belong_dept_id"), @Index(columnList = "execute_dept_id"),
+		@Index(columnList = "plan_start_date"), @Index(columnList = "place_type") })
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Order extends IdEntity implements OrderCreateCommand {
 
@@ -78,12 +78,13 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	@Column(name = "execute_need_send")
 	private Boolean executeNeedSend;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REMOVE })
 	@JoinColumn(name = "type_app_id")
 	private OrderTypeApp typeApp;
 
-	@OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REMOVE })
+	@OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REMOVE })
 	private Apply apply;
 
 	@OneToMany(mappedBy = "order", cascade = { CascadeType.REMOVE })
@@ -227,7 +228,8 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	 * @throws OrderExecuteException
 	 * @roseuid 584F494100C2
 	 */
-	public List<OrderExecute> resolve(AbstractUser user) throws OrderException, OrderExecuteException {
+	public List<OrderExecute> resolve(AbstractUser user)
+			throws OrderException, OrderExecuteException {
 		if (!this.state.equals(State_Executing)) {
 			throw new OrderException(this, "医嘱[%s]的状态为[%s],不能分解", this.getId(), this.state);
 		}
@@ -242,7 +244,8 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 		if (resolveOrderExecutes.size() > 0) {
 			for (OrderExecute orderExecute : resolveOrderExecutes) {
 				// 更新一组执行条目的首条目的状态
-				if (orderExecute.isFirst() && !orderExecute.getState().equals(OrderExecute.State_NeedSend)) {
+				if (orderExecute.isFirst()
+						&& !orderExecute.getState().equals(OrderExecute.State_NeedSend)) {
 					orderExecute.updateState(user);
 				}
 				orderExecute.updateChargeState();
@@ -266,7 +269,8 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 			this.lastOrderExecute = resolveOrderExecutes.get(resolveOrderExecutes.size() - 1);
 		}
 
-		LogUtil.log(this.getClass(), "系统分解了医嘱条目[{}],得到{}条执行条目", this.getId(), resolveOrderExecutes.size());
+		LogUtil.log(this.getClass(), "系统分解了医嘱条目[{}],得到{}条执行条目", this.getId(),
+				resolveOrderExecutes.size());
 
 		return resolveOrderExecutes;
 	}

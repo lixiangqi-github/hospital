@@ -25,9 +25,9 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 
 	@Override
 	public List<OrderExecuteTeam> createExecuteTeams(Order order) {
-		
+
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
-		
+
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
 		DrugOrderTypeApp drugOrderTypeApp = this.getService(DrugOrderTypeAppRepo.class)
@@ -46,12 +46,14 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		ChargeItem chargeItem = drugOrderTypeApp.getDrugTypeSpec().getChargeItem();
 		// 辅材费用
 		ChargeItem assistMaterialChargeItem = null;
-		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this.getTheOrderUseModeChargeItem(transportFluid);
+		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this
+				.getTheOrderUseModeChargeItem(transportFluid);
 		if (orderUseModeAssistMaterial != null) {
 			// 判断在指定药品规格上绑定材料费进行收费
 			if (drugOrderTypeApp.getDrugTypeSpec().isTransportFluidCharge()) {
 				// 记录辅材收费项目
-				assistMaterialChargeItem = orderUseModeAssistMaterial.getAssistMaterial().getChargeItem();
+				assistMaterialChargeItem = orderUseModeAssistMaterial.getAssistMaterial()
+						.getChargeItem();
 			}
 		}
 
@@ -106,7 +108,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		distributeDrugExecute.setExecuteDept(pharmacy);
 		distributeDrugExecute.setState(OrderExecute.State_NeedExecute);
 		distributeDrugExecute.setCount(order.getCount());
-		
+
 		distributeDrugExecute.setPharmacy(pharmacy);
 		distributeDrugExecute.setDrugTypeSpec(drugOrderTypeApp.getDrugTypeSpec());
 
@@ -123,7 +125,7 @@ public class InfusionOrderUseModeToOutPatient extends DrugUseMode {
 		transportFluidExecute.setBelongDept(order.getBelongDept());
 		transportFluidExecute.setType(OrderExecute.Type_Transport_Fluid);
 		transportFluidExecute.setCount(order.getCount());
-		
+
 		if (assistMaterialChargeItem != null) {
 			transportFluidExecute.addChargeItemRecord(assistMaterialChargeItem);
 		}

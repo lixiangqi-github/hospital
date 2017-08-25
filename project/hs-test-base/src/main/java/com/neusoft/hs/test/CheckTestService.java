@@ -59,7 +59,7 @@ public class CheckTestService extends AppTestService {
 		orderExecutes = orderExecuteDomainService.findByState(
 				OrderExecute.State_Finished, pageable);
 
-		assertTrue(orderExecutes.size() == 92);
+		assertTrue(orderExecutes.size() == 93);
 
 		orderExecutes = orderExecuteDomainService.findByState(
 				OrderExecute.State_Canceled, pageable);
@@ -88,7 +88,7 @@ public class CheckTestService extends AppTestService {
 
 		orders = orderAdminDomainService.findAll(pageable);
 
-		assertTrue(orders.size() == 20);
+		assertTrue(orders.size() == 21);
 
 		orders = orderDomainService.find(visit001, pageable);
 

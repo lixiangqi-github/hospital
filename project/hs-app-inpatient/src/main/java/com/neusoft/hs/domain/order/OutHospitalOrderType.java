@@ -21,7 +21,7 @@ public class OutHospitalOrderType extends OrderType {
 
 	@Override
 	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
-		
+
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
 

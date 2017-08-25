@@ -27,10 +27,12 @@ public class NursingOrderType extends OrderType {
 
 	@Override
 	protected void check(Order order) throws OrderException {
-		List<Order> orders = this.getService(OrderDAO.class).findExecutingByVisitAndOrderType(order.getVisit(), this);
+		List<Order> orders = this.getService(OrderDAO.class)
+				.findExecutingByVisitAndOrderType(order.getVisit(), this);
 
 		if (orders.size() > 0) {
-			throw new OrderException(order, "患者[%s]有在执行的护理医嘱[%s]", order.getVisit().getName(), orders.get(0).getId());
+			throw new OrderException(order, "患者[%s]有在执行的护理医嘱[%s]", order.getVisit().getName(),
+					orders.get(0).getId());
 		}
 	}
 

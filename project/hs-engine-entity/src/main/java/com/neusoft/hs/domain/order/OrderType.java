@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -138,7 +137,8 @@ public abstract class OrderType extends SuperEntity {
 
 			if (order.isInPatient()) {
 				// 没有分解出执行条目，设置之前分解的最后一条为last
-				if (order.getResolveOrderExecutes().size() == 0 && longOrder.getPlanEndDate() != null
+				if (order.getResolveOrderExecutes().size() == 0
+						&& longOrder.getPlanEndDate() != null
 						&& longOrder.getPlanEndDate().before(DateUtil.getSysDate())) {
 					OrderExecute lastOrderExecute = order.getLastOrderExecute();
 					if (lastOrderExecute != null) {

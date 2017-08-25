@@ -43,7 +43,7 @@ public class InspectOrderType extends OrderType {
 			arrange.setVisit(order.getVisit());
 			arrange.setBelongDept(order.getBelongDept());
 			arrange.setExecuteDept(inspectApplyItem.getArrangeDept());
-			
+
 			arrange.setType(OrderExecute.Type_Arrange_Inspect);
 			arrange.setInspectApplyItem(inspectApplyItem);
 
@@ -73,7 +73,7 @@ public class InspectOrderType extends OrderType {
 
 			teams.add(team);
 		}
-		
+
 		return teams;
 	}
 }

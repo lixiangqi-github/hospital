@@ -19,9 +19,9 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 
 	@Override
 	public List<OrderExecuteTeam> createExecuteTeams(Order order) {
-		
+
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
-		
+
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
 		DrugOrderTypeApp drugOrderTypeApp = this.getService(DrugOrderTypeAppRepo.class)
@@ -62,7 +62,7 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 		distributeDrugExecute.setCount(order.getCount());
 		distributeDrugExecute.setState(OrderExecute.State_NeedExecute);
 		distributeDrugExecute.setCount(order.getCount());
-		
+
 		distributeDrugExecute.setPharmacy(pharmacy);
 		distributeDrugExecute.setDrugTypeSpec(drugOrderTypeApp.getDrugTypeSpec());
 
@@ -77,12 +77,14 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 		transportFluidExecute.setCount(order.getCount());
 
 		// 处理辅材产生的费用
-		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this.getTheOrderUseModeChargeItem(transportFluid);
+		DrugUseModeAssistMaterial orderUseModeAssistMaterial = this
+				.getTheOrderUseModeChargeItem(transportFluid);
 		if (orderUseModeAssistMaterial != null) {
 			if (drugOrderTypeApp.getDrugTypeSpec().isTransportFluidCharge()) {
 
 				String chargeMode = orderUseModeAssistMaterial.getChargeMode();
-				ChargeItem assistMaterialChargeItem = orderUseModeAssistMaterial.getAssistMaterial().getChargeItem();
+				ChargeItem assistMaterialChargeItem = orderUseModeAssistMaterial.getAssistMaterial()
+						.getChargeItem();
 
 				if (chargeMode.equals(DrugUseModeAssistMaterial.everyOne)) {
 					transportFluidExecute.addChargeItemRecord(assistMaterialChargeItem);

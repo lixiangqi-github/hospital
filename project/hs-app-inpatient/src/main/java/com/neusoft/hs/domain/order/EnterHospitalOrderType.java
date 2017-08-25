@@ -58,7 +58,8 @@ public class EnterHospitalOrderType extends OrderType {
 		OrganizationAdminDomainService organizationAdminDomainService = this
 				.getService(OrganizationAdminDomainService.class);
 
-		Dept inPatientOfficeDept = organizationAdminDomainService.getInPatientOfficeDept(order.getExecuteDept());
+		Dept inPatientOfficeDept = organizationAdminDomainService
+				.getInPatientOfficeDept(order.getExecuteDept());
 
 		Dept inChargeDept = organizationAdminDomainService.getInChargeDept(order.getExecuteDept());
 
@@ -67,7 +68,7 @@ public class EnterHospitalOrderType extends OrderType {
 		register.setOrder(order);
 		register.setVisit(order.getVisit());
 		register.setType(OrderExecute.Type_Enter_Hospital_Register);
-		
+
 		register.setBelongDept(order.getBelongDept());
 		register.setExecuteDept(inPatientOfficeDept);
 		register.setState(OrderExecute.State_Executing);

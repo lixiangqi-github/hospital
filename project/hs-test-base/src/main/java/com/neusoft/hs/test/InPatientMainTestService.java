@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.neusoft.hs.application.pharmacy.InPatientPharmacyAppService;
 import com.neusoft.hs.data.init.ChoiceItem;
 import com.neusoft.hs.domain.cost.ChargeRecord;
 import com.neusoft.hs.domain.inspect.InspectApply;
@@ -42,9 +40,6 @@ import com.neusoft.hs.platform.util.DateUtil;
 @Service
 public class InPatientMainTestService extends InPatientTestService {
 
-	@Autowired
-	private InPatientPharmacyAppService patientPharmacyAppService;
-
 	@Override
 	protected void treatment() throws HsException {
 
@@ -64,6 +59,9 @@ public class InPatientMainTestService extends InPatientTestService {
 		NursingOrderBuilder nursingOrderBuilder;
 		TemporaryDrugOrderBuilder drugOrderBuilder;
 		LongDrugOrderBuilder longDrugOrderBuilder;
+
+		LongOrder describeLongOrder;
+		TemporaryOrder describeTemporaryOrder;
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 10:40", dayCount));
 
@@ -222,8 +220,8 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		Visit currentVisit = visitDomainService.find(visit001.getId());
 
-		List<TreatmentItemSpec> treatmentItemSpecs = treatmentAppService.getShouldTreatmentItemSpecs(currentVisit,
-				user002);
+		List<TreatmentItemSpec> treatmentItemSpecs = treatmentAppService
+				.getShouldTreatmentItemSpecs(currentVisit, user002);
 
 		assertTrue(treatmentItemSpecs.size() == 1);
 
@@ -326,7 +324,8 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-29 14:00", dayCount));
 
 		// 打印配液单
-		fluidOrder = configureFluidAppService.print(dept000n, afternoonConfigureFluidBatch, userb02);
+		fluidOrder = configureFluidAppService.print(dept000n, afternoonConfigureFluidBatch,
+				userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
@@ -406,7 +405,8 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-30 14:00", dayCount));
 
 		// 打印配液单
-		fluidOrder = configureFluidAppService.print(dept000n, afternoonConfigureFluidBatch, userb02);
+		fluidOrder = configureFluidAppService.print(dept000n, afternoonConfigureFluidBatch,
+				userb02);
 
 		assertTrue(fluidOrder.getConfigureFluidExecutes().size() == 2);
 
@@ -564,8 +564,8 @@ public class InPatientMainTestService extends InPatientTestService {
 		assertTrue(executes.size() == 1);
 
 		// 安排检查时间
-		inspectAppService.arrange(executes.get(0).getId(), DateUtil.createMinute("2017-01-02 14:00", dayCount),
-				user401);
+		inspectAppService.arrange(executes.get(0).getId(),
+				DateUtil.createMinute("2017-01-02 14:00", dayCount), user401);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 10:30", dayCount));
 
@@ -575,8 +575,8 @@ public class InPatientMainTestService extends InPatientTestService {
 		assertTrue(executes.size() == 1);
 
 		// 安排检查时间
-		inspectAppService.arrange(executes.get(0).getId(), DateUtil.createMinute("2017-01-03 14:00", dayCount),
-				user501);
+		inspectAppService.arrange(executes.get(0).getId(),
+				DateUtil.createMinute("2017-01-03 14:00", dayCount), user501);
 
 		// 2017-01-02
 		DateUtil.setSysDate(DateUtil.createDay("2017-01-02", dayCount));
@@ -755,11 +755,12 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 09:33", dayCount));
 
 		// 将当天已收的二级护理给退了费
-		List<ChargeRecord> records = costDomainService.getChargeRecords(visit004, user003.getOperationDepts(),
-				pageable);
+		List<ChargeRecord> records = costDomainService.getChargeRecords(visit004,
+				user003.getOperationDepts(), pageable);
 
 		List<ChargeRecord> theRecords = records.stream()
-				.filter(record -> DateUtil.isDayIn(record.getCreateDate(), DateUtil.getDateStart(DateUtil.getSysDate()))
+				.filter(record -> DateUtil.isDayIn(record.getCreateDate(),
+						DateUtil.getDateStart(DateUtil.getSysDate()))
 						&& record.getChargeItemName().equals("二级护理"))
 				.collect(Collectors.toList());
 
@@ -842,19 +843,19 @@ public class InPatientMainTestService extends InPatientTestService {
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 10:00", dayCount));
 
 		// 为患者001开一个描述医嘱
-		LongOrder describeOrder = new LongOrder();
-		describeOrder.setVisit(visit001);
-		describeOrder.setOrderType(describeOrderType);
-		describeOrder.setName(describeOrderType.getName());
-		
-		describeOrder.setBelongDept(dept000);
-		describeOrder.setExecuteDept(dept000);
-		describeOrder.setDescribe("辅助患者翻身");
-		describeOrder.setFrequencyType(orderFrequencyType_11H);
-		describeOrder.setPlanStartDate(DateUtil.getSysDate());
-		describeOrder.setPlanEndDate(DateUtil.addDay(DateUtil.getSysDate(), 2));
+		describeLongOrder = new LongOrder();
+		describeLongOrder.setVisit(visit001);
+		describeLongOrder.setOrderType(describeOrderType);
+		describeLongOrder.setName(describeOrderType.getName());
 
-		orderAppService.create(describeOrder, user002);
+		describeLongOrder.setBelongDept(dept000);
+		describeLongOrder.setExecuteDept(dept000);
+		describeLongOrder.setDescribe("辅助患者翻身");
+		describeLongOrder.setFrequencyType(orderFrequencyType_11H);
+		describeLongOrder.setPlanStartDate(DateUtil.getSysDate());
+		describeLongOrder.setPlanEndDate(DateUtil.addDay(DateUtil.getSysDate(), 2));
+
+		orderAppService.create(describeLongOrder, user002);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 10:02", dayCount));
 
@@ -875,6 +876,44 @@ public class InPatientMainTestService extends InPatientTestService {
 		assertTrue(executes.size() == 1);
 
 		// 完成当天的描述医嘱
+		for (OrderExecute execute : executes) {
+			orderExecuteAppService.finish(execute.getId(), null, user003);
+		}
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 14:00", dayCount));
+
+		// 为患者001开一个描述医嘱
+		describeTemporaryOrder = new TemporaryOrder();
+		describeTemporaryOrder.setVisit(visit004);
+		describeTemporaryOrder.setOrderType(describeOrderType);
+		describeTemporaryOrder.setName(describeOrderType.getName());
+
+		describeTemporaryOrder.setBelongDept(deptddd);
+		describeTemporaryOrder.setExecuteDept(deptddd);
+		describeTemporaryOrder.setDescribe("辅助患者看天");
+		describeTemporaryOrder.setPlanStartDate(DateUtil.getSysDate());
+
+		orderAppService.create(describeTemporaryOrder, userd02);
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 14:10", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		orders = orderAppService.findNeedVerifyOrders(user003, pageable);
+
+		assertTrue(orders.size() == 1);
+
+		for (Order order : orders) {
+			orderAppService.verify(order.getId(), user003);
+		}
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 14:30", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
+
+		assertTrue(executes.size() == 1);
+
+		// 完成描述临嘱
 		for (OrderExecute execute : executes) {
 			orderExecuteAppService.finish(execute.getId(), null, user003);
 		}
