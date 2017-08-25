@@ -70,6 +70,16 @@ public class LongOrder extends Order {
 		this.endDate = endDate;
 	}
 
+	public int resolveDays() {
+		int resolveDays;
+		if (this.isInPatient()) {
+			resolveDays = ResolveDays;// 住院长嘱分解指定天数
+		} else {
+			resolveDays = DateUtil.calDay(this.getPlanStartDate(), planEndDate);// 门诊长嘱一次性分解完
+		}
+		return resolveDays;
+	}
+
 	/**
 	 * 创建医嘱条目前的检查回调函数 该回调函数将职责委托给医嘱类型@OrderType完成
 	 * 

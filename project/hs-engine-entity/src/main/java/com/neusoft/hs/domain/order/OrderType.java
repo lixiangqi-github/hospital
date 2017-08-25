@@ -113,14 +113,7 @@ public abstract class OrderType extends SuperEntity {
 		} else {
 			LongOrder longOrder = (LongOrder) order;
 
-			int resolveDays;
-			if (order.isInPatient()) {
-				resolveDays = LongOrder.ResolveDays;// 住院长嘱分解指定天数
-			} else {
-				resolveDays = DateUtil.calDay(longOrder.getPlanStartDate(), longOrder.getPlanEndDate());// 门诊长嘱一次性分解完
-			}
-
-			for (int day = 0; day < resolveDays; day++) {
+			for (int day = 0; day < longOrder.resolveDays(); day++) {
 				// 计算执行时间
 				List<Date> executeDates = longOrder.calExecuteDates(day);
 

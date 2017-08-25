@@ -688,6 +688,10 @@ public abstract class OrderExecute extends IdEntity {
 		return this.team.getExecutes();
 	}
 
+	public boolean isFirst() {
+		return this.previous == null;
+	}
+
 	public OrderExecute getPrevious() {
 		return previous;
 	}

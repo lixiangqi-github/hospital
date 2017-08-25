@@ -242,8 +242,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 		if (resolveOrderExecutes.size() > 0) {
 			for (OrderExecute orderExecute : resolveOrderExecutes) {
 				// 更新一组执行条目的首条目的状态
-				if (orderExecute.getPrevious() == null
-						&& !orderExecute.getState().equals(OrderExecute.State_NeedSend)) {
+				if (orderExecute.isFirst() && !orderExecute.getState().equals(OrderExecute.State_NeedSend)) {
 					orderExecute.updateState(user);
 				}
 				orderExecute.updateChargeState();
@@ -252,7 +251,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 				if (this.getCompsiteOrder() != null) {
 					orderExecute.setCompsiteOrder(this.getCompsiteOrder());
 				}
-				// 设置创建时间
+				// 补充创建时间
 				if (orderExecute.getCreateDate() == null) {
 					orderExecute.setCreateDate(createDate);
 				}
@@ -261,6 +260,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 				// 计算提示信息
 				orderExecute.calTip();
 			}
+			// 持久化
 			this.getService(OrderExecuteTeamRepo.class).save(resolveTeams);
 			// 记录本次分解的最后一条执行条目
 			this.lastOrderExecute = resolveOrderExecutes.get(resolveOrderExecutes.size() - 1);
