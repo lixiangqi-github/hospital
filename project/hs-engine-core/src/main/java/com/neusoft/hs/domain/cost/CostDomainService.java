@@ -60,9 +60,9 @@ public class CostDomainService {
 	 */
 	public ChargeBill createChargeBill(Visit visit, float balance, AbstractUser user) {
 		ChargeBill chargeBill = visit.initAccount(balance, user);
-		
+
 		applicationContext.publishEvent(new ChargeBillCreatedEvent(chargeBill));
-		
+
 		return chargeBill;
 	}
 
@@ -94,7 +94,7 @@ public class CostDomainService {
 			chargeBill.setChargeMode(ChargeBill.ChargeMode_PreCharge);
 		}
 		chargeBill.setBalance(chargeBill.getBalance() + balance);
-		
+
 		applicationContext.publishEvent(new ChargeBillAddCostEvent(chargeRecord));
 
 		LogUtil.log(this.getClass(), "用户[{}]给账户[{}]续费{}", user.getId(), chargeBill.getId(),
@@ -119,7 +119,7 @@ public class CostDomainService {
 		visitChargeItem.setStartDate(startDate);
 
 		visitChargeItem.save();
-		
+
 		applicationContext.publishEvent(new VisitChargeItemCreatedEvent(visitChargeItem));
 
 		LogUtil.log(this.getClass(), "系统给患者一次就诊[{}]增加收费项目{}", visit.getName(), item.getId());
@@ -305,7 +305,8 @@ public class CostDomainService {
 		if (visitChargeItems != null) {
 			for (VisitChargeItem visitChargeItem : visitChargeItems) {
 				try {
-					visitChargeItem.charge();
+					this.charging(visitChargeItem.getVisit(),
+							visitChargeItem.createChargeRecords());
 					count++;
 				} catch (CostException e) {
 					e.printStackTrace();

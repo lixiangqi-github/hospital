@@ -52,24 +52,21 @@ public class VisitChargeItem extends IdEntity {
 	public static final String State_Stop = "已停止";
 
 	/**
-	 * 生成收费条目
+	 * 创建收费条目
 	 * 
 	 * @throws CostException
 	 */
-	public void charge() throws CostException {
+	public List<ChargeRecord> createChargeRecords() throws CostException {
 
 		if (chargeItem.getChargingMode().equals(ChargeItem.ChargingMode_Day)) {
 			Date sysDate = DateUtil.getSysDate();
 			Date startDate = DateUtil.getSysDateStart();
 			Date endDate = DateUtil.addDay(startDate, 1);
-			List<ChargeRecord> oldChargeRecords = this.getService(
-					ChargeRecordRepo.class)
-					.findByVisitAndChargeItemAndCreateDate(visit, chargeItem,
-							startDate, endDate);
+			List<ChargeRecord> oldChargeRecords = this.getService(ChargeRecordRepo.class)
+					.findByVisitAndChargeItemAndCreateDate(visit, chargeItem, startDate, endDate);
 			if (oldChargeRecords.size() > 0) {
-				throw new CostException("患者[%s]的收费项目[%s]在[%s]时间的已经收费",
-						visit.getName(), chargeItem.getName(),
-						DateUtil.toString(sysDate));
+				throw new CostException("患者[%s]的收费项目[%s]在[%s]时间的已经收费", visit.getName(),
+						chargeItem.getName(), DateUtil.toString(sysDate));
 			}
 		}
 
@@ -87,7 +84,7 @@ public class VisitChargeItem extends IdEntity {
 
 		chargeRecords.add(chargeRecord);
 
-		this.visit.getChargeBill().charging(chargeRecords);
+		return chargeRecords;
 	}
 
 	public Date getStartDate() {
