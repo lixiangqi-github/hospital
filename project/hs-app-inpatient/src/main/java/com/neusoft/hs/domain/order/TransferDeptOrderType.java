@@ -1,5 +1,9 @@
 package com.neusoft.hs.domain.order;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -8,17 +12,16 @@ import javax.persistence.Entity;
 public class TransferDeptOrderType extends OrderType {
 
 	@Override
-	protected void check(Order order) throws OrderException,
-			OrderExecuteException {
+	protected void check(Order order) throws OrderException, OrderExecuteException {
 		if (order.getExecuteDept() == null) {
 			throw new OrderException(order, "没有指定转科科室");
 		}
 	}
 
 	@Override
-	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
-		Order order = orderTypeApp.getOrder();
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
 
+		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
 		// 转科确认执行条目
@@ -37,7 +40,9 @@ public class TransferDeptOrderType extends OrderType {
 
 		team.addOrderExecute(transferConfirm);
 
-		order.addExecuteTeam(team);
+		teams.add(team);
+
+		return teams;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.neusoft.hs.domain.order;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
@@ -19,9 +21,7 @@ import com.neusoft.hs.domain.order.OrderTypeApp;
 public class InspectOrderType extends OrderType {
 
 	@Override
-	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
-
-		Order order = orderTypeApp.getOrder();
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
 
 		InspectApply inspectApply = (InspectApply) order.getApply();
 		if (inspectApply == null) {
@@ -32,6 +32,9 @@ public class InspectOrderType extends OrderType {
 		if (inspectApplyItems == null || inspectApplyItems.size() == 0) {
 			throw new OrderException(order, "申请单[%s]没有申请检查项目", inspectApply.getId());
 		}
+
+		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
+
 		for (InspectApplyItem inspectApplyItem : inspectApply.getInspectApplyItems()) {
 			OrderExecuteTeam team = new OrderExecuteTeam();
 			// 安排检查
@@ -71,7 +74,9 @@ public class InspectOrderType extends OrderType {
 
 			team.addOrderExecute(confirm);
 
-			order.addExecuteTeam(team);
+			teams.add(team);
 		}
+		
+		return teams;
 	}
 }

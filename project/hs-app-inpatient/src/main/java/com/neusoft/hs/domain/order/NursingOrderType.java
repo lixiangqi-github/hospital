@@ -1,5 +1,6 @@
 package com.neusoft.hs.domain.order;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,13 +35,9 @@ public class NursingOrderType extends OrderType {
 	}
 
 	@Override
-	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
-		orderTypeApp.doResolve();
-	}
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
 
-	@Override
-	protected OrderExecuteTeam createExecuteTeam(Order order, Date planExecuteDate) throws OrderException {
-
+		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
 		NursingOrderExecute execute = new NursingOrderExecute();
@@ -56,7 +53,9 @@ public class NursingOrderType extends OrderType {
 
 		team.addOrderExecute(execute);
 
-		return team;
+		teams.add(team);
+
+		return teams;
 	}
 
 	public String getNursingType() {

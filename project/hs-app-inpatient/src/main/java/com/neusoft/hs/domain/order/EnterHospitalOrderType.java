@@ -1,5 +1,9 @@
 package com.neusoft.hs.domain.order;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -46,20 +50,17 @@ public class EnterHospitalOrderType extends OrderType {
 	}
 
 	@Override
-	public void resolveOrder(OrderTypeApp orderTypeApp) {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
 
-		Order order = orderTypeApp.getOrder();
-
+		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
 		OrganizationAdminDomainService organizationAdminDomainService = this
 				.getService(OrganizationAdminDomainService.class);
 
-		Dept inPatientOfficeDept = organizationAdminDomainService
-				.getInPatientOfficeDept(order.getExecuteDept());
+		Dept inPatientOfficeDept = organizationAdminDomainService.getInPatientOfficeDept(order.getExecuteDept());
 
-		Dept inChargeDept = organizationAdminDomainService
-				.getInChargeDept(order.getExecuteDept());
+		Dept inChargeDept = organizationAdminDomainService.getInChargeDept(order.getExecuteDept());
 
 		// 入院登记执行条目
 		EnterHospitalRegisterOrderExecute register = new EnterHospitalRegisterOrderExecute();
@@ -107,7 +108,9 @@ public class EnterHospitalOrderType extends OrderType {
 
 		team.addOrderExecute(intoWard);
 
-		order.addExecuteTeam(team);
+		teams.add(team);
+
+		return teams;
 	}
 
 }

@@ -95,7 +95,35 @@ public abstract class OrderType extends SuperEntity {
 	 * @throws OrderException
 	 * @roseuid 584F4A3201B9
 	 */
-	public abstract void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException;
+	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
+
+		Order order = orderTypeApp.getOrder();
+
+		if (order instanceof TemporaryOrder) {
+			List<OrderExecuteTeam> teams = order.getOrderType().createExecuteTeams(order, order.getPlanStartDate());
+			for (OrderExecuteTeam team : teams) {
+				order.addExecuteTeam(team);
+			}
+		} else {
+			LongOrder longOrder = (LongOrder) order;
+			for (int day = 0; day < LongOrder.ResolveDays; day++) {
+				// 计算执行时间
+				List<Date> executeDates = longOrder.calExecuteDates(day);
+
+				for (Date executeDate : executeDates) {
+					List<OrderExecuteTeam> teams = order.getOrderType().createExecuteTeams(order, executeDate);
+					for (OrderExecuteTeam team : teams) {
+						// 设置执行时间
+						for (OrderExecute execute : team.getExecutes()) {
+							execute.fillPlanDate(executeDate, executeDate);
+						}
+						// 收集执行条目
+						order.addExecuteTeam(team);
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * 在医嘱分解时创建一组执行条目组
@@ -105,7 +133,7 @@ public abstract class OrderType extends SuperEntity {
 	 * @return
 	 * @throws OrderException
 	 */
-	protected OrderExecuteTeam createExecuteTeam(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
 		throw new OrderException(order, "该方法没有被子类实现");
 	}
 

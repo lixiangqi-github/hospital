@@ -55,34 +55,6 @@ public abstract class OrderTypeApp extends IdEntity {
 		this.order = order;
 	}
 
-	/**
-	 * 医嘱分解时回调方法
-	 * 
-	 * @throws OrderException
-	 */
-	void doResolve() throws OrderException {
-		if (order instanceof TemporaryOrder) {
-			OrderExecuteTeam team = order.getOrderType().createExecuteTeam(order, order.getPlanStartDate());
-			order.addExecuteTeam(team);
-		} else {
-			LongOrder longOrder = (LongOrder) order;
-			for (int day = 0; day < LongOrder.ResolveDays; day++) {
-				// 计算执行时间
-				List<Date> executeDates = longOrder.calExecuteDates(day);
-
-				for (Date executeDate : executeDates) {
-					OrderExecuteTeam executeTeam = order.getOrderType().createExecuteTeam(order, executeDate);
-					// 设置执行时间
-					for (OrderExecute execute : executeTeam.getExecutes()) {
-						execute.fillPlanDate(executeDate, executeDate);
-					}
-					// 收集执行条目
-					order.addExecuteTeam(executeTeam);
-				}
-			}
-		}
-	}
-
 	public void save() {
 		this.getService(OrderTypeAppRepo.class).save(this);
 	}
