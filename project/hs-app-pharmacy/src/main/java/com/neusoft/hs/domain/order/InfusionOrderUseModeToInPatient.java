@@ -1,5 +1,8 @@
 package com.neusoft.hs.domain.order;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -15,7 +18,10 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 	public static final String transportFluid = "transportFluid";
 
 	@Override
-	public void resolve(Order order) {
+	public List<OrderExecuteTeam> createExecuteTeams(Order order) {
+		
+		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
+		
 		OrderExecuteTeam team = new OrderExecuteTeam();
 
 		DrugOrderTypeApp drugOrderTypeApp = this.getService(DrugOrderTypeAppRepo.class)
@@ -97,7 +103,9 @@ public class InfusionOrderUseModeToInPatient extends DrugUseMode {
 
 		team.addOrderExecute(transportFluidExecute);
 
-		order.addExecuteTeam(team);
+		teams.add(team);
+
+		return teams;
 	}
 
 }

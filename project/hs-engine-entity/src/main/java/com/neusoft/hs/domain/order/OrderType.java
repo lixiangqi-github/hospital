@@ -105,13 +105,31 @@ public abstract class OrderType extends SuperEntity {
 			for (OrderExecuteTeam team : teams) {
 				order.addExecuteTeam(team);
 			}
+			// 设置执行时间
+			for (OrderExecute execute : order.getResolveOrderExecutes()) {
+				execute.fillPlanDate(order.getPlanStartDate(), order.getPlanStartDate());
+			}
+			if (order.getResolveOrderExecutes().size() == 0) {
+				throw new OrderException(order, "没有分解出执行条目");
+			}
 		} else {
 			LongOrder longOrder = (LongOrder) order;
-			for (int day = 0; day < LongOrder.ResolveDays; day++) {
+
+			int resolveDays;
+			if (order.isInPatient()) {
+				resolveDays = LongOrder.ResolveDays;// 住院长嘱分解指定天数
+			} else {
+				resolveDays = DateUtil.calDay(longOrder.getPlanStartDate(), longOrder.getPlanEndDate());// 门诊长嘱一次性分解完
+			}
+
+			for (int day = 0; day < resolveDays; day++) {
 				// 计算执行时间
 				List<Date> executeDates = longOrder.calExecuteDates(day);
 
 				for (Date executeDate : executeDates) {
+					// 清空上一频次的执行条目集合
+					order.clearResolveFrequencyOrderExecutes();
+					// 创建一个频次的执行条目集合
 					List<OrderExecuteTeam> teams = this.createExecuteTeams(order, executeDate);
 					for (OrderExecuteTeam team : teams) {
 						// 设置执行时间
@@ -120,6 +138,9 @@ public abstract class OrderType extends SuperEntity {
 						}
 						// 收集执行条目
 						order.addExecuteTeam(team);
+					}
+					if (order.getResolveFrequencyOrderExecutes().size() == 0) {
+						throw new OrderException(order, "没有分解出执行条目");
 					}
 				}
 			}

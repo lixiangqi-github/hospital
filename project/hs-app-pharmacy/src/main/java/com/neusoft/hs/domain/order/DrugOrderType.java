@@ -60,68 +60,11 @@ public class DrugOrderType extends OrderType {
 	}
 
 	@Override
-	public void resolveOrder(OrderTypeApp orderTypeApp) throws OrderException {
-
-		Order order = orderTypeApp.getOrder();
-
-		DrugUseMode drugUseMode = this.getService(DrugOrderTypeAppRepo.class).findOne(orderTypeApp.getId())
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+		DrugUseMode drugUseMode = this.getService(DrugOrderTypeAppRepo.class).findOne(order.getTypeApp().getId())
 				.getDrugUseMode();
 
-		if (order instanceof TemporaryOrder) {
-			// 分解执行条目
-			drugUseMode.resolve(order);
-			if (order.getResolveOrderExecutes().size() == 0) {
-				throw new OrderException(order, "没有分解出执行条目");
-			}
-			// 设置执行时间
-			for (OrderExecute execute : order.getResolveOrderExecutes()) {
-				execute.fillPlanDate(order.getPlanStartDate(), order.getPlanStartDate());
-			}
-		} else {
-			// 长嘱分解
-			LongOrder longOrder = (LongOrder) order;
-			int resolveDays;
-			if (order.isInPatient()) {
-				resolveDays = LongOrder.ResolveDays;// 住院长嘱分解指定天数
-			} else {
-				resolveDays = DateUtil.calDay(longOrder.getPlanStartDate(), longOrder.getPlanEndDate());// 门诊长嘱一次性分解完
-			}
-			for (int day = 0; day < resolveDays; day++) {
-				// 计算执行时间
-				List<Date> executeDates = longOrder.calExecuteDates(day);
-
-				for (Date executeDate : executeDates) {
-					// 清空上一频次的执行条目集合
-					order.clearResolveFrequencyOrderExecutes();
-					// 分解执行条目
-					drugUseMode.resolve(order);
-					if (order.getResolveFrequencyOrderExecutes().size() == 0) {
-						throw new OrderException(order, "没有分解出执行条目");
-					}
-					// 设置执行时间
-					for (OrderExecute execute : order.getResolveFrequencyOrderExecutes()) {
-						execute.fillPlanDate(executeDate, executeDate);
-					}
-				}
-			}
-			if (order.isInPatient()) {
-				// 没有分解出执行条目，设置之前分解的最后一条为last
-				if (order.getResolveOrderExecutes().size() == 0 && longOrder.getPlanEndDate() != null
-						&& longOrder.getPlanEndDate().before(DateUtil.getSysDate())) {
-					OrderExecute lastOrderExecute = order.getLastOrderExecute();
-					if (lastOrderExecute != null) {
-						lastOrderExecute.setLast(true);
-						lastOrderExecute.save();
-					}
-				}
-			} else {
-				// 门诊长嘱，分解的最后一条就是last
-				int size = order.getResolveOrderExecutes().size();
-				if (size > 0) {
-					order.getResolveOrderExecutes().get(size - 1).setLast(true);
-				}
-			}
-		}
+		return drugUseMode.createExecuteTeams(order);
 	}
 
 	public DrugTypeSpec getDrugTypeSpec() {

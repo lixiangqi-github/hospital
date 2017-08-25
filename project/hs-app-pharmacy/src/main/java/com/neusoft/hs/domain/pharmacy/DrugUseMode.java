@@ -21,6 +21,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.neusoft.hs.domain.order.Order;
+import com.neusoft.hs.domain.order.OrderExecuteTeam;
 import com.neusoft.hs.domain.order.OrderType;
 import com.neusoft.hs.platform.entity.SuperEntity;
 
@@ -53,13 +54,13 @@ public abstract class DrugUseMode extends SuperEntity {
 	private List<DrugUseModeAssistMaterial> orderUseModeAssistMaterials;
 
 	/**
-	 * 分解药品医嘱条目
+	 * 创建药品医嘱条目
 	 * 
 	 * @param order
 	 * @return
 	 * @roseuid 586D9239030F
 	 */
-	public abstract void resolve(Order order);
+	public abstract List<OrderExecuteTeam> createExecuteTeams(Order order);
 
 	public String getId() {
 		return id;
@@ -89,13 +90,11 @@ public abstract class DrugUseMode extends SuperEntity {
 		return orderUseModeAssistMaterials;
 	}
 
-	public void setOrderUseModeAssistMaterials(
-			List<DrugUseModeAssistMaterial> orderUseModeAssistMaterials) {
+	public void setOrderUseModeAssistMaterials(List<DrugUseModeAssistMaterial> orderUseModeAssistMaterials) {
 		this.orderUseModeAssistMaterials = orderUseModeAssistMaterials;
 	}
 
-	public void addOrderUseModeAssistMaterial(
-			DrugUseModeAssistMaterial orderUseModeAssistMaterial) {
+	public void addOrderUseModeAssistMaterial(DrugUseModeAssistMaterial orderUseModeAssistMaterial) {
 		if (this.orderUseModeAssistMaterials == null) {
 			this.orderUseModeAssistMaterials = new ArrayList<DrugUseModeAssistMaterial>();
 		}
@@ -118,8 +117,7 @@ public abstract class DrugUseMode extends SuperEntity {
 		return orderUseModeAssistMaterials;
 	}
 
-	public void setOrderUseModeChargeItems(
-			List<DrugUseModeAssistMaterial> orderUseModeChargeItems) {
+	public void setOrderUseModeChargeItems(List<DrugUseModeAssistMaterial> orderUseModeChargeItems) {
 		this.orderUseModeAssistMaterials = orderUseModeChargeItems;
 	}
 
