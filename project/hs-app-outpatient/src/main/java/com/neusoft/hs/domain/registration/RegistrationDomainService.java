@@ -2,10 +2,13 @@
 
 package com.neusoft.hs.domain.registration;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.neusoft.hs.domain.cost.ChargeRecord;
 import com.neusoft.hs.domain.cost.CostDomainService;
 import com.neusoft.hs.domain.cost.CostException;
 import com.neusoft.hs.domain.organization.AbstractUser;
@@ -46,12 +49,10 @@ public class RegistrationDomainService {
 	 * @throws CostException
 	 * @throws VisitException
 	 */
-	public Voucher register(CreateVisitVO createVisitVO, String planRecordId,
-			AbstractUser user) throws VoucherException, CostException,
-			VisitException {
+	public Voucher register(CreateVisitVO createVisitVO, String planRecordId, AbstractUser user)
+			throws VoucherException, CostException, VisitException {
 
-		OutPatientPlanRecord planRecord = outPatientPlanDomainService
-				.findPlanRecord(planRecordId);
+		OutPatientPlanRecord planRecord = outPatientPlanDomainService.findPlanRecord(planRecordId);
 		if (planRecord == null) {
 			throw new VoucherException("门诊医生排班记录[%s]不存在", planRecordId);
 		}
@@ -80,15 +81,14 @@ public class RegistrationDomainService {
 
 		planRecord.occupy(voucher);
 
-		if (!voucher.getRepeatVisit()) {
-			visit.getChargeBill().save();
-		}
+		List<ChargeRecord> chargeRecords = planRecord.createChargeRecords(visit);
+
+		this.costDomainService.charging(visit, chargeRecords);
 
 		voucherRepo.save(voucher);
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]挂号，号码是[{}], 诊室为[{}]",
-				user.getId(), visit.getName(), voucher.getNumber(), planRecord
-						.getRoom().getId());
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]挂号，号码是[{}], 诊室为[{}]", user.getId(),
+				visit.getName(), voucher.getNumber(), planRecord.getRoom().getId());
 
 		return voucher;
 	}
@@ -101,10 +101,9 @@ public class RegistrationDomainService {
 	 * @param user
 	 * @throws VoucherException
 	 */
-	public void repeatOccupy(Voucher voucher, String planRecordId,
-			AbstractUser user) throws VoucherException {
-		OutPatientPlanRecord planRecord = outPatientPlanDomainService
-				.findPlanRecord(planRecordId);
+	public void repeatOccupy(Voucher voucher, String planRecordId, AbstractUser user)
+			throws VoucherException {
+		OutPatientPlanRecord planRecord = outPatientPlanDomainService.findPlanRecord(planRecordId);
 		if (planRecord == null) {
 			throw new VoucherException("门诊医生排班记录[%s]不存在", planRecordId);
 		}
@@ -113,9 +112,8 @@ public class RegistrationDomainService {
 
 		voucherRepo.save(voucher);
 
-		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]重新排号，号码是[{}], 诊室为[{}]",
-				user.getId(), voucher.getVisit().getName(),
-				voucher.getNumber(), planRecord.getRoom().getId());
+		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]重新排号，号码是[{}], 诊室为[{}]", user.getId(),
+				voucher.getVisit().getName(), voucher.getNumber(), planRecord.getRoom().getId());
 	}
 
 	public Voucher getTheVoucher(OutPatientPlanRecord record, Integer number) {

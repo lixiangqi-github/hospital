@@ -96,12 +96,13 @@ public class OutPatientPlanRecord extends IdEntity {
 	}
 
 	/**
+	 * 占号
+	 * 
 	 * @param voucher
 	 * @throws VoucherException
-	 * @throws CostException
 	 * @roseuid 58B7D9F402FA
 	 */
-	public void occupy(Voucher voucher) throws VoucherException, CostException {
+	public void occupy(Voucher voucher) throws VoucherException {
 		if (this.currentAllotNumber > maxAllotNumber) {
 			throw new VoucherException("诊室[%s]号源已满", room.getName());
 		}
@@ -111,15 +112,9 @@ public class OutPatientPlanRecord extends IdEntity {
 			vouchers = new ArrayList<Voucher>();
 		}
 		vouchers.add(voucher);
-
-		Visit visit = voucher.getVisit();
-
-		List<ChargeRecord> chargeRecords = this.createChargeRecords(visit);
-		// 生成费用记录
-		visit.getChargeBill().charging(chargeRecords);
 	}
 
-	private List<ChargeRecord> createChargeRecords(Visit visit) {
+	public List<ChargeRecord> createChargeRecords(Visit visit) {
 
 		List<ChargeRecord> chargeRecords = new ArrayList<ChargeRecord>();
 		ChargeRecord chargeRecord;
@@ -294,8 +289,7 @@ public class OutPatientPlanRecord extends IdEntity {
 	}
 
 	private Voucher getTheVoucher(Integer number) {
-		return this.getService(RegistrationDomainService.class).getTheVoucher(
-				this, number);
+		return this.getService(RegistrationDomainService.class).getTheVoucher(this, number);
 	}
 
 }
