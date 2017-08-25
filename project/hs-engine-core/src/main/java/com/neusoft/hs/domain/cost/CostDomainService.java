@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import com.neusoft.hs.domain.organization.Nurse;
 import com.neusoft.hs.domain.organization.Staff;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitDomainService;
+import com.neusoft.hs.platform.entity.EntityUtil;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.log.LogUtil;
 import com.neusoft.hs.platform.util.DateUtil;
@@ -28,7 +30,7 @@ import com.neusoft.hs.platform.util.DateUtil;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CostDomainService {
-	
+
 	@Autowired
 	private ChargeBillRepo chargeBillRepo;
 
@@ -47,15 +49,20 @@ public class CostDomainService {
 	@Autowired
 	private OrderExecuteDomainService orderExecuteDomainService;
 
+	@Autowired
+	private ApplicationContext applicationContext;
+
 	/**
 	 * 创建财务账户
 	 * 
 	 * @throws HsException
 	 * @roseuid 584DFD470092
 	 */
-	public ChargeBill createChargeBill(Visit visit, float balance,
-			AbstractUser user) {
+	public ChargeBill createChargeBill(Visit visit, float balance, AbstractUser user) {
 		ChargeBill chargeBill = visit.initAccount(balance, user);
+		
+		applicationContext.publishEvent(new ChargeBillCreatedEvent(chargeBill));
+		
 		return chargeBill;
 	}
 
@@ -68,8 +75,7 @@ public class CostDomainService {
 	 * @return
 	 * @throws HsException
 	 */
-	public ChargeRecord addCost(Visit visit, float balance, AbstractUser user)
-			throws HsException {
+	public ChargeRecord addCost(Visit visit, float balance, AbstractUser user) throws HsException {
 
 		if (!visit.isInitedAccount()) {
 			throw new HsException("visitName=[%s]未初始化账户", visit.getName());
@@ -84,14 +90,15 @@ public class CostDomainService {
 
 		ChargeBill chargeBill = visit.getChargeBill();
 		chargeBill.addChargeRecord(chargeRecord);
-		if (chargeBill.getChargeMode()
-				.equals(ChargeBill.ChargeMode_NoPreCharge)) {
+		if (chargeBill.getChargeMode().equals(ChargeBill.ChargeMode_NoPreCharge)) {
 			chargeBill.setChargeMode(ChargeBill.ChargeMode_PreCharge);
 		}
 		chargeBill.setBalance(chargeBill.getBalance() + balance);
+		
+		applicationContext.publishEvent(new ChargeBillAddCostEvent(chargeRecord));
 
-		LogUtil.log(this.getClass(), "用户[{}]给账户[{}]续费{}", user.getId(),
-				chargeBill.getId(), balance);
+		LogUtil.log(this.getClass(), "用户[{}]给账户[{}]续费{}", user.getId(), chargeBill.getId(),
+				balance);
 
 		return chargeRecord;
 	}
@@ -102,8 +109,7 @@ public class CostDomainService {
 	 * @param visit
 	 * @roseuid 584E2630028C
 	 */
-	public void createVisitChargeItem(Visit visit, ChargeItem item,
-			Date startDate) {
+	public void createVisitChargeItem(Visit visit, ChargeItem item, Date startDate) {
 
 		VisitChargeItem visitChargeItem = new VisitChargeItem();
 
@@ -113,9 +119,10 @@ public class CostDomainService {
 		visitChargeItem.setStartDate(startDate);
 
 		visitChargeItem.save();
+		
+		applicationContext.publishEvent(new VisitChargeItemCreatedEvent(visitChargeItem));
 
-		LogUtil.log(this.getClass(), "系统给患者一次就诊[{}]增加收费项目{}", visit.getName(),
-				item.getId());
+		LogUtil.log(this.getClass(), "系统给患者一次就诊[{}]增加收费项目{}", visit.getName(), item.getId());
 	}
 
 	/**
@@ -134,8 +141,7 @@ public class CostDomainService {
 		if (chargeRecords.size() > 0) {
 			Date sysDate = DateUtil.getSysDate();
 			// 处理费用
-			if (!execute.getChargeState().equals(
-					OrderExecute.ChargeState_Charge)) {
+			if (!execute.getChargeState().equals(OrderExecute.ChargeState_Charge)) {
 
 				Float amount = 0F;
 				// 设置数据
@@ -146,17 +152,14 @@ public class CostDomainService {
 					chargeRecord.setBelongDept(execute.getBelongDept());
 				}
 				// 生成费用记录
-				amount = execute.getVisit().getChargeBill()
-						.charging(chargeRecords);
+				amount = this.charging(execute.getVisit(), chargeRecords);
 				// 修改执行条目状态
-				if (execute.getChargeState().equals(
-						OrderExecute.ChargeState_NoCharge)) {
+				if (execute.getChargeState().equals(OrderExecute.ChargeState_NoCharge)) {
 					execute.setChargeState(OrderExecute.ChargeState_Charge);
 				}
 
 				result.setCharge(amount);
-				LogUtil.log(this.getClass(), "系统:医嘱执行条目[{}]产生费用{}",
-						execute.getId(), amount);
+				LogUtil.log(this.getClass(), "系统:医嘱执行条目[{}]产生费用{}", execute.getId(), amount);
 			}
 			// 记录成本
 			if (execute.getCostState().equals(OrderExecute.CostState_NoCost)) {
@@ -178,8 +181,7 @@ public class CostDomainService {
 				}
 
 				result.setCost(amount);
-				LogUtil.log(this.getClass(), "系统:医嘱执行条目[{}]产生成本{}",
-						execute.getId(), amount);
+				LogUtil.log(this.getClass(), "系统:医嘱执行条目[{}]产生成本{}", execute.getId(), amount);
 			}
 
 		}
@@ -199,8 +201,9 @@ public class CostDomainService {
 			throws OrderExecuteException {
 
 		List<ChargeRecord> chargeRecords = execute.getChargeRecords();
-		Float amount = execute.getVisit().getChargeBill()
-				.unCharging(chargeRecords);
+
+		Float amount = this.unCharging(chargeRecords, nurse);
+
 		execute.setChargeState(OrderExecute.ChargeState_BackCharge);
 
 		if (isBackCost) {
@@ -214,21 +217,80 @@ public class CostDomainService {
 			}
 		}
 
-		LogUtil.log(this.getClass(), "护士[{}]将医嘱执行条目[{}]产生的费用{}撤回",
-				nurse.getId(), execute.getId(), amount);
+		LogUtil.log(this.getClass(), "护士[{}]将医嘱执行条目[{}]产生的费用{}撤回", nurse.getId(), execute.getId(),
+				amount);
 	}
 
 	/**
-	 * 得到需要退费的执行条目列表
+	 * 退一条收费条目
 	 * 
+	 * @param record
+	 * @param isBackCost
 	 * @param user
-	 * @param pageable
-	 * @return
 	 */
-	public List<OrderExecute> getNeedBackChargeOrderExecutes(Staff user,
-			Pageable pageable) {
-		return orderExecuteDomainService.findNeedBackChargeOrderExecutes(user,
-				pageable);
+	public void retreat(ChargeRecord record, boolean isBackCost, AbstractUser user) {
+		List<ChargeRecord> chargeRecords = new ArrayList<ChargeRecord>();
+		chargeRecords.add(record);
+
+		Float amount = this.unCharging(chargeRecords, user);
+
+		OrderExecute orderExecute = record.getOrderExecute();
+		if (orderExecute != null) {
+			orderExecute.setChargeState(OrderExecute.ChargeState_BackCharge);
+
+			if (isBackCost) {
+				CostRecord costRecord;
+				orderExecute.setCostState(OrderExecute.CostState_NoCost);
+				for (ChargeRecord chargeRecord : chargeRecords) {
+					costRecord = chargeRecord.getCostRecord();
+					if (costRecord != null) {
+						costRecord.setState(CostRecord.State_Back);
+					}
+				}
+			}
+			LogUtil.log(this.getClass(), "护士[{}]将收费条目[{}]撤回，金额为[%s]，并修改对应的执行条目[%s]为已退费",
+					user.getId(), record.getId(), amount, orderExecute.getId());
+		}
+	}
+
+	/**
+	 * 创建费用记录
+	 * 
+	 * @param visit
+	 * @param chargeRecords
+	 * @return
+	 * @throws CostException
+	 */
+	public Float charging(Visit visit, List<ChargeRecord> chargeRecords) throws CostException {
+
+		Float amount = visit.getChargeBill().charging(chargeRecords);
+
+		applicationContext.publishEvent(new ChargeRecordCreatedEvent(chargeRecords));
+
+		LogUtil.log(this.getClass(), "患者一次就诊[{}]生成产生费用{}", visit.getName(), amount);
+
+		return amount;
+	}
+
+	/**
+	 * 撤销收费条目
+	 * 
+	 * @param chargeRecords
+	 * @param user
+	 */
+	public Float unCharging(List<ChargeRecord> chargeRecords, AbstractUser user) {
+		if (chargeRecords.size() > 0) {
+			Float amount = chargeRecords.get(0).getChargeBill().unCharging(chargeRecords);
+
+			applicationContext.publishEvent(new ChargeRecordCanceledEvent(chargeRecords));
+
+			LogUtil.log(this.getClass(), "用户[{}]将收费条目[{}]撤回，金额为[%s]", user.getId(),
+					EntityUtil.listId(chargeRecords), amount);
+
+			return amount;
+		} else {
+			return 0F;
+		}
 	}
 
 	/**
@@ -259,53 +321,17 @@ public class CostDomainService {
 	}
 
 	/**
-	 * 退一条收费条目
-	 * 
-	 * @param record
-	 * @param isBackCost
-	 * @param user
-	 */
-	public void retreat(ChargeRecord record, boolean isBackCost,
-			AbstractUser user) {
-		List<ChargeRecord> chargeRecords = new ArrayList<ChargeRecord>();
-		chargeRecords.add(record);
-
-		Float amount = record.getChargeBill().unCharging(chargeRecords);
-
-		OrderExecute orderExecute = record.getOrderExecute();
-		orderExecute.setChargeState(OrderExecute.ChargeState_BackCharge);
-
-		if (isBackCost) {
-			CostRecord costRecord;
-			orderExecute.setCostState(OrderExecute.CostState_NoCost);
-			for (ChargeRecord chargeRecord : chargeRecords) {
-				costRecord = chargeRecord.getCostRecord();
-				if (costRecord != null) {
-					costRecord.setState(CostRecord.State_Back);
-				}
-			}
-		}
-
-		LogUtil.log(this.getClass(),
-				"护士[{}]将收费条目[{}]撤回，金额为[%s]，并修改对应的执行条目[%s]为已退费", user.getId(),
-				record.getId(), amount, orderExecute.getId());
-	}
-
-	/**
 	 * 得到需初始化账户的患者一次就诊集合
 	 * 
 	 * @param pageable
 	 * @return
 	 */
 	public List<Visit> getNeedInitAccount(Pageable pageable) {
-		return visitDomainService.findByState(Visit.State_NeedInitAccount,
-				pageable);
+		return visitDomainService.findByState(Visit.State_NeedInitAccount, pageable);
 	}
 
-	public List<ChargeRecord> getChargeRecords(Visit visit, List<Dept> depts,
-			Pageable pageable) {
-		return chargeRecordRepo.findByVisitAndBelongDeptIn(visit, depts,
-				pageable);
+	public List<ChargeRecord> getChargeRecords(Visit visit, List<Dept> depts, Pageable pageable) {
+		return chargeRecordRepo.findByVisitAndBelongDeptIn(visit, depts, pageable);
 	}
 
 	public List<ChargeRecord> getChargeRecords(Visit visit, Pageable pageable) {
@@ -318,5 +344,16 @@ public class CostDomainService {
 
 	public ChargeRecord findChargeRecord(String recordId) {
 		return chargeRecordRepo.findOne(recordId);
+	}
+
+	/**
+	 * 得到需要退费的执行条目列表
+	 * 
+	 * @param user
+	 * @param pageable
+	 * @return
+	 */
+	public List<OrderExecute> getNeedBackChargeOrderExecutes(Staff user, Pageable pageable) {
+		return orderExecuteDomainService.findNeedBackChargeOrderExecutes(user, pageable);
 	}
 }
