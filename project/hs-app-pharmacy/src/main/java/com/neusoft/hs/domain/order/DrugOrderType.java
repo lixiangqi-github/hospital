@@ -34,8 +34,7 @@ public class DrugOrderType extends OrderType {
 
 	@Override
 	public void check(Order order) throws OrderException {
-		DrugOrderTypeApp drugOrderTypeApp = (DrugOrderTypeApp) order
-				.getTypeApp();
+		DrugOrderTypeApp drugOrderTypeApp = (DrugOrderTypeApp) order.getTypeApp();
 		// 临嘱预扣
 		if (order instanceof TemporaryOrder) {
 			try {
@@ -51,8 +50,7 @@ public class DrugOrderType extends OrderType {
 	public void delete(Order order) throws OrderException {
 		// 解除临嘱预扣
 		if (order instanceof TemporaryOrder) {
-			DrugOrderTypeApp drugOrderTypeApp = (DrugOrderTypeApp) order
-					.getTypeApp();
+			DrugOrderTypeApp drugOrderTypeApp = (DrugOrderTypeApp) order.getTypeApp();
 			try {
 				drugOrderTypeApp.unWithhold();
 			} catch (PharmacyException e) {
@@ -66,8 +64,8 @@ public class DrugOrderType extends OrderType {
 
 		Order order = orderTypeApp.getOrder();
 
-		DrugUseMode drugUseMode = this.getService(DrugOrderTypeAppRepo.class)
-				.findOne(orderTypeApp.getId()).getDrugUseMode();
+		DrugUseMode drugUseMode = this.getService(DrugOrderTypeAppRepo.class).findOne(orderTypeApp.getId())
+				.getDrugUseMode();
 
 		if (order instanceof TemporaryOrder) {
 			// 分解执行条目
@@ -77,22 +75,20 @@ public class DrugOrderType extends OrderType {
 			}
 			// 设置执行时间
 			for (OrderExecute execute : order.getResolveOrderExecutes()) {
-				execute.fillPlanDate(order.getPlanStartDate(),
-						order.getPlanStartDate());
+				execute.fillPlanDate(order.getPlanStartDate(), order.getPlanStartDate());
 			}
 		} else {
 			// 长嘱分解
-			LongOrder longorder = (LongOrder) order;
+			LongOrder longOrder = (LongOrder) order;
 			int resolveDays;
 			if (order.isInPatient()) {
 				resolveDays = LongOrder.ResolveDays;// 住院长嘱分解指定天数
 			} else {
-				resolveDays = DateUtil.calDay(longorder.getPlanStartDate(),
-						longorder.getPlanEndDate());// 门诊长嘱一次性分解完
+				resolveDays = DateUtil.calDay(longOrder.getPlanStartDate(), longOrder.getPlanEndDate());// 门诊长嘱一次性分解完
 			}
 			for (int day = 0; day < resolveDays; day++) {
 				// 计算执行时间
-				List<Date> executeDates = longorder.calExecuteDates(day);
+				List<Date> executeDates = longOrder.calExecuteDates(day);
 
 				for (Date executeDate : executeDates) {
 					// 清空上一频次的执行条目集合
@@ -103,15 +99,15 @@ public class DrugOrderType extends OrderType {
 						throw new OrderException(order, "没有分解出执行条目");
 					}
 					// 设置执行时间
-					for (OrderExecute execute : order
-							.getResolveFrequencyOrderExecutes()) {
+					for (OrderExecute execute : order.getResolveFrequencyOrderExecutes()) {
 						execute.fillPlanDate(executeDate, executeDate);
 					}
 				}
 			}
 			if (order.isInPatient()) {
 				// 没有分解出执行条目，设置之前分解的最后一条为last
-				if (order.getResolveOrderExecutes().size() == 0) {
+				if (order.getResolveOrderExecutes().size() == 0 && longOrder.getPlanEndDate() != null
+						&& longOrder.getPlanEndDate().before(DateUtil.getSysDate())) {
 					OrderExecute lastOrderExecute = order.getLastOrderExecute();
 					if (lastOrderExecute != null) {
 						lastOrderExecute.setLast(true);

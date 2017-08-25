@@ -24,6 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.neusoft.hs.domain.cost.ChargeItem;
 import com.neusoft.hs.platform.entity.SuperEntity;
+import com.neusoft.hs.platform.util.DateUtil;
 
 /**
  * 医嘱类型
@@ -120,6 +121,24 @@ public abstract class OrderType extends SuperEntity {
 						// 收集执行条目
 						order.addExecuteTeam(team);
 					}
+				}
+			}
+
+			if (order.isInPatient()) {
+				// 没有分解出执行条目，设置之前分解的最后一条为last
+				if (order.getResolveOrderExecutes().size() == 0 && longOrder.getPlanEndDate() != null
+						&& longOrder.getPlanEndDate().before(DateUtil.getSysDate())) {
+					OrderExecute lastOrderExecute = order.getLastOrderExecute();
+					if (lastOrderExecute != null) {
+						lastOrderExecute.setLast(true);
+						lastOrderExecute.save();
+					}
+				}
+			} else {
+				// 门诊长嘱，分解的最后一条就是last
+				int size = order.getResolveOrderExecutes().size();
+				if (size > 0) {
+					order.getResolveOrderExecutes().get(size - 1).setLast(true);
 				}
 			}
 		}
