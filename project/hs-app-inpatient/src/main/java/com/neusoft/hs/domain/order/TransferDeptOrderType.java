@@ -19,7 +19,7 @@ public class TransferDeptOrderType extends OrderType {
 	}
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
@@ -29,13 +29,9 @@ public class TransferDeptOrderType extends OrderType {
 		transferConfirm.setOrder(order);
 		transferConfirm.setVisit(order.getVisit());
 		transferConfirm.setBelongDept(order.getBelongDept());
+		transferConfirm.setExecuteDept(order.getExecuteDept());
 		transferConfirm.setType(OrderExecute.Type_Transfer_Dept);
 		transferConfirm.setMain(true);
-
-		transferConfirm.setPlanStartDate(order.getPlanStartDate());
-		transferConfirm.setPlanEndDate(order.getPlanStartDate());
-
-		transferConfirm.setExecuteDept(order.getExecuteDept());
 		transferConfirm.setState(OrderExecute.State_NeedSend);
 
 		team.addOrderExecute(transferConfirm);

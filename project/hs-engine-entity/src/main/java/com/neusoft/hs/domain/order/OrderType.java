@@ -101,7 +101,7 @@ public abstract class OrderType extends SuperEntity {
 		Order order = orderTypeApp.getOrder();
 
 		if (order instanceof TemporaryOrder) {
-			List<OrderExecuteTeam> teams = this.createExecuteTeams(order, order.getPlanStartDate());
+			List<OrderExecuteTeam> teams = this.createExecuteTeams(order);
 			for (OrderExecuteTeam team : teams) {
 				order.addExecuteTeam(team);
 			}
@@ -130,7 +130,7 @@ public abstract class OrderType extends SuperEntity {
 					// 清空上一频次的执行条目集合
 					order.clearResolveFrequencyOrderExecutes();
 					// 创建一个频次的执行条目集合
-					List<OrderExecuteTeam> teams = this.createExecuteTeams(order, executeDate);
+					List<OrderExecuteTeam> teams = this.createExecuteTeams(order);
 					for (OrderExecuteTeam team : teams) {
 						// 设置执行时间
 						for (OrderExecute execute : team.getExecutes()) {
@@ -169,13 +169,10 @@ public abstract class OrderType extends SuperEntity {
 	 * 在医嘱分解时创建一组执行条目组
 	 * 
 	 * @param order
-	 * @param planExecuteDate
 	 * @return
 	 * @throws OrderException
 	 */
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
-		throw new OrderException(order, "该方法没有被子类实现");
-	}
+	protected abstract List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException;
 
 	/**
 	 * 医嘱核对后的回调函数

@@ -35,7 +35,7 @@ public class NursingOrderType extends OrderType {
 	}
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
@@ -44,11 +44,10 @@ public class NursingOrderType extends OrderType {
 		execute.setOrder(order);
 		execute.setVisit(order.getVisit());
 		execute.setBelongDept(order.getBelongDept());
-		execute.setType(nursingType);
-		execute.addChargeItem(this.getChargeItem());
-
 		execute.setExecuteDept(order.getBelongDept());
 		execute.setChargeDept(order.getBelongDept());
+		execute.setType(nursingType);
+		execute.addChargeItem(this.getChargeItem());
 		execute.setState(OrderExecute.State_NeedExecute);
 
 		team.addOrderExecute(execute);

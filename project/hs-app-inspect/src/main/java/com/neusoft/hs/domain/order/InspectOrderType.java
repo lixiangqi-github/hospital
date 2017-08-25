@@ -21,7 +21,7 @@ import com.neusoft.hs.domain.order.OrderTypeApp;
 public class InspectOrderType extends OrderType {
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 
 		InspectApply inspectApply = (InspectApply) order.getApply();
 		if (inspectApply == null) {
@@ -42,13 +42,11 @@ public class InspectOrderType extends OrderType {
 			arrange.setOrder(order);
 			arrange.setVisit(order.getVisit());
 			arrange.setBelongDept(order.getBelongDept());
+			arrange.setExecuteDept(inspectApplyItem.getArrangeDept());
+			
 			arrange.setType(OrderExecute.Type_Arrange_Inspect);
 			arrange.setInspectApplyItem(inspectApplyItem);
 
-			arrange.setPlanStartDate(order.getPlanStartDate());
-			arrange.setPlanEndDate(order.getPlanStartDate());
-
-			arrange.setExecuteDept(inspectApplyItem.getArrangeDept());
 			if (arrange.needSend()) {
 				arrange.setState(OrderExecute.State_NeedSend);
 			} else {
@@ -62,12 +60,11 @@ public class InspectOrderType extends OrderType {
 			confirm.setOrder(order);
 			confirm.setVisit(order.getVisit());
 			confirm.setBelongDept(order.getBelongDept());
+			confirm.setExecuteDept(inspectApplyItem.getInspectDept());
+			confirm.setChargeDept(inspectApplyItem.getInspectDept());
 			confirm.setType(OrderExecute.Type_Confirm_Inspect);
 			confirm.setInspectApplyItem(inspectApplyItem);
 			confirm.setMain(true);
-
-			confirm.setExecuteDept(inspectApplyItem.getInspectDept());
-			confirm.setChargeDept(inspectApplyItem.getInspectDept());
 			confirm.setState(OrderExecute.State_NeedExecute);
 
 			confirm.addChargeItem(inspectApplyItem.getInspectItem().getChargeItem());

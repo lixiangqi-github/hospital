@@ -20,7 +20,7 @@ public class OutHospitalOrderType extends OrderType {
 	}
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 		
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
@@ -30,13 +30,9 @@ public class OutHospitalOrderType extends OrderType {
 		register.setOrder(order);
 		register.setVisit(order.getVisit());
 		register.setBelongDept(order.getBelongDept());
+		register.setExecuteDept(order.getBelongDept());
 		register.setType(OrderExecute.Type_Leave_Hospital_Register);
 		register.setMain(true);
-
-		register.setPlanStartDate(order.getPlanStartDate());
-		register.setPlanEndDate(order.getPlanStartDate());
-
-		register.setExecuteDept(order.getBelongDept());
 		register.setState(OrderExecute.State_NeedExecute);
 
 		team.addOrderExecute(register);
@@ -46,12 +42,8 @@ public class OutHospitalOrderType extends OrderType {
 		balance.setOrder(order);
 		balance.setVisit(order.getVisit());
 		balance.setBelongDept(order.getBelongDept());
-		balance.setType(OrderExecute.Type_Leave_Hospital_Balance);
-
-		balance.setPlanStartDate(order.getPlanStartDate());
-		balance.setPlanEndDate(order.getPlanStartDate());
-
 		balance.setExecuteDept(order.getBelongDept().getOrg().getInChargeDept());
+		balance.setType(OrderExecute.Type_Leave_Hospital_Balance);
 		balance.setState(OrderExecute.State_NeedExecute);
 
 		team.addOrderExecute(balance);

@@ -19,7 +19,7 @@ public class DescribeOrderType extends OrderType {
 	}
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 
@@ -29,13 +29,11 @@ public class DescribeOrderType extends OrderType {
 		DescribeOrderExecute execute = new DescribeOrderExecute();
 		execute.setOrder(order);
 		execute.setVisit(order.getVisit());
-		execute.setBelongDept(order.getBelongDept());
 		execute.setType(OrderExecute.Type_Describe);
-
-		execute.setPlanStartDate(planExecuteDate);
-		execute.setPlanEndDate(planExecuteDate);
-
+		
+		execute.setBelongDept(order.getBelongDept());
 		execute.setExecuteDept(order.getExecuteDept());
+		
 		if (execute.needSend()) {
 			execute.setState(OrderExecute.State_NeedSend);
 		} else {

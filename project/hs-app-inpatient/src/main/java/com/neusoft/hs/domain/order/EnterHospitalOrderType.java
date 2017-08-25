@@ -50,7 +50,7 @@ public class EnterHospitalOrderType extends OrderType {
 	}
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 		OrderExecuteTeam team = new OrderExecuteTeam();
@@ -66,12 +66,9 @@ public class EnterHospitalOrderType extends OrderType {
 		EnterHospitalRegisterOrderExecute register = new EnterHospitalRegisterOrderExecute();
 		register.setOrder(order);
 		register.setVisit(order.getVisit());
-		register.setBelongDept(order.getBelongDept());
 		register.setType(OrderExecute.Type_Enter_Hospital_Register);
-
-		register.setPlanStartDate(order.getPlanStartDate());
-		register.setPlanEndDate(order.getPlanStartDate());
-
+		
+		register.setBelongDept(order.getBelongDept());
 		register.setExecuteDept(inPatientOfficeDept);
 		register.setState(OrderExecute.State_Executing);
 

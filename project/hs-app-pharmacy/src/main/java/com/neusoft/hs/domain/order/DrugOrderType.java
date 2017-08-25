@@ -60,7 +60,7 @@ public class DrugOrderType extends OrderType {
 	}
 
 	@Override
-	protected List<OrderExecuteTeam> createExecuteTeams(Order order, Date planExecuteDate) throws OrderException {
+	protected List<OrderExecuteTeam> createExecuteTeams(Order order) throws OrderException {
 		DrugUseMode drugUseMode = this.getService(DrugOrderTypeAppRepo.class).findOne(order.getTypeApp().getId())
 				.getDrugUseMode();
 
