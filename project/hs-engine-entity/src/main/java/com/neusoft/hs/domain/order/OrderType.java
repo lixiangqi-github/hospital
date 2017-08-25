@@ -100,7 +100,7 @@ public abstract class OrderType extends SuperEntity {
 		Order order = orderTypeApp.getOrder();
 
 		if (order instanceof TemporaryOrder) {
-			List<OrderExecuteTeam> teams = order.getOrderType().createExecuteTeams(order, order.getPlanStartDate());
+			List<OrderExecuteTeam> teams = this.createExecuteTeams(order, order.getPlanStartDate());
 			for (OrderExecuteTeam team : teams) {
 				order.addExecuteTeam(team);
 			}
@@ -111,7 +111,7 @@ public abstract class OrderType extends SuperEntity {
 				List<Date> executeDates = longOrder.calExecuteDates(day);
 
 				for (Date executeDate : executeDates) {
-					List<OrderExecuteTeam> teams = order.getOrderType().createExecuteTeams(order, executeDate);
+					List<OrderExecuteTeam> teams = this.createExecuteTeams(order, executeDate);
 					for (OrderExecuteTeam team : teams) {
 						// 设置执行时间
 						for (OrderExecute execute : team.getExecutes()) {
