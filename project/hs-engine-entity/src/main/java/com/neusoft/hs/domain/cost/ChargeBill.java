@@ -45,8 +45,8 @@ public class ChargeBill extends IdEntity {
 	@Column(length = 32, name = "charge_mode")
 	private String chargeMode;
 
-	@OneToMany(mappedBy = "chargeBill", cascade = { CascadeType.PERSIST,
-			CascadeType.REMOVE, CascadeType.MERGE })
+	@OneToMany(mappedBy = "chargeBill", cascade = { CascadeType.PERSIST, CascadeType.REMOVE,
+			CascadeType.MERGE })
 	@OrderBy("createDate DESC")
 	private List<ChargeRecord> chargeRecords;
 
@@ -70,14 +70,13 @@ public class ChargeBill extends IdEntity {
 	 * @throws CostException
 	 * @roseuid 5850A3D500DE
 	 */
-	public Float charging(List<ChargeRecord> chargeRecords)
-			throws CostException {
+	public Float charging(List<ChargeRecord> chargeRecords) throws CostException {
 
 		if (this.visit.getState().equals(Visit.State_OutHospital)
 				|| this.visit.getState().equals(Visit.State_Archived)
 				|| this.visit.getState().equals(Visit.State_IntoRecordRoom)) {
-			throw new CostException("患者一次就诊[%s]状态为[%s],不能增加费用条目",
-					this.visit.getName(), this.visit.getState());
+			throw new CostException("患者一次就诊[%s]状态为[%s],不能增加费用条目", this.visit.getName(),
+					this.visit.getState());
 		}
 
 		// 加入消费记录
@@ -130,9 +129,12 @@ public class ChargeBill extends IdEntity {
 	/**
 	 * 结算
 	 */
-	public void balance() {
+	public Float balance() {
+
+		Float amount = this.balance;
+
 		if (this.balance == 0) {
-			return;
+			return amount;
 		}
 		ChargeRecord chargeRecord = new ChargeRecord();
 		chargeRecord.setAmount(-this.balance);
@@ -142,6 +144,9 @@ public class ChargeBill extends IdEntity {
 		this.addChargeRecord(chargeRecord);
 
 		this.balance = 0;
+
+		return amount;
+
 	}
 
 	/**

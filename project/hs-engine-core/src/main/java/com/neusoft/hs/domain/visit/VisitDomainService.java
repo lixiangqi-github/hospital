@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.neusoft.hs.domain.cost.CostDomainService;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.Order;
@@ -39,6 +40,9 @@ public class VisitDomainService {
 
 	@Autowired
 	private OrderDomainService orderDomainService;
+
+	@Autowired
+	private CostDomainService costDomainService;
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -231,8 +235,10 @@ public class VisitDomainService {
 	 * @throws VisitException
 	 */
 	public void outHospitalBalance(Visit visit, AbstractUser user) throws VisitException {
-
+		// 出院结算
 		visit.balance(user);
+		// 处理账户
+		costDomainService.balance(visit.getChargeBill());
 
 		// 发出患者出院事件
 		ApplicationContextUtil.getApplicationContext()

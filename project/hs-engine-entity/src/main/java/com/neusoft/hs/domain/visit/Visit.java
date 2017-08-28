@@ -338,8 +338,6 @@ public class Visit extends IdEntity {
 
 		this.setState(State_OutHospital);
 
-		this.chargeBill.balance();
-
 		VisitLog visitLog = new VisitLog();
 		visitLog.setVisit(this);
 		visitLog.setType(VisitLog.Type_OutHospital);

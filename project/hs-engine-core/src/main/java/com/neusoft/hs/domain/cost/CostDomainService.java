@@ -253,6 +253,15 @@ public class CostDomainService {
 		}
 	}
 
+	public void balance(ChargeBill chargeBill) {
+
+		Float amount = chargeBill.balance();
+
+		applicationContext.publishEvent(new ChargeBillBalancedEvent(chargeBill));
+
+		LogUtil.log(this.getClass(), "患者一次就诊[{}]账户结算，余额[{}]", chargeBill.getVisitName(), amount);
+	}
+
 	/**
 	 * 创建费用记录
 	 * 
