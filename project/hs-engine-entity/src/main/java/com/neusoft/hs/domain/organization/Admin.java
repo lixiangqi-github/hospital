@@ -4,16 +4,28 @@ import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Entity
 @DiscriminatorValue("Admin")
 public class Admin extends AbstractUser {
-	
+
 	public Admin() {
 	}
 
 	public Admin(String id) {
 		this.setId(id);
+	}
+
+	@Override
+	public List<Dept> getOperationDepts() {
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		return this.getService(UnitRepo.class).findDepts(this.getOrg(), pageable);
 	}
 
 	@Override

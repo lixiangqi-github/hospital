@@ -103,5 +103,6 @@ public class Doctor extends AbstractUser {
 
 	public void setDept(Dept dept) {
 		this.dept = dept;
+		this.setOrg(dept.getOrg());
 	}
 }

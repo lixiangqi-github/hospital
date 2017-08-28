@@ -2,19 +2,34 @@
 
 package com.neusoft.hs.domain.organization;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
 @DiscriminatorValue("Org")
 public class Org extends Unit {
 
-	@OneToOne(mappedBy = "org", fetch = FetchType.LAZY, cascade = {
-			CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToOne(mappedBy = "org", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REMOVE })
 	private OrgExtend orgExtend;
+
+	@OneToMany(mappedBy = "org", cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REMOVE })
+	private List<Dept> depts;
+
+	public List<Dept> getDepts() {
+		return depts;
+	}
+
+	public void setDepts(List<Dept> depts) {
+		this.depts = depts;
+	}
 
 	/**
 	 * 门诊收费处

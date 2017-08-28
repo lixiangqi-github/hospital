@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 interface UnitRepo extends PagingAndSortingRepository<Unit, String> {
 
@@ -18,8 +19,11 @@ interface UnitRepo extends PagingAndSortingRepository<Unit, String> {
 
 	@Query("select o from Org o")
 	List<Org> findOrgs();
-	
+
 	@Query("select d from Dept d")
 	List<Dept> findDepts(Pageable pageable);
+
+	@Query("select d from Dept d where d.org = :org")
+	List<Dept> findDepts(@Param("org") Org org, Pageable pageable);
 
 }

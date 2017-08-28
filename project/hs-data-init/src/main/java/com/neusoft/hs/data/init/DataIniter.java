@@ -1006,6 +1006,7 @@ public class DataIniter {
 
 		admin001.setId("admin001");
 		admin001.setName("超级管理员-孙尚香");
+		admin001.setOrg(org);
 
 		users.add(admin001);
 

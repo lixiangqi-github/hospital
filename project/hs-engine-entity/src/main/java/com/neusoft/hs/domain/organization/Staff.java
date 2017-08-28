@@ -60,5 +60,6 @@ public class Staff extends AbstractUser {
 
 	public void setDept(Dept dept) {
 		this.dept = dept;
+		this.setOrg(dept.getOrg());
 	}
 }

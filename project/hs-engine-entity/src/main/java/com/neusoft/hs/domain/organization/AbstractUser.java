@@ -4,9 +4,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -30,6 +33,10 @@ public abstract class AbstractUser extends SuperEntity implements User {
 	@Column(length = 32)
 	private String name;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "org_id")
+	private Org org;
+
 	public String getId() {
 		return id;
 	}
@@ -49,6 +56,14 @@ public abstract class AbstractUser extends SuperEntity implements User {
 	public abstract Dept getDept();
 
 	public abstract void setDept(Dept dept);
+
+	public Org getOrg() {
+		return org;
+	}
+
+	public void setOrg(Org org) {
+		this.org = org;
+	}
 
 	/**
 	 * 用户可操作的部门集合
