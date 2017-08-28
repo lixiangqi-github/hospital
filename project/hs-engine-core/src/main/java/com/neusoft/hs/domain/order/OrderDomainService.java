@@ -58,10 +58,12 @@ public class OrderDomainService {
 		// 更新为数据库最新的患者一次就诊信息
 		Visit visit = visitDomainService.find(orderCommand.getVisit().getId());
 		// 状态校验
-		if (visit.getState().equals(Visit.State_OutHospital) || visit.getState().equals(Visit.State_LeaveHospital)
+		if (visit.getState().equals(Visit.State_OutHospital)
+				|| visit.getState().equals(Visit.State_LeaveHospital)
 				|| visit.getState().equals(Visit.State_Archived)
 				|| visit.getState().equals(Visit.State_IntoRecordRoom)) {
-			throw new OrderException(null, "患者一次就诊[%s]状态为[%s],不能创建医嘱", visit.getName(), visit.getState());
+			throw new OrderException(null, "患者一次就诊[%s]状态为[%s],不能创建医嘱", visit.getName(),
+					visit.getState());
 		}
 
 		orderCommand.setVisit(visit);
@@ -171,14 +173,15 @@ public class OrderDomainService {
 	 * @throws HsException
 	 * @roseuid 584F489E03D2
 	 */
-	public Order verify(Order order, AbstractUser nurse) throws OrderException, OrderExecuteException {
+	public Order verify(Order order, AbstractUser nurse)
+			throws OrderException, OrderExecuteException {
 
 		order.verify(nurse);
 
 		applicationContext.publishEvent(new OrderVerifyedEvent(order));
 
-		LogUtil.log(this.getClass(), "护士[{}]核对患者一次就诊[[{}]的医嘱条目[{}],类型为[{}]", nurse.getId(), order.getVisit().getName(),
-				order.getId(), order.getOrderType().getId());
+		LogUtil.log(this.getClass(), "护士[{}]核对患者一次就诊[[{}]的医嘱条目[{}],类型为[{}]", nurse.getId(),
+				order.getVisit().getName(), order.getId(), order.getOrderType().getId());
 
 		return order;
 	}
@@ -218,8 +221,8 @@ public class OrderDomainService {
 
 		applicationContext.publishEvent(new OrderCanceledEvent(order));
 
-		LogUtil.log(this.getClass(), "医生[{}]作废了患者一次就诊[[{}]的医嘱条目{},类型为[{}]", doctor.getId(), order.getVisit().getName(),
-				order.getId(), order.getOrderType().getId());
+		LogUtil.log(this.getClass(), "医生[{}]作废了患者一次就诊[[{}]的医嘱条目{},类型为[{}]", doctor.getId(),
+				order.getVisit().getName(), order.getId(), order.getOrderType().getId());
 
 	}
 
@@ -239,8 +242,8 @@ public class OrderDomainService {
 
 		applicationContext.publishEvent(new OrderStopedEvent(order));
 
-		LogUtil.log(this.getClass(), "医生[{}]停止了患者一次就诊[[{}]的医嘱条目{},类型为[{}]", doctor.getId(), order.getVisit().getName(),
-				order.getId(), order.getOrderType().getId());
+		LogUtil.log(this.getClass(), "医生[{}]停止了患者一次就诊[[{}]的医嘱条目{},类型为[{}]", doctor.getId(),
+				order.getVisit().getName(), order.getId(), order.getOrderType().getId());
 	}
 
 	/**
@@ -278,6 +281,10 @@ public class OrderDomainService {
 		return orderRepo.findByVisit(visit, pageable);
 	}
 
+	public List<Order> find(Visit visit, String state, Pageable pageable) {
+		return orderRepo.findByVisitAndState(visit, state, pageable);
+	}
+
 	public List<Order> findByBelongDept(Dept dept, Pageable pageable) {
 		return orderRepo.findByBelongDept(dept, pageable);
 	}
@@ -294,7 +301,8 @@ public class OrderDomainService {
 	 * @return
 	 */
 	public List<Order> getNeedVerifyOrders(AbstractUser user, Pageable pageable) {
-		return orderRepo.findByStateAndBelongDeptIn(Order.State_Created, user.getOperationDepts(), pageable);
+		return orderRepo.findByStateAndBelongDeptIn(Order.State_Created, user.getOperationDepts(),
+				pageable);
 	}
 
 }

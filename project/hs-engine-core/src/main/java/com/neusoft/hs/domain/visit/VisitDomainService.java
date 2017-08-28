@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.Order;
+import com.neusoft.hs.domain.order.OrderDomainService;
 import com.neusoft.hs.domain.order.OrderExecuteException;
 import com.neusoft.hs.domain.order.OrderStopedEvent;
 import com.neusoft.hs.domain.organization.AbstractUser;
@@ -36,6 +38,9 @@ public class VisitDomainService {
 	private PatientDomainService patientDomainService;
 
 	@Autowired
+	private OrderDomainService orderDomainService;
+
+	@Autowired
 	private ApplicationContext applicationContext;
 
 	/**
@@ -51,8 +56,7 @@ public class VisitDomainService {
 			throw new VisitException(null, "身份标识CardNumber不能为空");
 		}
 
-		Patient patient = patientDomainService.findByCardNumber(createVisitVO
-				.getCardNumber());
+		Patient patient = patientDomainService.findByCardNumber(createVisitVO.getCardNumber());
 		boolean newPatient;
 		if (patient == null) {
 			patient = new Patient();
@@ -69,13 +73,12 @@ public class VisitDomainService {
 		patient.save();
 
 		if (newPatient) {
-			LogUtil.log(this.getClass(), "用户[{}]创建了患者[{}]", createVisitVO
-					.getOperator().getId(), patient.getName());
+			LogUtil.log(this.getClass(), "用户[{}]创建了患者[{}]", createVisitVO.getOperator().getId(),
+					patient.getName());
 		}
 
 		// 修改原患者一次就诊为非最新
-		Visit oldVisit = visitRepo.findByLastAndCardNumber(true,
-				createVisitVO.getCardNumber());
+		Visit oldVisit = visitRepo.findByLastAndCardNumber(true, createVisitVO.getCardNumber());
 		if (oldVisit != null) {
 			oldVisit.setLast(false);
 			oldVisit.save();
@@ -101,8 +104,7 @@ public class VisitDomainService {
 		visit.save();
 
 		LogUtil.log(this.getClass(), "用户[{}]创建了患者一次就诊[{}]的病历夹[{}]",
-				createVisitVO.getOperator().getId(), visit.getName(),
-				medicalRecordClip.getId());
+				createVisitVO.getOperator().getId(), visit.getName(), medicalRecordClip.getId());
 
 		VisitLog visitLog = new VisitLog();
 		visitLog.setVisit(visit);
@@ -111,11 +113,11 @@ public class VisitDomainService {
 		visitLog.setCreateDate(DateUtil.getSysDate());
 
 		visitLog.save();
-		
+
 		applicationContext.publishEvent(new VisitCreatedEvent(visit));
 
-		LogUtil.log(this.getClass(), "用户[{}]创建了患者一次就诊[{}]", createVisitVO
-				.getOperator().getId(), visit.getName());
+		LogUtil.log(this.getClass(), "用户[{}]创建了患者一次就诊[{}]", createVisitVO.getOperator().getId(),
+				visit.getName());
 
 		return visit;
 
@@ -131,8 +133,7 @@ public class VisitDomainService {
 
 		Visit visit = this.findLastVisit(createVisitVO.getCardNumber());
 		if (visit == null) {
-			throw new VisitException(null, "未发现号码为[%s]的就诊记录",
-					createVisitVO.getCardNumber());
+			throw new VisitException(null, "未发现号码为[%s]的就诊记录", createVisitVO.getCardNumber());
 		}
 
 		VisitLog visitLog = new VisitLog();
@@ -154,22 +155,19 @@ public class VisitDomainService {
 	 * @throws HsException
 	 * @roseuid 584E135F0389
 	 */
-	public void intoWard(ReceiveVisitVO receiveVisitVO, AbstractUser user)
-			throws HsException {
+	public void intoWard(ReceiveVisitVO receiveVisitVO, AbstractUser user) throws HsException {
 
 		Visit visit = visitRepo.findOne(receiveVisitVO.getVisit().getId());
 		if (visit == null) {
-			throw new HsException("visitId=[%s]不存在", receiveVisitVO.getVisit()
-					.getId());
+			throw new HsException("visitId=[%s]不存在", receiveVisitVO.getVisit().getId());
 		}
 
 		visit.intoWard(receiveVisitVO, user);
 
 		applicationContext.publishEvent(new VisitIntoWardedEvent(visit));
 
-		LogUtil.log(this.getClass(), "用户[{}]将患者一次就诊[{}]登记到病房[{}],床位号[{}]",
-				user.getId(), visit.getName(), visit.getDept().getId(),
-				visit.getBed());
+		LogUtil.log(this.getClass(), "用户[{}]将患者一次就诊[{}]登记到病房[{}],床位号[{}]", user.getId(),
+				visit.getName(), visit.getDept().getId(), visit.getBed());
 	}
 
 	/**
@@ -179,15 +177,13 @@ public class VisitDomainService {
 	 * @param user
 	 * @throws HsException
 	 */
-	public void leaveHospital(Visit visit, AbstractUser user)
-			throws VisitException {
+	public void leaveHospital(Visit visit, AbstractUser user) throws VisitException {
 
 		visit.leaveHospital(user);
 
 		applicationContext.publishEvent(new VisitLeaveHospitalEvent(visit));
 
-		LogUtil.log(this.getClass(), "用户[{}]将患者一次就诊[{}]设置为离院状态", user.getId(),
-				visit.getName());
+		LogUtil.log(this.getClass(), "用户[{}]将患者一次就诊[{}]设置为离院状态", user.getId(), visit.getName());
 
 	}
 
@@ -200,11 +196,15 @@ public class VisitDomainService {
 	 * @throws VisitException
 	 * @throws OrderExecuteException
 	 */
-	public void outHospitalRegister(Visit visit, Order currentOrder,
-			AbstractUser user) throws VisitException, OrderExecuteException {
-		for (Order order : visit.getOrders()) {
-			if (currentOrder == null
-					|| !currentOrder.getId().equals(order.getId())) {
+	public void outHospitalRegister(Visit visit, Order currentOrder, AbstractUser user)
+			throws VisitException, OrderExecuteException {
+
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
+				pageable);
+
+		for (Order order : executingOrders) {
+			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
 				if (order.getState().equals(Order.State_Executing)) {
 					if (order instanceof LongOrder) {
 						((LongOrder) order).stop(user);
@@ -212,8 +212,7 @@ public class VisitDomainService {
 						ApplicationContextUtil.getApplicationContext()
 								.publishEvent(new OrderStopedEvent(visit));
 					} else {
-						throw new VisitException(visit,
-								"医嘱[%s]状态处于执行中，不能办理出院登记", order.getName());
+						throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理出院登记", order.getName());
 					}
 				}
 			}
@@ -221,8 +220,7 @@ public class VisitDomainService {
 		visit.leaveWard(user);
 
 		// 发出患者离开病房事件
-		ApplicationContextUtil.getApplicationContext().publishEvent(
-				new VisitOutWardedEvent(visit));
+		ApplicationContextUtil.getApplicationContext().publishEvent(new VisitOutWardedEvent(visit));
 	}
 
 	/**
@@ -232,14 +230,13 @@ public class VisitDomainService {
 	 * @param user
 	 * @throws VisitException
 	 */
-	public void outHospitalBalance(Visit visit, AbstractUser user)
-			throws VisitException {
+	public void outHospitalBalance(Visit visit, AbstractUser user) throws VisitException {
 
 		visit.balance(user);
 
 		// 发出患者出院事件
-		ApplicationContextUtil.getApplicationContext().publishEvent(
-				new VisitOutHospitalEvent(visit));
+		ApplicationContextUtil.getApplicationContext()
+				.publishEvent(new VisitOutHospitalEvent(visit));
 	}
 
 	/**
@@ -251,11 +248,15 @@ public class VisitDomainService {
 	 * @throws OrderExecuteException
 	 * @throws VisitException
 	 */
-	public void transferDeptSend(Visit visit, Order currentOrder,
-			AbstractUser user) throws OrderExecuteException, VisitException {
-		for (Order order : visit.getOrders()) {
-			if (currentOrder == null
-					|| !currentOrder.getId().equals(order.getId())) {
+	public void transferDeptSend(Visit visit, Order currentOrder, AbstractUser user)
+			throws OrderExecuteException, VisitException {
+
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
+				pageable);
+
+		for (Order order : executingOrders) {
+			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
 				if (order.getState().equals(Order.State_Executing)) {
 					if (order instanceof LongOrder) {
 						((LongOrder) order).stop(user);
@@ -263,8 +264,7 @@ public class VisitDomainService {
 						ApplicationContextUtil.getApplicationContext()
 								.publishEvent(new OrderStopedEvent(visit));
 					} else {
-						throw new VisitException(visit,
-								"医嘱[%s]状态处于执行中，不能办理转科发起", order.getName());
+						throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理转科发起", order.getName());
 					}
 				}
 			}
@@ -280,13 +280,13 @@ public class VisitDomainService {
 	 * @param user
 	 * @throws VisitException
 	 */
-	public void transferDeptConfirm(TransferDeptVO transferDeptVO,
-			AbstractUser user) throws VisitException {
+	public void transferDeptConfirm(TransferDeptVO transferDeptVO, AbstractUser user)
+			throws VisitException {
 		Visit visit = transferDeptVO.getVisit();
 		visit.transferDeptConfirm(transferDeptVO, user);
 		// 发出患者转科事件
-		ApplicationContextUtil.getApplicationContext().publishEvent(
-				new VisitTransferDeptEvent(visit));
+		ApplicationContextUtil.getApplicationContext()
+				.publishEvent(new VisitTransferDeptEvent(visit));
 	}
 
 	/**
@@ -309,28 +309,24 @@ public class VisitDomainService {
 		return visitRepo.findByStateIn(states, pageable);
 	}
 
-	public List<Visit> findByStateAndDept(String state, Dept dept,
-			Pageable pageable) {
+	public List<Visit> findByStateAndDept(String state, Dept dept, Pageable pageable) {
 		return visitRepo.findByStateAndDept(state, dept, pageable);
 	}
 
-	public List<Visit> findByStatesAndDept(List<String> states, Dept dept,
-			Pageable pageable) {
+	public List<Visit> findByStatesAndDept(List<String> states, Dept dept, Pageable pageable) {
 		return visitRepo.findByStateInAndDept(states, dept, pageable);
 	}
 
-	public List<Visit> findByStateAndArea(String state, Dept area,
-			Pageable pageable) {
+	public List<Visit> findByStateAndArea(String state, Dept area, Pageable pageable) {
 		return visitRepo.findByStateAndArea(state, area, pageable);
 	}
 
-	public List<Visit> findByStateAndDepts(String state, List<Dept> depts,
-			Pageable pageable) {
+	public List<Visit> findByStateAndDepts(String state, List<Dept> depts, Pageable pageable) {
 		return visitRepo.findByStateAndDeptIn(state, depts, pageable);
 	}
 
-	public List<Visit> findByStatesAndDepts(List<String> states,
-			List<Dept> depts, Pageable pageable) {
+	public List<Visit> findByStatesAndDepts(List<String> states, List<Dept> depts,
+			Pageable pageable) {
 		return visitRepo.findByStateInAndDeptIn(states, depts, pageable);
 	}
 
@@ -349,8 +345,8 @@ public class VisitDomainService {
 	 */
 	public int changeVisitState(Admin admin) {
 		Date changeDate = DateUtil.reduceHour(DateUtil.getSysDate(), 10);
-		List<Visit> visits = visitRepo.findByStateAndVoucherDateLessThan(
-				Visit.State_Diagnosed_Executing, changeDate);
+		List<Visit> visits = visitRepo
+				.findByStateAndVoucherDateLessThan(Visit.State_Diagnosed_Executing, changeDate);
 		for (Visit visit : visits) {
 			visit.setState(Visit.State_LeaveHospital);
 			visit.save();
@@ -365,9 +361,8 @@ public class VisitDomainService {
 
 		}
 
-		LogUtil.log(this.getClass(), "系统修改患者状态由[{}]到[{}]{}个",
-				Visit.State_Diagnosed_Executing, Visit.State_LeaveHospital,
-				visits.size());
+		LogUtil.log(this.getClass(), "系统修改患者状态由[{}]到[{}]{}个", Visit.State_Diagnosed_Executing,
+				Visit.State_LeaveHospital, visits.size());
 
 		return visits.size();
 	}

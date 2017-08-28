@@ -14,20 +14,19 @@ import com.neusoft.hs.domain.visit.Visit;
 
 interface OrderRepo extends PagingAndSortingRepository<Order, String> {
 
-	List<Order> findByStateAndBelongDept(String state, Dept dept,
-			Pageable pageable);
+	List<Order> findByStateAndBelongDept(String state, Dept dept, Pageable pageable);
 
-	List<Order> findByStateAndBelongDeptIn(String state, List<Dept> depts,
-			Pageable pageable);
+	List<Order> findByStateAndBelongDeptIn(String state, List<Dept> depts, Pageable pageable);
 
 	List<Order> findByVisit(Visit visit, Pageable pageable);
+
+	List<Order> findByVisitAndState(Visit visit, String state, Pageable pageable);
 
 	List<Order> findByBelongDept(Dept dept, Pageable pageable);
 
 	List<Order> findByBelongDeptIn(List<Dept> depts, Pageable pageable);
 
-	List<Order> findByVisitAndOrderTypeAndState(Visit visit,
-			OrderType orderType, String state);
+	List<Order> findByVisitAndOrderTypeAndState(Visit visit, OrderType orderType, String state);
 
 	@Query("select o from LongOrder o where o.state = :state")
 	List<LongOrder> findLongOrder(@Param("state") String state);
@@ -39,5 +38,4 @@ interface OrderRepo extends PagingAndSortingRepository<Order, String> {
 	@Query("select o from TemporaryOrder o where o.visit = :visit and o.state in(:states)")
 	List<TemporaryOrder> findTemporaryOrder(@Param("visit") Visit visit,
 			@Param("states") List<String> states, Pageable pageable);
-
 }
