@@ -143,7 +143,6 @@ public abstract class OrderType extends SuperEntity {
 					OrderExecute lastOrderExecute = order.getLastOrderExecute();
 					if (lastOrderExecute != null) {
 						lastOrderExecute.setLast(true);
-						lastOrderExecute.save();
 						// 如果分解时确定的最后一条执行条目已经完成，将设置对应的长嘱状态为已完成
 						if (lastOrderExecute.getState().equals(OrderExecute.State_Finished)) {
 							longOrder.setState(Order.State_Finished);
