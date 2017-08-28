@@ -26,6 +26,14 @@ public class RegistrationAppService {
 				user);
 	}
 
+	/**
+	 * 重新排号
+	 * 
+	 * @param voucher
+	 * @param planRecordId
+	 * @param user
+	 * @throws VoucherException
+	 */
 	public void repeatOccupy(Voucher voucher, String planRecordId,
 			AbstractUser user) throws VoucherException {
 		registrationDomainService.repeatOccupy(voucher, planRecordId, user);

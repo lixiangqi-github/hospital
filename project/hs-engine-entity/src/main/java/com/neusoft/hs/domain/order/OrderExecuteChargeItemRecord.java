@@ -13,11 +13,11 @@ import com.neusoft.hs.platform.entity.IdEntity;
 @Table(name = "domain_order_execute_charge_item")
 public class OrderExecuteChargeItemRecord extends IdEntity {
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional=false)
 	@JoinColumn(name = "order_execute_id")
 	private OrderExecute orderExecute;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional=false)
 	@JoinColumn(name = "charge_item_id")
 	private ChargeItem chargeItem;
 
