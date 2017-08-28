@@ -38,9 +38,9 @@ import com.neusoft.hs.platform.util.DateUtil;
  *
  */
 @Entity
-@Table(name = "domain_order_execute", indexes = { @Index(columnList = "state"), @Index(columnList = "belong_dept_id"),
-		@Index(columnList = "execute_dept_id"), @Index(columnList = "plan_start_date"),
-		@Index(columnList = "charge_state") })
+@Table(name = "domain_order_execute", indexes = { @Index(columnList = "state"),
+		@Index(columnList = "belong_dept_id"), @Index(columnList = "execute_dept_id"),
+		@Index(columnList = "plan_start_date"), @Index(columnList = "charge_state") })
 public abstract class OrderExecute extends IdEntity {
 
 	@NotEmpty(message = "状态不能为空")
@@ -155,10 +155,12 @@ public abstract class OrderExecute extends IdEntity {
 	@Column(name = "order_category", length = 8)
 	private String orderCategory;
 
-	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REMOVE })
 	private List<OrderExecuteChargeItemRecord> chargeItemRecords;
 
-	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "orderExecute", cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.REMOVE })
 	@OrderBy("createDate DESC")
 	private List<ChargeRecord> chargeRecords;
 
@@ -231,7 +233,8 @@ public abstract class OrderExecute extends IdEntity {
 	 */
 	public void send(AbstractUser user) throws OrderExecuteException {
 		if (!this.state.equals(State_NeedSend)) {
-			throw new OrderExecuteException(this, "id=[%s]state=[%s]不是[%s]", this.getId(), this.state, State_NeedSend);
+			throw new OrderExecuteException(this, "id=[%s]state=[%s]不是[%s]", this.getId(),
+					this.state, State_NeedSend);
 		}
 		this.doSend(user);
 
@@ -261,10 +264,12 @@ public abstract class OrderExecute extends IdEntity {
 	 * @return 下一条执行条目
 	 * @roseuid 584FB6EB03E5
 	 */
-	public OrderExecute finish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
+	public OrderExecute finish(Map<String, Object> params, AbstractUser user)
+			throws OrderExecuteException {
 
 		if (!this.state.equals(State_Executing)) {
-			throw new OrderExecuteException(this, "执行条目[%s]的状态为[%s]不能执行完成", this.getId(), this.state);
+			throw new OrderExecuteException(this, "执行条目[%s]的状态为[%s]不能执行完成", this.getId(),
+					this.state);
 		}
 
 		this.doFinish(params, user);
@@ -311,7 +316,8 @@ public abstract class OrderExecute extends IdEntity {
 	 * @param user
 	 * @throws OrderExecuteException
 	 */
-	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user)
+			throws OrderExecuteException {
 
 	}
 
@@ -419,7 +425,9 @@ public abstract class OrderExecute extends IdEntity {
 	 * @return
 	 */
 	public boolean needSend() {
-		if (this.order.getExecuteNeedSend() != null && !this.order.getExecuteNeedSend()) {
+		if (!this.order.isInPatient()) {
+			return false;
+		} else if (this.order.getExecuteNeedSend() != null && !this.order.getExecuteNeedSend()) {
 			return false;
 		} else {
 			return !this.executeDept.equals(this.order.getBelongDept());

@@ -1,20 +1,16 @@
 package com.neusoft.hs.domain.order;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import com.neusoft.hs.domain.cost.ChargeOrderExecute;
 import com.neusoft.hs.domain.inspect.InspectApply;
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
-import com.neusoft.hs.domain.order.Order;
-import com.neusoft.hs.domain.order.OrderException;
-import com.neusoft.hs.domain.order.OrderExecute;
-import com.neusoft.hs.domain.order.OrderExecuteTeam;
-import com.neusoft.hs.domain.order.OrderType;
-import com.neusoft.hs.domain.order.OrderTypeApp;
+import com.neusoft.hs.domain.organization.OrganizationAdminDomainService;
+import com.neusoft.hs.domain.visit.Visit;
 
 @Entity
 @DiscriminatorValue("Inspect")
@@ -33,10 +29,32 @@ public class InspectOrderType extends OrderType {
 			throw new OrderException(order, "申请单[%s]没有申请检查项目", inspectApply.getId());
 		}
 
+		OrganizationAdminDomainService organizationAdminDomainService = this
+				.getService(OrganizationAdminDomainService.class);
+
+		Visit visit = order.getVisit();
+
 		List<OrderExecuteTeam> teams = new ArrayList<OrderExecuteTeam>();
 
 		for (InspectApplyItem inspectApplyItem : inspectApply.getInspectApplyItems()) {
 			OrderExecuteTeam team = new OrderExecuteTeam();
+
+			if (!order.isInPatient()) {
+				// 收费执行条目
+				ChargeOrderExecute chargeOrderExecute = new ChargeOrderExecute();
+				chargeOrderExecute.setOrder(order);
+				chargeOrderExecute.setVisit(visit);
+				chargeOrderExecute.setBelongDept(order.getBelongDept());
+				chargeOrderExecute.setType(OrderExecute.Type_Change);
+				chargeOrderExecute.addChargeItem(inspectApplyItem.getInspectItem().getChargeItem());
+
+				chargeOrderExecute.setExecuteDept(
+						organizationAdminDomainService.getOutChargeDept(visit.getDept()));
+				chargeOrderExecute.setChargeDept(inspectApplyItem.getArrangeDept());
+				chargeOrderExecute.setState(OrderExecute.State_Executing);
+
+				team.addOrderExecute(chargeOrderExecute);
+			}
 			// 安排检查
 			InspectArrangeOrderExecute arrange = new InspectArrangeOrderExecute();
 			arrange.setOrder(order);
