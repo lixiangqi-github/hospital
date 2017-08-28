@@ -33,62 +33,69 @@ public class CheckTestService extends AppTestService {
 
 		List<Order> orders;
 
-		balance = this.visitDomainService.find(visit001.getId())
-				.getChargeBill().getConsume();
+		balance = this.visitDomainService.find(visit001.getId()).getChargeBill().getConsume();
 
 		assertTrue(balance == 2235F);
 
-		balance = this.visitDomainService.find(visit002.getId())
-				.getChargeBill().getConsume();
+		balance = this.visitDomainService.find(visit002.getId()).getChargeBill().getConsume();
 
 		assertTrue(balance == 531F);
 
-		balance = this.visitDomainService.find(visit003.getId())
-				.getChargeBill().getConsume();
+		balance = this.visitDomainService.find(visit003.getId()).getChargeBill().getConsume();
 
 		assertTrue(balance == 7F);
 
-		balance = this.visitDomainService.find(visit004.getId())
-				.getChargeBill().getConsume();
+		balance = this.visitDomainService.find(visit004.getId()).getChargeBill().getConsume();
 
 		assertTrue(balance == 464F);
 
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<OrderExecute> orderExecutes;
 
-		orderExecutes = orderExecuteDomainService.findByState(
-				OrderExecute.State_Finished, pageable);
+		orderExecutes = orderExecuteDomainService.findByState(OrderExecute.State_Finished,
+				pageable);
 
 		assertTrue(orderExecutes.size() == 93);
 
-		orderExecutes = orderExecuteDomainService.findByState(
-				OrderExecute.State_Canceled, pageable);
+		orderExecutes = orderExecuteDomainService.findByState(OrderExecute.State_Canceled,
+				pageable);
 
 		assertTrue(orderExecutes.size() == 4);
 
-		orderExecutes = orderExecuteDomainService.findByState(
-				OrderExecute.State_Stoped, pageable);
+		orderExecutes = orderExecuteDomainService.findByState(OrderExecute.State_Stoped, pageable);
 
 		assertTrue(orderExecutes.size() == 4);
 
-		orderExecutes = orderExecuteDomainService.findByChargeState(
-				OrderExecute.ChargeState_Charge, pageable);
+		orderExecutes = orderExecuteDomainService.findByChargeState(OrderExecute.ChargeState_Charge,
+				pageable);
 
 		assertTrue(orderExecutes.size() == 57);
 
-		orderExecutes = orderExecuteDomainService.findByChargeState(
-				OrderExecute.ChargeState_BackCharge, pageable);
+		orderExecutes = orderExecuteDomainService
+				.findByChargeState(OrderExecute.ChargeState_BackCharge, pageable);
 
 		assertTrue(orderExecutes.size() == 2);
 
-		orderExecutes = orderExecuteDomainService.findByChargeState(
-				OrderExecute.ChargeState_NoCharge, pageable);
+		orderExecutes = orderExecuteDomainService
+				.findByChargeState(OrderExecute.ChargeState_NoCharge, pageable);
 
 		assertTrue(orderExecutes.size() == 5);
 
 		orders = orderAdminDomainService.findAll(pageable);
 
 		assertTrue(orders.size() == 21);
+
+		orders = orderAdminDomainService.find(Order.State_Finished, pageable);
+
+		assertTrue(orders.size() == 16);
+		
+		orders = orderAdminDomainService.find(Order.State_Stoped, pageable);
+
+		assertTrue(orders.size() == 4);
+		
+		orders = orderAdminDomainService.find(Order.State_Canceled, pageable);
+
+		assertTrue(orders.size() == 1);
 
 		orders = orderDomainService.find(visit001, pageable);
 

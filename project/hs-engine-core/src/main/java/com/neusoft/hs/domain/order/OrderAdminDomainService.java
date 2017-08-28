@@ -43,6 +43,10 @@ public class OrderAdminDomainService {
 		return orders;
 	}
 
+	public List<Order> find(String state, Pageable pageable) {
+		return orderRepo.findByState(state, pageable);
+	}
+
 	public List<OrderType> findOrderType(Pageable pageable) {
 		return orderTypeRepo.findAll(pageable).getContent();
 	}
@@ -59,8 +63,7 @@ public class OrderAdminDomainService {
 		orderTypeRepo.save(orderTypes);
 	}
 
-	public void createOrderFrequencyTypes(
-			List<OrderFrequencyType> orderFrequencyTypes) {
+	public void createOrderFrequencyTypes(List<OrderFrequencyType> orderFrequencyTypes) {
 		orderFrequencyTypeRepo.save(orderFrequencyTypes);
 	}
 
