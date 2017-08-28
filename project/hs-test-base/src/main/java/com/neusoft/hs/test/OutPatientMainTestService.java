@@ -368,6 +368,10 @@ public class OutPatientMainTestService extends AppTestService {
 		theVisit = visitDomainService.find(visit003.getId());
 
 		assertTrue(theVisit.getState().equals(Visit.State_Diagnosing));
+		
+		//给患者003开立检查医嘱
+		
+		
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-27 10:05"));
 

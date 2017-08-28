@@ -17,6 +17,7 @@ import com.neusoft.hs.domain.cost.ChargeRecord;
 import com.neusoft.hs.domain.inspect.InspectApply;
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecord;
+import com.neusoft.hs.domain.order.InspectOrderBuilder;
 import com.neusoft.hs.domain.order.LongDrugOrderBuilder;
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.NursingOrderBuilder;
@@ -59,6 +60,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		NursingOrderBuilder nursingOrderBuilder;
 		TemporaryDrugOrderBuilder drugOrderBuilder;
 		LongDrugOrderBuilder longDrugOrderBuilder;
+		InspectOrderBuilder inspectOrderBuilder;
 
 		LongOrder describeLongOrder;
 		TemporaryOrder describeTemporaryOrder;
@@ -504,12 +506,10 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 09:30", dayCount));
 
-		TemporaryOrder brainInspectOrder = new TemporaryOrder();
-		brainInspectOrder.setVisit(visit001);
-		brainInspectOrder.setName("脑部检查");
-		brainInspectOrder.setOrderType(inspectOrderType);
-		brainInspectOrder.setPlanStartDate(DateUtil.getSysDate());
-		brainInspectOrder.setPlaceType(OrderCreateCommand.PlaceType_InPatient);
+		inspectOrderBuilder = new InspectOrderBuilder();
+		inspectOrderBuilder.setVisit(visit001);
+		inspectOrderBuilder.setOrderType(inspectOrderType);
+		inspectOrderBuilder.setPlaceType(OrderCreateCommand.PlaceType_InPatient);
 
 		InspectApply inspectApply = new InspectApply();
 		inspectApply.setGoal("查查是否有问题");
@@ -528,9 +528,9 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		inspectApply.addInspectApplyItem(brainHCInspectApplyItem);
 
-		brainInspectOrder.setApply(inspectApply);
+		inspectOrderBuilder.setInspectApply(inspectApply);
 
-		orderAppService.create(brainInspectOrder, user002);
+		Order brainInspectOrder = orderAppService.create(inspectOrderBuilder, user002).get(0);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-01-01 09:40", dayCount));
 
