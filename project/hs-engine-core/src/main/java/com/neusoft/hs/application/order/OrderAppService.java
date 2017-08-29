@@ -17,7 +17,6 @@ import com.neusoft.hs.domain.order.Order;
 import com.neusoft.hs.domain.order.OrderCreateCommand;
 import com.neusoft.hs.domain.order.OrderDomainService;
 import com.neusoft.hs.domain.order.OrderException;
-import com.neusoft.hs.domain.order.OrderExecuteDomainService;
 import com.neusoft.hs.domain.order.OrderExecuteException;
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.organization.Admin;
@@ -30,9 +29,6 @@ public class OrderAppService {
 
 	@Autowired
 	private OrderDomainService orderDomainService;
-
-	@Autowired
-	private OrderExecuteDomainService orderExecuteDomainService;
 
 	/**
 	 * 创建医嘱
