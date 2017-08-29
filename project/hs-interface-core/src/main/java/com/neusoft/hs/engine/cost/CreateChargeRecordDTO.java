@@ -12,11 +12,7 @@ import java.util.Date;
  */
 public class CreateChargeRecordDTO {
 
-	private Float amount;
-
 	private Integer count;
-
-	private Float price;
 
 	private String type;
 
@@ -42,28 +38,12 @@ public class CreateChargeRecordDTO {
 
 	public static final String Type_Balance = "结账";
 
-	public Float getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Float amount) {
-		this.amount = amount;
-	}
-
 	public Integer getCount() {
 		return count;
 	}
 
 	public void setCount(Integer count) {
 		this.count = count;
-	}
-
-	public Float getPrice() {
-		return price;
-	}
-
-	public void setPrice(Float price) {
-		this.price = price;
 	}
 
 	public String getType() {

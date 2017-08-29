@@ -120,18 +120,18 @@ public abstract class OrderExecute extends IdEntity {
 	@Column(name = "actual_executor_name", length = 32)
 	private String actualExecutorName;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional=false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "order_id")
 	private Order order;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional=false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "belong_dept_id")
 	private Dept belongDept;
 
 	@Column(name = "belong_dept_name", length = 32)
 	private String belongDeptName;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional=false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "execute_dept_id")
 	private Dept executeDept;
 
@@ -145,7 +145,7 @@ public abstract class OrderExecute extends IdEntity {
 	@Column(name = "charge_dept_name", length = 32)
 	private String chargeDeptName;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional=false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "visit_id")
 	private Visit visit;
 
@@ -392,10 +392,10 @@ public abstract class OrderExecute extends IdEntity {
 
 				ChargeItem chargeItem = chargeItemRecord.getChargeItem();
 
-				chargeRecord.setPrice(chargeItem.getPrice());
-				chargeRecord.setCount(chargeItemRecord.getCount());
-				chargeRecord.setAmount(-this.calAmout(chargeItemRecord));
 				chargeRecord.setChargeItem(chargeItem);
+				chargeRecord.setCount(chargeItemRecord.getCount());
+
+				chargeRecord.setAmount(-chargeRecord.calAmout());
 
 				chargeRecords.add(chargeRecord);
 			}
@@ -809,11 +809,4 @@ public abstract class OrderExecute extends IdEntity {
 		}
 	}
 
-	private Float calAmout(OrderExecuteChargeItemRecord chargeItemRecord) {
-		if (chargeItemRecord.getCount() == null || chargeItemRecord.getCount() == 0) {
-			return chargeItemRecord.getChargeItem().getPrice();
-		} else {
-			return chargeItemRecord.getChargeItem().getPrice() * chargeItemRecord.getCount();
-		}
-	}
 }

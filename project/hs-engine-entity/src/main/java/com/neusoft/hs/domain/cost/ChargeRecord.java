@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.neusoft.hs.domain.order.OrderExecute;
+import com.neusoft.hs.domain.order.OrderExecuteChargeItemRecord;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.entity.IdEntity;
@@ -59,8 +60,8 @@ public class ChargeRecord extends IdEntity {
 	@JoinColumn(name = "original_id")
 	private ChargeRecord original;
 
-	@OneToOne(mappedBy = "original", fetch = FetchType.LAZY, cascade = {
-			CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToOne(mappedBy = "original", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST,
+			CascadeType.MERGE, CascadeType.REMOVE })
 	private ChargeRecord newChargeRecord;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -223,6 +224,9 @@ public class ChargeRecord extends IdEntity {
 		this.chargeItem = chargeItem;
 		if (chargeItem != null) {
 			this.chargeItemName = chargeItem.getName();
+			if (this.price == null) {
+				this.price = chargeItem.getPrice();
+			}
 		}
 	}
 
@@ -314,6 +318,17 @@ public class ChargeRecord extends IdEntity {
 
 	public void setVisitName(String visitName) {
 		this.visitName = visitName;
+	}
+
+	public Float calAmout() {
+		if (this.amount == null) {
+			if (this.count == null || this.count == 0) {
+				this.amount = this.price;
+			} else {
+				this.amount = this.price * this.count;
+			}
+		}
+		return this.amount;
 	}
 
 	public void save() {

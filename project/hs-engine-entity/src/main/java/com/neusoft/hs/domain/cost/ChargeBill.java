@@ -81,13 +81,6 @@ public class ChargeBill extends IdEntity {
 
 		// 加入消费记录
 		for (ChargeRecord chargeRecord : chargeRecords) {
-			if (chargeRecord.getType() == null) {
-				if (chargeRecord.getAmount() > 0) {
-					chargeRecord.setType(ChargeRecord.Type_ShouldCharge);
-				} else {
-					chargeRecord.setType(ChargeRecord.Type_Charged);
-				}
-			}
 			this.addChargeRecord(chargeRecord);
 		}
 		// 计算金额
@@ -155,15 +148,28 @@ public class ChargeBill extends IdEntity {
 	 * @roseuid 5850A31301AE
 	 */
 	public void addChargeRecord(ChargeRecord chargeRecord) {
+		// 计算单向金额
+		chargeRecord.calAmout();
+		// 计算类型
+		if (chargeRecord.getType() == null) {
+			if (chargeRecord.getAmount() > 0) {
+				chargeRecord.setType(ChargeRecord.Type_ShouldCharge);
+			} else {
+				chargeRecord.setType(ChargeRecord.Type_Charged);
+			}
+		}
+		// 计算时间
+		if (chargeRecord.getCreateDate() == null) {
+			chargeRecord.setCreateDate(DateUtil.getSysDate());
+		}
+		// 加入集合
 		if (this.chargeRecords == null) {
 			this.chargeRecords = new ArrayList<ChargeRecord>();
 		}
 		this.chargeRecords.add(chargeRecord);
-
+		// 建立关联
 		chargeRecord.setChargeBill(this);
-		if (chargeRecord.getCreateDate() == null) {
-			chargeRecord.setCreateDate(DateUtil.getSysDate());
-		}
+
 	}
 
 	public String getChargeMode() {

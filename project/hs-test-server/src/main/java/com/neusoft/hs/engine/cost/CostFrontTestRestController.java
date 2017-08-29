@@ -18,6 +18,13 @@ public class CostFrontTestRestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/test/cost/visit/{visitId}/chargerecord/create")
 	public Float charge(@PathVariable("visitId") String visitId) throws CostDTOException {
 		List<CreateChargeRecordDTO> records = new ArrayList<CreateChargeRecordDTO>();
+		
+		CreateChargeRecordDTO record = new CreateChargeRecordDTO();
+		record.setChargeItemId("transportFluidMaterialChargeItem");
+		record.setCount(1);
+		record.setBelongDeptId("dept000");
+		record.setChargeDeptId("dept000");
+		
 
 		return costFacade.charge(visitId, records);
 	}
