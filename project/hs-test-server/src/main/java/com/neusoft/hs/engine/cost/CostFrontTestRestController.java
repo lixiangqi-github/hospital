@@ -25,7 +25,8 @@ public class CostFrontTestRestController {
 		record.setBelongDeptId("dept000");
 		record.setChargeDeptId("dept000");
 		
-
+		records.add(record);
+		
 		return costFacade.charge(visitId, records);
 	}
 
