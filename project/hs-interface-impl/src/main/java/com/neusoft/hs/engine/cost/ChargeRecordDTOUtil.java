@@ -30,8 +30,10 @@ public class ChargeRecordDTOUtil {
 
 		BeanUtils.copyProperties(record, createChargeRecordDTO);
 
-		record.setOrderExecute(
-				orderExecuteDomainService.find(createChargeRecordDTO.getOrderExecuteId()));
+		if (createChargeRecordDTO.getOrderExecuteId() != null) {
+			record.setOrderExecute(
+					orderExecuteDomainService.find(createChargeRecordDTO.getOrderExecuteId()));
+		}
 		record.setChargeItem(
 				costDomainService.findTheChargeItem(createChargeRecordDTO.getChargeItemId()));
 		record.setChargeDept(
