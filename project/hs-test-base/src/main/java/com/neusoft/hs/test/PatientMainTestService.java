@@ -40,6 +40,8 @@ public class PatientMainTestService extends AppTestService {
 		inPatientMainTestService.createVisit004();//向住院场景增加患者004
 		
 		inPatientMainTestService.doExecute();
+		
+		inPatientMainTestService.intoWardTTT();
 
 		checkTestService.setVisit001(inPatientMainTestService.getVisit001());
 
@@ -48,7 +50,7 @@ public class PatientMainTestService extends AppTestService {
 		checkTestService.setVisit003(outPatientMainTestService.getVisit003());
 		
 		checkTestService.setVisit004(inPatientMainTestService.getVisit004());
-
+		
 		checkTestService.execute();
 	}
 

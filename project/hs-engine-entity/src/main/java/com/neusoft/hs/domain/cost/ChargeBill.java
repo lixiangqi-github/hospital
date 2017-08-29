@@ -148,20 +148,8 @@ public class ChargeBill extends IdEntity {
 	 * @roseuid 5850A31301AE
 	 */
 	public void addChargeRecord(ChargeRecord chargeRecord) {
-		// 计算单向金额
-		chargeRecord.calAmout();
-		// 计算类型
-		if (chargeRecord.getType() == null) {
-			if (chargeRecord.getAmount() > 0) {
-				chargeRecord.setType(ChargeRecord.Type_ShouldCharge);
-			} else {
-				chargeRecord.setType(ChargeRecord.Type_Charged);
-			}
-		}
-		// 计算时间
-		if (chargeRecord.getCreateDate() == null) {
-			chargeRecord.setCreateDate(DateUtil.getSysDate());
-		}
+		// 准备数据
+		chargeRecord.ready();
 		// 加入集合
 		if (this.chargeRecords == null) {
 			this.chargeRecords = new ArrayList<ChargeRecord>();

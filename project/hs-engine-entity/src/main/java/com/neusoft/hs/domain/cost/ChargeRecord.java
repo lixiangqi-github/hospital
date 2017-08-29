@@ -176,6 +176,34 @@ public class ChargeRecord extends IdEntity {
 		return chargeRecord;
 	}
 
+	/**
+	 * 准备数据
+	 */
+	public void ready() {
+		// 计算单向金额
+		this.calAmout();
+		// 计算类型
+		if (this.type == null) {
+			if (this.amount > 0) {
+				this.type = Type_ShouldCharge;
+			} else {
+				this.type = Type_Charged;
+			}
+		} else if (this.type.equals(Type_ShouldCharge)) {
+			if (this.amount < 0) {
+				this.amount = -this.amount;
+			}
+		} else if (this.type.equals(Type_Charged)) {
+			if (this.amount > 0) {
+				this.amount = -this.amount;
+			}
+		}
+		// 计算时间
+		if (this.createDate == null) {
+			this.createDate = DateUtil.getSysDate();
+		}
+	}
+
 	public Float getAmount() {
 		return amount;
 	}
