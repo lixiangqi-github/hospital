@@ -41,6 +41,9 @@ public class CostDomainService {
 	private CostRecordRepo costRecordRepo;
 
 	@Autowired
+	private ChargeItemRepo chargeItemRepo;
+
+	@Autowired
 	private VisitChargeItemRepo visitChargeItemRepo;
 
 	@Autowired
@@ -354,6 +357,10 @@ public class CostDomainService {
 
 	public ChargeRecord findChargeRecord(String recordId) {
 		return chargeRecordRepo.findOne(recordId);
+	}
+
+	public ChargeItem findTheChargeItem(String id) {
+		return chargeItemRepo.findOne(id);
 	}
 
 	/**

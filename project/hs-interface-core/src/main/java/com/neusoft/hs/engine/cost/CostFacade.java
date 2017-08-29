@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface CostFacade {
 
-	public void charge(String visitId, List<CreateChargeRecordDTO> records);
+	public Float charge(String visitId, List<CreateChargeRecordDTO> records)
+			throws CostDTOException;
 
 }

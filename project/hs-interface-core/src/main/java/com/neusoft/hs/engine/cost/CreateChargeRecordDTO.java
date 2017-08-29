@@ -26,9 +26,9 @@ public class CreateChargeRecordDTO {
 
 	private String orderExecuteId;
 
-	private String chargeDept;
+	private String chargeDeptId;;
 
-	private String belongDept;
+	private String belongDeptId;;
 
 	private boolean haveCost;
 
@@ -98,20 +98,20 @@ public class CreateChargeRecordDTO {
 		this.orderExecuteId = orderExecuteId;
 	}
 
-	public String getChargeDept() {
-		return chargeDept;
+	public String getChargeDeptId() {
+		return chargeDeptId;
 	}
 
-	public void setChargeDept(String chargeDept) {
-		this.chargeDept = chargeDept;
+	public void setChargeDeptId(String chargeDeptId) {
+		this.chargeDeptId = chargeDeptId;
 	}
 
-	public String getBelongDept() {
-		return belongDept;
+	public String getBelongDeptId() {
+		return belongDeptId;
 	}
 
-	public void setBelongDept(String belongDept) {
-		this.belongDept = belongDept;
+	public void setBelongDeptId(String belongDeptId) {
+		this.belongDeptId = belongDeptId;
 	}
 
 	public boolean isHaveCost() {

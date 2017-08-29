@@ -36,24 +36,23 @@ public class CashierAppService {
 		return costDomainService.getNeedInitAccount(pageable);
 	}
 
-	public List<OrderExecute> getNeedChageExecutes(Visit visit,
-			AbstractUser user, Pageable pageable) {
-		return orderExecuteAppService.getNeedExecuteOrderExecutes(visit,
-				OrderExecute.Type_Change, user, pageable);
+	public List<OrderExecute> getNeedChageExecutes(Visit visit, AbstractUser user,
+			Pageable pageable) {
+		return orderExecuteAppService.getNeedExecuteOrderExecutes(visit, OrderExecute.Type_Change,
+				user, pageable);
 	}
 
 	/**
 	 * @throws HsException
 	 * @roseuid 584DFCB00142
 	 */
-	public ChargeBill initAccount(String visitId, float balance,
-			AbstractUser user) throws HsException {
+	public ChargeBill initAccount(String visitId, float balance, AbstractUser user)
+			throws HsException {
 		Visit visit = visitDomainService.find(visitId);
 		if (visit == null) {
 			throw new HsException("visitId=[%s]不存在", visitId);
 		}
-		ChargeBill chargeBill = costDomainService.createChargeBill(visit,
-				balance, user);
+		ChargeBill chargeBill = costDomainService.createChargeBill(visit, balance, user);
 		visit.setState(Visit.State_NeedIntoWard);
 		return chargeBill;
 	}
@@ -64,10 +63,7 @@ public class CashierAppService {
 		if (visit == null) {
 			throw new HsException("visitId=[%s]不存在", visitId);
 		}
-		ChargeRecord chargeRecord = costDomainService.addCost(visit, balance,
-				user);
-		visit.setState(Visit.State_NeedIntoWard);
-		return chargeRecord;
+		return costDomainService.addCost(visit, balance, user);
 	}
 
 	/**
