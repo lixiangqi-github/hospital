@@ -3,11 +3,12 @@ spring:
   application:
      name: test-service  # Service registers under this name
   freemarker:
-    enabled: false           # Ignore Eureka dashboard FreeMarker templates
+    enabled: false
   thymeleaf:
-    cache: false             # Allow Thymeleaf templates to be reloaded at runtime
-    prefix: classpath:/test-server/templates/    # Trailing / mandatory
-                             # Template location for this application only
+    cache: false          
+    prefix: classpath:/templates/
+    suffix: .html
+    content-type: text/html
     encoding: UTF-8
   datasource:
     url: jdbc:mysql://localhost:3306/hs?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8
