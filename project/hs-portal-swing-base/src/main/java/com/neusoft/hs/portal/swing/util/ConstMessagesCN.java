@@ -161,6 +161,7 @@ public interface ConstMessagesCN {
 		String OutPatientRoom = "诊室";
 		String BelongDept = "所属部门";
 		String ExecuteDept = "执行部门";
+		String Describe = "描述";
 		String Operator = "操作人";
 		String ExecuteCount = "执行条目数量";
 		String CreateDate = "创建时间";

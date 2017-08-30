@@ -21,6 +21,7 @@ import com.neusoft.hs.domain.inspect.InspectApply;
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.inspect.InspectDomainService;
 import com.neusoft.hs.domain.inspect.InspectItem;
+import com.neusoft.hs.domain.order.DescribeOrderType;
 import com.neusoft.hs.domain.order.DrugOrderType;
 import com.neusoft.hs.domain.order.DrugOrderTypeApp;
 import com.neusoft.hs.domain.order.EnterHospitalOrderType;
@@ -102,7 +103,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 	@PostConstruct
 	private void prepareListeners() {
-		registerAction(createOrderFrame.getCreateOrderPanel().getOrderTypeCB(), (e) -> changeOrderType(e));
+		registerAction(createOrderFrame.getCreateOrderPanel().getOrderTypeCB(),
+				(e) -> changeOrderType(e));
 		registerAction(createOrderFrame.getCompsiteBtn(), (e) -> compsite());
 		registerAction(createOrderFrame.getConfirmBtn(), (e) -> create());
 		registerAction(createOrderFrame.getCloseBtn(), (e) -> closeWindow());
@@ -135,7 +137,8 @@ public class CreateOrderController extends AbstractFrameController {
 		List<Dept> depts = new ArrayList<Dept>();
 		depts.add(user.getDept());
 
-		OutPatientRoom outPatientRoom = outPatientDeptAppService.findOutPatientRoom(user, DateUtil.getSysDate());
+		OutPatientRoom outPatientRoom = outPatientDeptAppService.findOutPatientRoom(user,
+				DateUtil.getSysDate());
 		if (outPatientRoom != null) {
 			depts.add(outPatientRoom);
 		}
@@ -169,7 +172,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 		List<OrderType> orderTypes = this.orderAdminDomainService.findOrderType(pageable);
 
-		orderTypeComboBoxModel = this.createOrderFrame.getCreateOrderPanel().getOrderTypeComboBoxModel();
+		orderTypeComboBoxModel = this.createOrderFrame.getCreateOrderPanel()
+				.getOrderTypeComboBoxModel();
 
 		orderTypeComboBoxModel.clear();
 		orderTypeComboBoxModel.addElement(null);
@@ -181,7 +185,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 		List<OrderFrequencyType> entities = orderAdminDomainService.findFrequencyType(pageable);
 
-		frequencyTypeComboBoxModel = this.createOrderFrame.getCreateOrderPanel().getFrequencyTypeComboBoxModel();
+		frequencyTypeComboBoxModel = this.createOrderFrame.getCreateOrderPanel()
+				.getFrequencyTypeComboBoxModel();
 		frequencyTypeComboBoxModel.clear();
 		frequencyTypeComboBoxModel.addElement(null);
 		frequencyTypeComboBoxModel.addElements(entities);
@@ -191,7 +196,8 @@ public class CreateOrderController extends AbstractFrameController {
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<Dept> depts = organizationAdminDomainService.findDept(pageable);
 
-		executeDeptComboBoxModel = this.createOrderFrame.getCreateOrderPanel().getExecuteDeptComboBoxModel();
+		executeDeptComboBoxModel = this.createOrderFrame.getCreateOrderPanel()
+				.getExecuteDeptComboBoxModel();
 		executeDeptComboBoxModel.clear();
 		executeDeptComboBoxModel.addElement(null);
 		executeDeptComboBoxModel.addElements(depts);
@@ -202,7 +208,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 		List<DrugUseMode> entities = pharmacyAdminService.findDrugUseMode(pageable);
 
-		orderUseModeComboBoxModel = this.createOrderFrame.getCreateOrderPanel().getOrderUseModeComboBoxModel();
+		orderUseModeComboBoxModel = this.createOrderFrame.getCreateOrderPanel()
+				.getOrderUseModeComboBoxModel();
 		orderUseModeComboBoxModel.clear();
 		orderUseModeComboBoxModel.addElement(null);
 		orderUseModeComboBoxModel.addElements(entities);
@@ -220,6 +227,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 			Integer count = this.createOrderFrame.getCount();
 
+			String describe = this.createOrderFrame.getCreateOrderPanel().getDescribeTF().getText();
+
 			OrderType orderType = orderTypeComboBoxModel.getSelectedItem();
 
 			Order order = null;
@@ -232,13 +241,15 @@ public class CreateOrderController extends AbstractFrameController {
 				longOrder.setFrequencyType(frequencyType);
 				longOrder.setPlanStartDate(planStartDate);
 				if (executeDay != null) {
-					longOrder.setPlanEndDate(DateUtil.addDay(longOrder.getPlanStartDate(), executeDay));
+					longOrder.setPlanEndDate(
+							DateUtil.addDay(longOrder.getPlanStartDate(), executeDay));
 				}
 			}
 			order.setVisit(visitComboBoxModel.getSelectedItem());
 			order.setName(orderType.getName());
 			order.setOrderType(orderType);
 			order.setCount(count);
+			order.setDescribe(describe);
 
 			if (orderType instanceof DrugOrderType) {
 				Pharmacy pharmacy = (Pharmacy) executeDeptComboBoxModel.getSelectedItem();
@@ -281,6 +292,10 @@ public class CreateOrderController extends AbstractFrameController {
 				}
 				order.setExecuteDept(dept);
 				order.setApply(inspectApply);
+			} else if (orderType instanceof DescribeOrderType) {
+				if (order.getDescribe() == null) {
+					throw new UIException("请录入描述");
+				}
 			}
 
 			orderAppService.create(order, (Doctor) UserUtil.getUser());
@@ -293,7 +308,8 @@ public class CreateOrderController extends AbstractFrameController {
 	}
 
 	public void compsite() {
-		OrderTableModel orderTableModel = this.createOrderFrame.getOrderListPanel().getOrderTableModel();
+		OrderTableModel orderTableModel = this.createOrderFrame.getOrderListPanel()
+				.getOrderTableModel();
 		JTable table = this.createOrderFrame.getOrderListPanel().getTable();
 		int[] rows = table.getSelectedRows();
 		if (rows != null && rows.length == 2) {
@@ -301,7 +317,8 @@ public class CreateOrderController extends AbstractFrameController {
 			Order order2 = orderTableModel.getEntityByRow(rows[1]);
 
 			try {
-				orderAppService.compsite(order1.getId(), order2.getId(), (Doctor) UserUtil.getUser());
+				orderAppService.compsite(order1.getId(), order2.getId(),
+						(Doctor) UserUtil.getUser());
 			} catch (Exception e) {
 				e.printStackTrace();
 				Notifications.showFormValidationAlert(e.getMessage());
@@ -312,7 +329,8 @@ public class CreateOrderController extends AbstractFrameController {
 	}
 
 	private void changeOrderType(ItemEvent e) {
-		OrderType orderType = this.createOrderFrame.getCreateOrderPanel().getOrderTypeComboBoxModel().getSelectedItem();
+		OrderType orderType = this.createOrderFrame.getCreateOrderPanel()
+				.getOrderTypeComboBoxModel().getSelectedItem();
 		if (orderType != null) {
 			if (orderType instanceof InspectOrderType) {
 				Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);

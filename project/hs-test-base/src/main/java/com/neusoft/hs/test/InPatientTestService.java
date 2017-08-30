@@ -469,21 +469,21 @@ public abstract class InPatientTestService extends AppTestService {
 		Visit visit;
 		ReceiveVisitVO receiveVisitVO;
 
-		DateUtil.setSysDate(DateUtil.createMinute("2017-01-10 09:00", dayCount));
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-12 09:00", dayCount));
 		// 创建测试患者
 		CreateVisitVO createVisitVO = new CreateVisitVO();
 		createVisitVO.setCardNumber("ttt");
 		createVisitVO.setName("测试患者ttt");
 		createVisitVO.setBirthday(DateUtil.createDay("1990-01-22"));
 		createVisitVO.setSex("男");
-		createVisitVO.setOperator(user002);
+		createVisitVO.setOperator(user101);
 		createVisitVO.setDept(dept000);
 		createVisitVO.setArea(dept000n);
 		createVisitVO.setRespDoctor(user002);
 		// 送诊
 		visitttt = registerAppService.register(createVisitVO);
 
-		DateUtil.setSysDate(DateUtil.createMinute("2017-01-10 09:30", dayCount));
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-12 09:30", dayCount));
 
 		cashierAppService.initAccount(visitttt.getId(), 2000F, user201);
 
@@ -496,7 +496,7 @@ public abstract class InPatientTestService extends AppTestService {
 
 		assertTrue(visit.getState().equals(Visit.State_NeedIntoWard));
 
-		DateUtil.setSysDate(DateUtil.createMinute("2017-01-10 09:50", dayCount));
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-12 09:50", dayCount));
 
 		receiveVisitVO = new ReceiveVisitVO();
 		receiveVisitVO.setVisit(visitttt);

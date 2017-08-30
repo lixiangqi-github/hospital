@@ -41,6 +41,8 @@ public class CreateOrderPanel extends JPanel {
 
 	SpinnerNumber countSN;
 
+	JTextField describeTF;
+
 	JComboBox<Visit> visitCB;
 	VisitComboBoxModel visitComboBoxModel;
 
@@ -56,7 +58,7 @@ public class CreateOrderPanel extends JPanel {
 	JComboBox<Dept> executeDeptCB;
 	DeptComboBoxModel executeDeptComboBoxModel;
 
-	private static final int LAYOUT_ROWS = 4;
+	private static final int LAYOUT_ROWS = 5;
 	private static final int LAYOUT_COLS = 2;
 	private static final int HORIZONTAL_GAP = 0;
 	private static final int VERTICAL_GAP = 20;
@@ -90,13 +92,16 @@ public class CreateOrderPanel extends JPanel {
 		JLabel frequencyTypeLbl = new JLabel(ConstMessagesCN.Labels.FrequencyType);
 		JLabel orderUseModeLbl = new JLabel(ConstMessagesCN.Labels.OrderUseMode);
 		JLabel countLbl = new JLabel(ConstMessagesCN.Labels.Count);
-		JLabel pharmacyLbl = new JLabel(ConstMessagesCN.Labels.ExecuteDept);
+		JLabel executeDeptLbl = new JLabel(ConstMessagesCN.Labels.ExecuteDept);
+		JLabel describeLbl = new JLabel(ConstMessagesCN.Labels.Describe);
 
 		planStartDateSD = new SpinnerDate("yyyy-MM-dd HH:mm");
 
 		executeDaySN = new SpinnerNumber();
 
 		countSN = new SpinnerNumber();
+
+		describeTF = new JTextField();
 
 		visitCB = new JComboBox<>(visitComboBoxModel);
 		orderTypeCB = new JComboBox<>(orderTypeComboBoxModel);
@@ -124,11 +129,15 @@ public class CreateOrderPanel extends JPanel {
 		add(orderUseModeLbl);
 		add(orderUseModeCB);
 
-		add(pharmacyLbl);
+		add(executeDeptLbl);
 		add(executeDeptCB);
 
 		add(countLbl);
 		add(countSN);
+
+		add(describeLbl);
+		add(describeTF);
+
 	}
 
 	public VisitComboBoxModel getVisitComboBoxModel() {
@@ -157,5 +166,9 @@ public class CreateOrderPanel extends JPanel {
 
 	public JComboBox<OrderType> getOrderTypeCB() {
 		return orderTypeCB;
+	}
+
+	public JTextField getDescribeTF() {
+		return describeTF;
 	}
 }
