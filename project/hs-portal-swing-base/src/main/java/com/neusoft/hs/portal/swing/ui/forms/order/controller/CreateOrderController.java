@@ -229,6 +229,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 			String describe = this.createOrderFrame.getCreateOrderPanel().getDescribeTF().getText();
 
+			Dept executeDept = executeDeptComboBoxModel.getSelectedItem();
+
 			OrderType orderType = orderTypeComboBoxModel.getSelectedItem();
 
 			Order order = null;
@@ -250,47 +252,49 @@ public class CreateOrderController extends AbstractFrameController {
 			order.setOrderType(orderType);
 			order.setCount(count);
 			order.setDescribe(describe);
+			order.setExecuteDept(executeDept);
 
 			if (orderType instanceof DrugOrderType) {
-				Pharmacy pharmacy = (Pharmacy) executeDeptComboBoxModel.getSelectedItem();
-				if (pharmacy == null) {
+				if (order.getExecuteDept() != null && order.getExecuteDept() instanceof Pharmacy) {
+					Pharmacy pharmacy = (Pharmacy) order.getExecuteDept();
+					DrugUseMode drugUseMode = orderUseModeComboBoxModel.getSelectedItem();
+					if (drugUseMode == null) {
+						throw new UIException("请选择药品用法");
+					}
+					if (order.getCount() == null) {
+						throw new UIException("请录入数量");
+					}
+
+					order.setTypeApp(new DrugOrderTypeApp(pharmacy, drugUseMode));
+				} else {
 					throw new UIException("请选择药房");
 				}
-				DrugUseMode drugUseMode = orderUseModeComboBoxModel.getSelectedItem();
-				if (drugUseMode == null) {
-					throw new UIException("请选择药品用法");
-				}
-				if (order.getCount() == null) {
-					throw new UIException("请录入数量");
-				}
-
-				order.setTypeApp(new DrugOrderTypeApp(pharmacy, drugUseMode));
 			} else if (orderType instanceof EnterHospitalOrderType) {
-				InPatientDept dept = (InPatientDept) user.getDept();
-				order.addParam(EnterHospitalOrderType.WardDept, dept);
-				order.addParam(EnterHospitalOrderType.RespDoctor, user);
-				order.addParam(EnterHospitalOrderType.WardArea,
-						organizationAdminDomainService.findInPatientArea(dept).get(0));
-				order.setExecuteDept(dept);
+				if (order.getExecuteDept() != null
+						&& order.getExecuteDept() instanceof InPatientDept) {
+					InPatientDept inPatientDept = (InPatientDept) order.getExecuteDept();
+					order.addParam(EnterHospitalOrderType.WardDept, inPatientDept);
+					order.addParam(EnterHospitalOrderType.RespDoctor, user);
+					order.addParam(EnterHospitalOrderType.WardArea,
+							organizationAdminDomainService.findInPatientArea(inPatientDept).get(0));
+				} else {
+					throw new UIException("请选择住院科室");
+				}
 			} else if (orderType instanceof TransferDeptOrderType) {
-				Dept dept = executeDeptComboBoxModel.getSelectedItem();
-				if (dept == null) {
+				if (order.getExecuteDept() == null) {
 					throw new UIException("请选择转科科室");
 				}
-				order.setExecuteDept(dept);
 			} else if (orderType instanceof InspectOrderType) {
 				if (inspectApply == null) {
 					throw new UIException("请创建检查申请单");
 				}
-				Dept dept = executeDeptComboBoxModel.getSelectedItem();
-				if (dept == null) {
+				if (order.getExecuteDept() == null) {
 					throw new UIException("请选择执行科室");
 				}
 				for (InspectApplyItem item : inspectApply.getInspectApplyItems()) {
-					item.setArrangeDept(dept);
-					item.setInspectDept(dept);
+					item.setArrangeDept(order.getExecuteDept());
+					item.setInspectDept(order.getExecuteDept());
 				}
-				order.setExecuteDept(dept);
 				order.setApply(inspectApply);
 			} else if (orderType instanceof DescribeOrderType) {
 				if (order.getDescribe() == null) {
