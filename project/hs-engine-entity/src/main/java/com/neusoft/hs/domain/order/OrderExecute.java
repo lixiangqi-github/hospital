@@ -220,6 +220,12 @@ public abstract class OrderExecute extends IdEntity {
 
 	public static final String Type_Confirm_Inspect = "确认检查";
 
+	public static final String Type_Arrange_Surgery = "安排手术";
+
+	public static final String Type_Before_Surgery = "确认准备手术";
+
+	public static final String Type_After_Surgery = "确认患者回病房";
+
 	public static final String Type_Change = "收费";
 
 	public static final String Type_Describe = "描述";
