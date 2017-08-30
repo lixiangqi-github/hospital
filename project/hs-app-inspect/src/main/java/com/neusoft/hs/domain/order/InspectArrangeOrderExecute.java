@@ -36,7 +36,6 @@ public class InspectArrangeOrderExecute extends OrderExecute {
 
 		if (params == null || !params.containsKey(InspectArrangeOrderExecute.InspectPlace)) {
 			throw new OrderExecuteException(this, "params没有设置Key为[%s]计划检查地点", InspectPlace);
-
 		}
 		String inspectPlace = (String) params.get(InspectArrangeOrderExecute.InspectPlace);
 

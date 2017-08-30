@@ -7,6 +7,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 import com.neusoft.hs.domain.visit.Visit;
+import com.neusoft.hs.platform.util.DateUtil;
 
 @Entity
 @DiscriminatorValue("Surgery")
@@ -27,10 +28,13 @@ public class SurgeryOrderType extends OrderType {
 		arrange.setVisit(visit);
 		arrange.setBelongDept(order.getBelongDept());
 		arrange.setExecuteDept(order.getExecuteDept());
+		
+		arrange.setPlanStartDate(DateUtil.getSysDate());
+		arrange.setPlanEndDate(DateUtil.getSysDate());
 
 		arrange.setType(OrderExecute.Type_Arrange_Inspect);
 		arrange.setState(OrderExecute.State_NeedSend);
-
+		
 		team.addOrderExecute(arrange);
 
 		// 确认准备手术
@@ -41,7 +45,7 @@ public class SurgeryOrderType extends OrderType {
 		before.setExecuteDept(order.getBelongDept());
 		before.setType(OrderExecute.Type_Before_Surgery);
 		before.setState(OrderExecute.State_NeedExecute);
-
+		
 		team.addOrderExecute(before);
 
 		teams.add(team);
