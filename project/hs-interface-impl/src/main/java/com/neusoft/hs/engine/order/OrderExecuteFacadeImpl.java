@@ -33,8 +33,8 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 	private OrderExecuteDTOUtil orderExecuteDTOUtil;
 
 	@Override
-	public List<OrderExecuteDTO> findNeedExecute(String userId, Integer pageNumber, Integer pageSize)
-			throws OrderExecuteDTOException {
+	public List<OrderExecuteDTO> findNeedExecute(String userId, Integer pageNumber,
+			Integer pageSize) throws OrderExecuteDTOException {
 		AbstractUser user = userAdminDomainService.find(userId);
 		if (user == null) {
 			throw new OrderExecuteDTOException(null, "用户userId=[%s]不存在", userId);
@@ -42,7 +42,8 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 		Sort sort = new Sort(Direction.DESC, "planStartDate");
 		Pageable pageable = new PageRequest(pageNumber, pageSize, sort);
 
-		List<OrderExecute> executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user, pageable);
+		List<OrderExecute> executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user,
+				pageable);
 
 		List<OrderExecuteDTO> executeDTOs = new ArrayList<OrderExecuteDTO>();
 		try {
@@ -60,13 +61,14 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 	}
 
 	@Override
-	public OrderExecuteDTO finish(String executeId, String userId) throws OrderExecuteDTOException {
+	public OrderExecuteDTO finish(String executeId, Map<String, Object> params, String userId)
+			throws OrderExecuteDTOException {
 		AbstractUser user = userAdminDomainService.find(userId);
 		if (user == null) {
 			throw new OrderExecuteDTOException(null, "用户userId=[%s]不存在", userId);
 		}
 		try {
-			OrderExecute next = orderExecuteAppService.finish(executeId, null, user);
+			OrderExecute next = orderExecuteAppService.finish(executeId, params, user);
 			if (next != null) {
 				return orderExecuteDTOUtil.convert(next);
 			} else {
