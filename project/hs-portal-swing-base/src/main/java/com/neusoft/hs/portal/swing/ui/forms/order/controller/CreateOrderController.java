@@ -4,6 +4,7 @@ import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JTable;
@@ -58,6 +59,7 @@ import com.neusoft.hs.portal.swing.ui.shared.model.OrderTableModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.OrderTypeComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.VisitComboBoxModel;
 import com.neusoft.hs.portal.swing.util.Notifications;
+import com.neusoft.hs.portal.swing.validation.ValidationError;
 
 @Controller
 public class CreateOrderController extends AbstractFrameController {
@@ -88,6 +90,9 @@ public class CreateOrderController extends AbstractFrameController {
 
 	@Autowired
 	private VisitBusinessView visitBusinessView;
+
+	@Autowired
+	private CreateOrderValidator validator;
 
 	private VisitComboBoxModel visitComboBoxModel;
 
@@ -233,6 +238,8 @@ public class CreateOrderController extends AbstractFrameController {
 
 			OrderType orderType = orderTypeComboBoxModel.getSelectedItem();
 
+			DrugUseMode drugUseMode = orderUseModeComboBoxModel.getSelectedItem();
+
 			Order order = null;
 			if (frequencyType == null) {
 				order = new TemporaryOrder();
@@ -248,63 +255,28 @@ public class CreateOrderController extends AbstractFrameController {
 				}
 			}
 			order.setVisit(visitComboBoxModel.getSelectedItem());
-			order.setName(orderType.getName());
 			order.setOrderType(orderType);
 			order.setCount(count);
 			order.setDescribe(describe);
 			order.setExecuteDept(executeDept);
 
-			if (orderType instanceof DrugOrderType) {
-				if (order.getExecuteDept() != null && order.getExecuteDept() instanceof Pharmacy) {
-					Pharmacy pharmacy = (Pharmacy) order.getExecuteDept();
-					DrugUseMode drugUseMode = orderUseModeComboBoxModel.getSelectedItem();
-					if (drugUseMode == null) {
-						throw new UIException("请选择药品用法");
-					}
-					if (order.getCount() == null) {
-						throw new UIException("请录入数量");
-					}
-
-					order.setTypeApp(new DrugOrderTypeApp(pharmacy, drugUseMode));
-				} else {
-					throw new UIException("请选择药房");
-				}
-			} else if (orderType instanceof EnterHospitalOrderType) {
-				if (order.getExecuteDept() != null
-						&& order.getExecuteDept() instanceof InPatientDept) {
-					InPatientDept inPatientDept = (InPatientDept) order.getExecuteDept();
-					order.addParam(EnterHospitalOrderType.WardDept, inPatientDept);
-					order.addParam(EnterHospitalOrderType.RespDoctor, user);
-					order.addParam(EnterHospitalOrderType.WardArea,
-							organizationAdminDomainService.findInPatientArea(inPatientDept).get(0));
-				} else {
-					throw new UIException("请选择住院科室");
-				}
-			} else if (orderType instanceof TransferDeptOrderType) {
-				if (order.getExecuteDept() == null) {
-					throw new UIException("请选择转科科室");
-				}
-			} else if (orderType instanceof InspectOrderType) {
-				if (inspectApply == null) {
-					throw new UIException("请创建检查申请单");
-				}
-				if (order.getExecuteDept() == null) {
-					throw new UIException("请选择执行科室");
-				}
-				for (InspectApplyItem item : inspectApply.getInspectApplyItems()) {
-					item.setArrangeDept(order.getExecuteDept());
-					item.setInspectDept(order.getExecuteDept());
-				}
-				order.setApply(inspectApply);
-			} else if (orderType instanceof DescribeOrderType) {
-				if (order.getDescribe() == null) {
-					throw new UIException("请录入描述");
-				}
+			if (this.inspectApply != null) {
+				order.setApply(this.inspectApply);
 			}
 
-			orderAppService.create(order, (Doctor) UserUtil.getUser());
+			CreateOrderInfo createOrderInfo = new CreateOrderInfo();
+			createOrderInfo.setOrder(order);
+			createOrderInfo.setDrugUseMode(drugUseMode);
+			createOrderInfo.setUser(user);
 
-			loadOrders();
+			Optional<ValidationError> errors = validator.validate(createOrderInfo);
+			if (errors.isPresent()) {
+				Notifications.showFormValidationAlert(errors.get().getMessage());
+			} else {
+				orderAppService.create(order, (Doctor) UserUtil.getUser());
+				loadOrders();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Notifications.showFormValidationAlert(e.getMessage());

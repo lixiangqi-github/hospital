@@ -432,7 +432,7 @@ public class OutPatientMainTestService extends AppTestService {
 
 		// 给患者003安排检查时间
 		inspectAppService.arrange(executes.get(0).getId(),
-				DateUtil.createMinute("2016-12-27 14:00"), user401);
+				DateUtil.createMinute("2016-12-27 14:00"), "CT检查室（一）", user401);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-27 11:00"));
 

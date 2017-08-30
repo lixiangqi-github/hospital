@@ -37,8 +37,8 @@ public class InspectAppService {
 		return (InspectApply) applyDomainService.find(applyId);
 	}
 
-	public void arrange(String executeId, Date planExecuteDate, AbstractUser user)
-			throws InspectException, OrderExecuteException {
+	public void arrange(String executeId, Date planExecuteDate, String inspectPlace,
+			AbstractUser user) throws InspectException, OrderExecuteException {
 
 		OrderExecute execute = orderExecuteDomainService.find(executeId);
 		if (execute == null) {
@@ -47,6 +47,7 @@ public class InspectAppService {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(InspectArrangeOrderExecute.PlanExecuteDate, planExecuteDate);
+		params.put(InspectArrangeOrderExecute.InspectPlace, inspectPlace);
 
 		orderExecuteDomainService.finish(execute, params, user);
 	}
@@ -64,7 +65,8 @@ public class InspectAppService {
 	}
 
 	public void cancel(String inspectApplyItemId, AbstractUser user) throws InspectException {
-		InspectApplyItem inspectApplyItem = inspectDomainService.findInspectApplyItem(inspectApplyItemId);
+		InspectApplyItem inspectApplyItem = inspectDomainService
+				.findInspectApplyItem(inspectApplyItemId);
 		if (inspectApplyItem == null) {
 			throw new InspectException("检查项目inspectApplyItemId=[%s]不存在", inspectApplyItemId);
 		}

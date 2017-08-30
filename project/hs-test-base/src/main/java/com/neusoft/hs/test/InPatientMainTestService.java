@@ -567,7 +567,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		// 安排检查时间
 		inspectAppService.arrange(executes.get(0).getId(),
-				DateUtil.createMinute("2017-01-02 14:00", dayCount), user401);
+				DateUtil.createMinute("2017-01-02 14:00", dayCount), "CT检查室（一）", user401);
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-01 10:30", dayCount));
 
@@ -578,7 +578,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		// 安排检查时间
 		inspectAppService.arrange(executes.get(0).getId(),
-				DateUtil.createMinute("2017-01-03 14:00", dayCount), user501);
+				DateUtil.createMinute("2017-01-03 14:00", dayCount), "核磁检查室（一）", user501);
 
 		// 2017-01-02
 		DateUtil.setSysDate(DateUtil.createDay("2017-01-02", dayCount));
