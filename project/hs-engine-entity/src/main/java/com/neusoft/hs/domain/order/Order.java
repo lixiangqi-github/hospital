@@ -142,6 +142,11 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	@JoinColumn(name = "compsite_order_id")
 	private CompsiteOrder compsiteOrder;
 
+	@OneToMany(mappedBy = "order", cascade = { CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REMOVE })
+	@OrderBy("createDate ASC")
+	private List<OrderInteraction> orderInteractions;
+
 	@Transient
 	private Map<String, Object> params = new HashMap<String, Object>();
 
@@ -555,6 +560,25 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 		this.apply = apply;
 		this.apply.setOrder(this);
 		this.apply.setVisit(visit);
+	}
+
+	public List<OrderInteraction> getOrderInteractions() {
+		return orderInteractions;
+	}
+
+	public void setOrderInteractions(List<OrderInteraction> orderInteractions) {
+		this.orderInteractions = orderInteractions;
+	}
+
+	public void addOrderInteraction(OrderInteraction orderInteraction) {
+		if (this.orderInteractions == null) {
+			this.orderInteractions = new ArrayList<OrderInteraction>();
+		}
+		orderInteraction.setOrder(this);
+		if(orderInteraction.getCreateDate() == null){
+			orderInteraction.setCreateDate(DateUtil.getSysDate());
+		}
+		this.orderInteractions.add(orderInteraction);
 	}
 
 	/**

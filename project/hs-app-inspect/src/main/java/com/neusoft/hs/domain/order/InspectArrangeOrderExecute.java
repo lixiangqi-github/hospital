@@ -28,16 +28,16 @@ public class InspectArrangeOrderExecute extends OrderExecute {
 	protected void doFinish(Map<String, Object> params, AbstractUser user)
 			throws OrderExecuteException {
 
-		if (params == null || !params.containsKey(InspectArrangeOrderExecute.PlanExecuteDate)) {
+		if (params == null || !params.containsKey(PlanExecuteDate)) {
 			throw new OrderExecuteException(this, "params没有设置Key为[%s]计划检查时间", PlanExecuteDate);
 
 		}
-		Date planExecuteDate = (Date) params.get(InspectArrangeOrderExecute.PlanExecuteDate);
+		Date planExecuteDate = (Date) params.get(PlanExecuteDate);
 
-		if (params == null || !params.containsKey(InspectArrangeOrderExecute.InspectPlace)) {
+		if (params == null || !params.containsKey(InspectPlace)) {
 			throw new OrderExecuteException(this, "params没有设置Key为[%s]计划检查地点", InspectPlace);
 		}
-		String inspectPlace = (String) params.get(InspectArrangeOrderExecute.InspectPlace);
+		String inspectPlace = (String) params.get(InspectPlace);
 
 		inspectApplyItem.setInspectPlace(inspectPlace);
 
