@@ -676,7 +676,8 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-05 08:20", dayCount));
 
-		orders = this.orderDAO.findExecutingByVisitAndOrderType(visit001, firstNursingOrderType);
+		orders = this.orderDAO.findByVisitAndOrderTypeAndState(visit001, firstNursingOrderType,
+				Order.State_Executing, pageable);
 
 		assertTrue(orders.size() == 1);
 

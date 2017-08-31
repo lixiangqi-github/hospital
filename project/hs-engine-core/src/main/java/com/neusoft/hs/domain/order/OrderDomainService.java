@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,7 +194,8 @@ public class OrderDomainService {
 	 */
 	public int resolve(Admin admin) {
 		// 获得执行中的长嘱
-		List<LongOrder> longOrders = orderRepo.findLongOrder(Order.State_Executing);
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<LongOrder> longOrders = orderRepo.findLongOrder(Order.State_Executing, pageable);
 
 		resolveOrderCount = 0;
 		// 采用并行计算处理医嘱分解

@@ -16,6 +16,7 @@ import com.neusoft.hs.domain.cost.CostDomainService;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.Order;
+import com.neusoft.hs.domain.order.OrderDAO;
 import com.neusoft.hs.domain.order.OrderDomainService;
 import com.neusoft.hs.domain.order.OrderExecuteException;
 import com.neusoft.hs.domain.order.OrderStopedEvent;
@@ -203,28 +204,11 @@ public class VisitDomainService {
 	public void outHospitalRegister(Visit visit, Order currentOrder, AbstractUser user)
 			throws VisitException, OrderExecuteException {
 
-		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
-				pageable);
-
-		for (Order order : executingOrders) {
-			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
-				if (order.getState().equals(Order.State_Executing)) {
-					if (order instanceof LongOrder) {
-						((LongOrder) order).stop(user);
-						// 发出停止长嘱事件
-						ApplicationContextUtil.getApplicationContext()
-								.publishEvent(new OrderStopedEvent(visit));
-					} else {
-						throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理出院登记", order.getName());
-					}
-				}
-			}
-		}
+		beforeChangeDept(visit, currentOrder, "出院登记", user);
 		visit.leaveWard(user);
 
 		// 发出患者离开病房事件
-		ApplicationContextUtil.getApplicationContext().publishEvent(new VisitOutWardedEvent(visit));
+		applicationContext.publishEvent(new VisitOutWardedEvent(visit));
 	}
 
 	/**
@@ -241,8 +225,7 @@ public class VisitDomainService {
 		costDomainService.balance(visit.getChargeBill());
 
 		// 发出患者出院事件
-		ApplicationContextUtil.getApplicationContext()
-				.publishEvent(new VisitOutHospitalEvent(visit));
+		applicationContext.publishEvent(new VisitOutHospitalEvent(visit));
 	}
 
 	/**
@@ -256,25 +239,7 @@ public class VisitDomainService {
 	 */
 	public void transferDeptSend(Visit visit, Order currentOrder, AbstractUser user)
 			throws OrderExecuteException, VisitException {
-
-		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
-				pageable);
-
-		for (Order order : executingOrders) {
-			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
-				if (order.getState().equals(Order.State_Executing)) {
-					if (order instanceof LongOrder) {
-						((LongOrder) order).stop(user);
-						// 发出停止长嘱事件
-						ApplicationContextUtil.getApplicationContext()
-								.publishEvent(new OrderStopedEvent(visit));
-					} else {
-						throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理转科发起", order.getName());
-					}
-				}
-			}
-		}
+		beforeChangeDept(visit, currentOrder, "转科发起", user);
 		visit.transferDeptSend(user);
 	}
 
@@ -291,8 +256,30 @@ public class VisitDomainService {
 		Visit visit = transferDeptVO.getVisit();
 		visit.transferDeptConfirm(transferDeptVO, user);
 		// 发出患者转科事件
-		ApplicationContextUtil.getApplicationContext()
-				.publishEvent(new VisitTransferDeptEvent(visit));
+		applicationContext.publishEvent(new VisitTransferDeptEvent(visit));
+	}
+
+	private void beforeChangeDept(Visit visit, Order currentOrder, String operation,
+			AbstractUser user) throws OrderExecuteException, VisitException {
+
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
+				pageable);
+
+		for (Order order : executingOrders) {
+			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
+				if (order.getState().equals(Order.State_Executing)) {
+					if (order instanceof LongOrder) {
+						((LongOrder) order).stop(user);
+						// 发出停止长嘱事件
+						applicationContext.publishEvent(new OrderStopedEvent(visit));
+					} else {
+						throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理[%s]", order.getName(),
+								operation);
+					}
+				}
+			}
+		}
 	}
 
 	/**

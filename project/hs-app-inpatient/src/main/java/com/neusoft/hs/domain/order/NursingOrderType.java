@@ -9,6 +9,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.Order;
@@ -27,8 +29,9 @@ public class NursingOrderType extends OrderType {
 
 	@Override
 	protected void check(Order order) throws OrderException {
-		List<Order> orders = this.getService(OrderDAO.class)
-				.findExecutingByVisitAndOrderType(order.getVisit(), this);
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<Order> orders = this.getService(OrderDAO.class).findByVisitAndOrderTypeAndState(
+				order.getVisit(), this, Order.State_Executing, pageable);
 
 		if (orders.size() > 0) {
 			throw new OrderException(order, "患者[%s]有在执行的护理医嘱[%s]", order.getVisit().getName(),
