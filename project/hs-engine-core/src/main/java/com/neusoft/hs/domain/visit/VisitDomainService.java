@@ -259,6 +259,38 @@ public class VisitDomainService {
 		applicationContext.publishEvent(new VisitTransferDeptEvent(visit));
 	}
 
+	/**
+	 * 术前操作
+	 * 
+	 * @param visit
+	 * @param currentOrder
+	 * @param user
+	 * @throws VisitException
+	 * @throws OrderExecuteException
+	 */
+	public void beforeSurgery(Visit visit, Order currentOrder, AbstractUser user)
+			throws OrderExecuteException, VisitException {
+		beforeChangeDept(visit, currentOrder, "术前操作", user);
+		visit.beforeSurgery(currentOrder.getExecuteDept(), user);
+
+		// 发出患者手术事件
+		applicationContext.publishEvent(new VisitBeforeSurgeryEvent(visit));
+	}
+
+	/**
+	 * 术后操作
+	 * 
+	 * @param visit
+	 * @param order
+	 * @param user
+	 * @throws VisitException
+	 */
+	public void afterSurgery(Visit visit, Order order, AbstractUser user) throws VisitException {
+		visit.afterSurgery(order.getBelongDept(), user);
+		// 发出患者手术完成事件
+		applicationContext.publishEvent(new VisitAfterSurgeryEvent(visit));
+	}
+
 	private void beforeChangeDept(Visit visit, Order currentOrder, String operation,
 			AbstractUser user) throws OrderExecuteException, VisitException {
 
@@ -359,4 +391,5 @@ public class VisitDomainService {
 
 		return visits.size();
 	}
+
 }

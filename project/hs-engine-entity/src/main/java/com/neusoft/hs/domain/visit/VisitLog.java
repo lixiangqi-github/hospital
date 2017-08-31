@@ -49,6 +49,8 @@ public class VisitLog extends IdEntity {
 	public static final String Type_IntoWard = "进入病房";
 	public static final String Type_TransferDeptSend = "发起转科";
 	public static final String Type_TransferDeptConfirm = "确认转科";
+	public static final String Type_SurgeryBefore = "发起手术";
+	public static final String Type_SurgeryAfter = "手术结束";
 	public static final String Type_OutWard = "出院登记";
 	public static final String Type_OutHospital = "出院结算";
 	public static final String Type_Transfer = "移交病案室";

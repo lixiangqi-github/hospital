@@ -185,6 +185,8 @@ public class Visit extends IdEntity {
 
 	public static final String State_TransferDepting = "转科中";
 
+	public static final String State_Surgerying = "手术中";
+
 	public static final String State_NeedLeaveHospitalBalance = "待出院结算";
 
 	public static final String State_OutHospital = "已出院";
@@ -405,6 +407,53 @@ public class Visit extends IdEntity {
 		VisitLog visitLog = new VisitLog();
 		visitLog.setVisit(this);
 		visitLog.setType(VisitLog.Type_TransferDeptConfirm);
+		visitLog.setOperator(user);
+		visitLog.setCreateDate(sysDate);
+
+		visitLog.save();
+	}
+
+	/**
+	 * 术前操作
+	 * 
+	 * @param user
+	 * @throws VisitException
+	 */
+	public void beforeSurgery(Dept surgeryDept, AbstractUser user) throws VisitException {
+
+		if (!State_IntoWard.equals(this.getState())) {
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_IntoWard);
+		}
+
+		this.setState(State_Surgerying);
+		this.setDept(surgeryDept);
+
+		Date sysDate = DateUtil.getSysDate();
+
+		VisitLog visitLog = new VisitLog();
+		visitLog.setVisit(this);
+		visitLog.setType(VisitLog.Type_SurgeryBefore);
+		visitLog.setOperator(user);
+		visitLog.setCreateDate(sysDate);
+
+		visitLog.save();
+
+	}
+
+	public void afterSurgery(Dept dept, AbstractUser user) throws VisitException {
+
+		if (!State_Surgerying.equals(this.getState())) {
+			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_Surgerying);
+		}
+
+		this.setState(State_IntoWard);
+		this.setDept(dept);
+
+		Date sysDate = DateUtil.getSysDate();
+
+		VisitLog visitLog = new VisitLog();
+		visitLog.setVisit(this);
+		visitLog.setType(VisitLog.Type_SurgeryAfter);
 		visitLog.setOperator(user);
 		visitLog.setCreateDate(sysDate);
 
@@ -757,5 +806,4 @@ public class Visit extends IdEntity {
 
 		this.getService(VisitRepo.class).delete(this);
 	}
-
 }
