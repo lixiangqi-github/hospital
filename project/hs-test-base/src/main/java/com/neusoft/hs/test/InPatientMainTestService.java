@@ -66,6 +66,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		LongOrder describeLongOrder;
 		TemporaryOrder describeTemporaryOrder;
+		TemporaryOrder surgeryTemporaryOrder;
 
 		DateUtil.setSysDate(DateUtil.createMinute("2016-12-28 10:40", dayCount));
 
@@ -885,7 +886,7 @@ public class InPatientMainTestService extends InPatientTestService {
 
 		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 14:00", dayCount));
 
-		// 为患者001开一个描述医嘱
+		// 为患者004开一个描述医嘱
 		describeTemporaryOrder = new TemporaryOrder();
 		describeTemporaryOrder.setVisit(visit004);
 		describeTemporaryOrder.setOrderType(describeOrderType);
@@ -920,6 +921,21 @@ public class InPatientMainTestService extends InPatientTestService {
 		for (OrderExecute execute : executes) {
 			orderExecuteAppService.finish(execute.getId(), null, user003);
 		}
+		
+//		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 15:00", dayCount));
+//		
+//		//为患者004开立手术医嘱
+//		surgeryTemporaryOrder = new TemporaryOrder();
+//		surgeryTemporaryOrder.setVisit(visit004);
+//		surgeryTemporaryOrder.setOrderType(surgeryOrderType);
+//		surgeryTemporaryOrder.setName(surgeryOrderType.getName());
+//		surgeryTemporaryOrder.setDescribe("眼底切除");
+//
+//		surgeryTemporaryOrder.setBelongDept(dept000);
+//		surgeryTemporaryOrder.setExecuteDept(depteee);
+//		surgeryTemporaryOrder.setPlanStartDate(DateUtil.getSysDate());
+//
+//		orderAppService.create(surgeryTemporaryOrder, userd02);
 
 	}
 }

@@ -39,6 +39,7 @@ import com.neusoft.hs.domain.order.OrderFrequencyTypeDayOne;
 import com.neusoft.hs.domain.order.OrderFrequencyTypeDayTwo;
 import com.neusoft.hs.domain.order.OrderType;
 import com.neusoft.hs.domain.order.OutHospitalOrderType;
+import com.neusoft.hs.domain.order.SurgeryOrderType;
 import com.neusoft.hs.domain.order.TemporaryOrderListTreatmentItemSpec;
 import com.neusoft.hs.domain.order.TransferDeptOrderType;
 import com.neusoft.hs.domain.organization.AbstractUser;
@@ -76,6 +77,9 @@ import com.neusoft.hs.domain.pharmacy.PharmacyAdminService;
 import com.neusoft.hs.domain.pharmacy.PharmacyDomainService;
 import com.neusoft.hs.domain.recordroom.RecordRoomDomainService;
 import com.neusoft.hs.domain.registration.RegistrationDomainService;
+import com.neusoft.hs.domain.surgery.SurgeryDept;
+import com.neusoft.hs.domain.surgery.SurgeryDomainService;
+import com.neusoft.hs.domain.surgery.SurgeryType;
 import com.neusoft.hs.domain.treatment.CommonTreatmentItemSpec;
 import com.neusoft.hs.domain.treatment.TreatmentAdminDomainService;
 import com.neusoft.hs.domain.treatment.TreatmentDomainService;
@@ -107,6 +111,8 @@ public class DataIniter {
 	protected InPatientAreaDept dept000n;// 内泌五和眼科一护士站
 
 	protected InPatientDept deptddd;// 眼科一
+
+	protected SurgeryDept depteee;// 眼科手术室
 
 	protected OutPatientDept dept999;// 内分泌门诊
 
@@ -144,6 +150,8 @@ public class DataIniter {
 	protected Nurse user001;// 内泌五和眼科一接诊护士-大乔
 	protected Nurse user003;// 内泌五和眼科一护士-小乔
 
+	protected Nurse usere01;// 眼科手术室护士-吕蒙
+
 	protected Admin admin001;// 超级管理员-孙尚香
 
 	protected ChargeItem bedChargeItem;// 床位费计费项目【暂时床位费只设一个计费项目】
@@ -173,6 +181,10 @@ public class DataIniter {
 	protected ChargeItem brainHCChargeItem;// 脑核磁计费项目
 
 	protected ChargeItem ordinaryVoucherTypeChargeItem;// 普通挂号费计费项目
+
+	protected ChargeItem surgery001ChargeItem;// 手术001计费项目
+
+	protected ChargeItem surgery002ChargeItem;// 手术002计费项目
 
 	protected DrugTypeSpec drugTypeSpec001;// 药品规格001
 
@@ -236,6 +248,8 @@ public class DataIniter {
 
 	protected DescribeOrderType describeOrderType;// 描述医嘱类型
 
+	protected SurgeryOrderType surgeryOrderType;// 手术医嘱类型
+
 	protected OralOrderUseMode oralOrderUseMode;// 口服用法
 
 	protected InfusionOrderUseModeToInPatient infusionOrderUseModeToInPatient;// 住院输液用法
@@ -289,6 +303,10 @@ public class DataIniter {
 	protected OutPatientPlanRecord planRecord1;// 门诊初诊记录 系统时间当前
 
 	protected OutPatientPlanRecord planRecord2;// 门诊初诊记录 系统时间第二天
+
+	protected SurgeryType surgeryType001;// 息肉切除
+
+	protected SurgeryType surgeryType002;// 泪道探通术
 
 	protected Map<ChoiceItem, Object> choices;
 
@@ -370,6 +388,9 @@ public class DataIniter {
 	@Autowired
 	private ConfigureFluidDomainService configureFluidDomainService;
 
+	@Autowired
+	protected SurgeryDomainService surgeryDomainService;
+
 	public void clone(DataIniter dataIniter) {
 		org = dataIniter.org;
 
@@ -387,6 +408,7 @@ public class DataIniter {
 		deptbbb = dataIniter.deptbbb;
 		deptccc = dataIniter.deptccc;
 		deptddd = dataIniter.deptddd;
+		depteee = dataIniter.depteee;
 
 		dept000n = dataIniter.dept000n;
 
@@ -420,6 +442,8 @@ public class DataIniter {
 
 		userd02 = dataIniter.userd02;
 
+		usere01 = dataIniter.usere01;
+
 		admin001 = dataIniter.admin001;
 
 		bedChargeItem = dataIniter.bedChargeItem;
@@ -433,6 +457,8 @@ public class DataIniter {
 		spineCTChargeItem = dataIniter.spineCTChargeItem;
 		brainHCChargeItem = dataIniter.brainHCChargeItem;
 		ordinaryVoucherTypeChargeItem = dataIniter.ordinaryVoucherTypeChargeItem;
+		surgery001ChargeItem = dataIniter.surgery001ChargeItem;
+		surgery002ChargeItem = dataIniter.surgery002ChargeItem;
 
 		drugTypeSpec001 = dataIniter.drugTypeSpec001;
 		drugTypeSpec002 = dataIniter.drugTypeSpec002;
@@ -472,6 +498,7 @@ public class DataIniter {
 		inspectOrderType = dataIniter.inspectOrderType;
 		transferDeptOrderType = dataIniter.transferDeptOrderType;
 		describeOrderType = dataIniter.describeOrderType;
+		surgeryOrderType = dataIniter.surgeryOrderType;
 
 		oralOrderUseMode = dataIniter.oralOrderUseMode;
 		infusionOrderUseModeToInPatient = dataIniter.infusionOrderUseModeToInPatient;
@@ -509,6 +536,9 @@ public class DataIniter {
 
 		planRecord1 = dataIniter.planRecord1;
 		planRecord2 = dataIniter.planRecord2;
+
+		surgeryType001 = dataIniter.surgeryType001;
+		surgeryType002 = dataIniter.surgeryType002;
 
 		choices = dataIniter.choices;
 	}
@@ -548,6 +578,8 @@ public class DataIniter {
 		inspectDomainService.clearInspectApplyItems();
 		// 清空检查项目
 		inspectDomainService.clearInspectItems();
+		// 清空手术项目
+		surgeryDomainService.clearSurgeryTypes();
 		// 清空挂号类型
 		outPatientPlanAdminDomainService.clearVoucherType();
 		// 清空收费记录
@@ -606,6 +638,8 @@ public class DataIniter {
 		initDrugTypes();
 
 		initInspectItems();
+
+		initSurgeryTypes();
 
 		initOrderTypes();
 
@@ -745,6 +779,14 @@ public class DataIniter {
 		deptddd.setOrg(org);
 
 		units.add(deptddd);
+
+		depteee = new SurgeryDept();
+		depteee.setId("depteee");
+		depteee.setName("眼科手术室");
+		depteee.setParent(org);
+		depteee.setOrg(org);
+
+		units.add(depteee);
 
 		dept000n = new InPatientAreaDept();
 		dept000n.setId("dept000n");
@@ -1002,6 +1044,14 @@ public class DataIniter {
 
 		users.add(user003);
 
+		usere01 = new Nurse();
+
+		usere01.setId("nursee01");
+		usere01.setName("眼科手术室护士-吕蒙");
+		usere01.setDept(depteee);
+
+		users.add(usere01);
+
 		admin001 = new Admin();
 
 		admin001.setId("admin001");
@@ -1153,6 +1203,26 @@ public class DataIniter {
 		ordinaryVoucherTypeChargeItem.setChargingMode(ChargeItem.ChargingMode_Amount);
 
 		chargeItems.add(ordinaryVoucherTypeChargeItem);
+
+		surgery001ChargeItem = new ChargeItem();
+		surgery001ChargeItem.setId("surgery001ChargeItem");
+		surgery001ChargeItem.setCode("surgery001ChargeItem");
+		surgery001ChargeItem.setName("息肉切除");
+		surgery001ChargeItem.setPrice(300F);
+		surgery001ChargeItem.setUnit("次");
+		surgery001ChargeItem.setChargingMode(ChargeItem.ChargingMode_Amount);
+
+		chargeItems.add(surgery001ChargeItem);
+
+		surgery002ChargeItem = new ChargeItem();
+		surgery002ChargeItem.setId("surgery002ChargeItem");
+		surgery002ChargeItem.setCode("surgery002ChargeItem");
+		surgery002ChargeItem.setName("泪道探通术");
+		surgery002ChargeItem.setPrice(800F);
+		surgery002ChargeItem.setUnit("次");
+		surgery002ChargeItem.setChargingMode(ChargeItem.ChargingMode_Amount);
+
+		chargeItems.add(surgery002ChargeItem);
 
 		costAdminDomainService.create(chargeItems);
 	}
@@ -1308,6 +1378,27 @@ public class DataIniter {
 		inspectDomainService.createInspectItems(inspectItems);
 	}
 
+	private void initSurgeryTypes() {
+
+		List<SurgeryType> surgeryTypes = new ArrayList<SurgeryType>();
+
+		surgeryType001 = new SurgeryType();
+		surgeryType001.setId("surgeryType001");
+		surgeryType001.setName("息肉切除");
+		surgeryType001.setChargeItem(surgery001ChargeItem);
+
+		surgeryTypes.add(surgeryType001);
+
+		surgeryType002 = new SurgeryType();
+		surgeryType002.setId("surgeryType002");
+		surgeryType002.setName("泪道探通术");
+		surgeryType002.setChargeItem(surgery002ChargeItem);
+
+		surgeryTypes.add(surgeryType002);
+
+		surgeryDomainService.createSurgeryTypes(surgeryTypes);
+	}
+
 	private void initOrderTypes() {
 
 		List<OrderType> orderTypes = new ArrayList<OrderType>();
@@ -1413,6 +1504,13 @@ public class DataIniter {
 
 		orderTypes.add(describeOrderType);
 
+		surgeryOrderType = new SurgeryOrderType();
+		surgeryOrderType.setId("surgeryOrderType");
+		surgeryOrderType.setCode("surgeryOrderType");
+		surgeryOrderType.setName("手术");
+
+		orderTypes.add(surgeryOrderType);
+
 		orderAdminDomainService.createOrderTypes(orderTypes);
 	}
 
@@ -1465,34 +1563,50 @@ public class DataIniter {
 		everyOneOrderUseModeAssistMaterialToInPatient = new DrugUseModeAssistMaterial();
 		everyOneOrderUseModeAssistMaterialToInPatient.setId("everyOneInPatient");
 		everyOneOrderUseModeAssistMaterialToInPatient.setCode("everyOneInPatient");
-		everyOneOrderUseModeAssistMaterialToInPatient.setAssistMaterial(transportFluidAssistMaterial);
-		everyOneOrderUseModeAssistMaterialToInPatient.setOrderUseMode(infusionOrderUseModeToInPatient);
-		everyOneOrderUseModeAssistMaterialToInPatient.setChargeMode(DrugUseModeAssistMaterial.everyOne);
-		everyOneOrderUseModeAssistMaterialToInPatient.setSign(InfusionOrderUseModeToInPatient.transportFluid);
+		everyOneOrderUseModeAssistMaterialToInPatient
+				.setAssistMaterial(transportFluidAssistMaterial);
+		everyOneOrderUseModeAssistMaterialToInPatient
+				.setOrderUseMode(infusionOrderUseModeToInPatient);
+		everyOneOrderUseModeAssistMaterialToInPatient
+				.setChargeMode(DrugUseModeAssistMaterial.everyOne);
+		everyOneOrderUseModeAssistMaterialToInPatient
+				.setSign(InfusionOrderUseModeToInPatient.transportFluid);
 
 		everyDayOrderUseModeAssistMaterialToInPatient = new DrugUseModeAssistMaterial();
 		everyDayOrderUseModeAssistMaterialToInPatient.setId("everyDayInPatient");
 		everyDayOrderUseModeAssistMaterialToInPatient.setCode("everyDayInPatient");
-		everyDayOrderUseModeAssistMaterialToInPatient.setAssistMaterial(transportFluidAssistMaterial);
-		everyDayOrderUseModeAssistMaterialToInPatient.setOrderUseMode(infusionOrderUseModeToInPatient);
-		everyDayOrderUseModeAssistMaterialToInPatient.setChargeMode(DrugUseModeAssistMaterial.everyDay);
-		everyDayOrderUseModeAssistMaterialToInPatient.setSign(InfusionOrderUseModeToInPatient.transportFluid);
+		everyDayOrderUseModeAssistMaterialToInPatient
+				.setAssistMaterial(transportFluidAssistMaterial);
+		everyDayOrderUseModeAssistMaterialToInPatient
+				.setOrderUseMode(infusionOrderUseModeToInPatient);
+		everyDayOrderUseModeAssistMaterialToInPatient
+				.setChargeMode(DrugUseModeAssistMaterial.everyDay);
+		everyDayOrderUseModeAssistMaterialToInPatient
+				.setSign(InfusionOrderUseModeToInPatient.transportFluid);
 
 		onlyOneOrderUseModeAssistMaterialToInPatient = new DrugUseModeAssistMaterial();
 		onlyOneOrderUseModeAssistMaterialToInPatient.setId("onlyOneInPatient");
 		onlyOneOrderUseModeAssistMaterialToInPatient.setCode("onlyOneInPatient");
-		onlyOneOrderUseModeAssistMaterialToInPatient.setAssistMaterial(transportFluidAssistMaterial);
-		onlyOneOrderUseModeAssistMaterialToInPatient.setOrderUseMode(infusionOrderUseModeToInPatient);
-		onlyOneOrderUseModeAssistMaterialToInPatient.setChargeMode(DrugUseModeAssistMaterial.onlyOne);
-		onlyOneOrderUseModeAssistMaterialToInPatient.setSign(InfusionOrderUseModeToInPatient.transportFluid);
+		onlyOneOrderUseModeAssistMaterialToInPatient
+				.setAssistMaterial(transportFluidAssistMaterial);
+		onlyOneOrderUseModeAssistMaterialToInPatient
+				.setOrderUseMode(infusionOrderUseModeToInPatient);
+		onlyOneOrderUseModeAssistMaterialToInPatient
+				.setChargeMode(DrugUseModeAssistMaterial.onlyOne);
+		onlyOneOrderUseModeAssistMaterialToInPatient
+				.setSign(InfusionOrderUseModeToInPatient.transportFluid);
 
 		everyOneOrderUseModeAssistMaterialToOutPatient = new DrugUseModeAssistMaterial();
 		everyOneOrderUseModeAssistMaterialToOutPatient.setId("everyOneOutPatient");
 		everyOneOrderUseModeAssistMaterialToOutPatient.setCode("everyOneOutPatient");
-		everyOneOrderUseModeAssistMaterialToOutPatient.setAssistMaterial(transportFluidAssistMaterial);
-		everyOneOrderUseModeAssistMaterialToOutPatient.setOrderUseMode(infusionOrderUseModeToOutPatient);
-		everyOneOrderUseModeAssistMaterialToOutPatient.setChargeMode(DrugUseModeAssistMaterial.everyOne);
-		everyOneOrderUseModeAssistMaterialToOutPatient.setSign(InfusionOrderUseModeToInPatient.transportFluid);
+		everyOneOrderUseModeAssistMaterialToOutPatient
+				.setAssistMaterial(transportFluidAssistMaterial);
+		everyOneOrderUseModeAssistMaterialToOutPatient
+				.setOrderUseMode(infusionOrderUseModeToOutPatient);
+		everyOneOrderUseModeAssistMaterialToOutPatient
+				.setChargeMode(DrugUseModeAssistMaterial.everyOne);
+		everyOneOrderUseModeAssistMaterialToOutPatient
+				.setSign(InfusionOrderUseModeToInPatient.transportFluid);
 	}
 
 	private void initOrderFrequencyTypes() {

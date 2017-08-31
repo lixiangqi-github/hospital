@@ -17,7 +17,7 @@ import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.platform.entity.IdEntity;
 
 /**
- * 检查项目
+ * 检查申请项目
  * 
  * @author kingbox
  *
@@ -26,6 +26,7 @@ import com.neusoft.hs.platform.entity.IdEntity;
 @Table(name = "app_inspect_apply_item")
 public class InspectApplyItem extends IdEntity {
 
+	@Column(length = 32)
 	private String state = State_Executing;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -133,7 +134,8 @@ public class InspectApplyItem extends IdEntity {
 		return inspectArrangeOrderExecute;
 	}
 
-	public void setInspectArrangeOrderExecute(InspectArrangeOrderExecute inspectArrangeOrderExecute) {
+	public void setInspectArrangeOrderExecute(
+			InspectArrangeOrderExecute inspectArrangeOrderExecute) {
 		this.inspectArrangeOrderExecute = inspectArrangeOrderExecute;
 	}
 
@@ -141,7 +143,8 @@ public class InspectApplyItem extends IdEntity {
 		return inspectConfirmOrderExecute;
 	}
 
-	public void setInspectConfirmOrderExecute(InspectConfirmOrderExecute inspectConfirmOrderExecute) {
+	public void setInspectConfirmOrderExecute(
+			InspectConfirmOrderExecute inspectConfirmOrderExecute) {
 		this.inspectConfirmOrderExecute = inspectConfirmOrderExecute;
 	}
 

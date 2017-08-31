@@ -11,7 +11,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "app_inpatient_group_consultation_apply")
+@Table(name = "app_inpatient_consultation_apply")
 public class GroupConsultationApply extends Apply {
 
 	@Column(length = 32)
