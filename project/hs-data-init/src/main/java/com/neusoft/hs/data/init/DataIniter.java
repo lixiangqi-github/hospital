@@ -578,6 +578,8 @@ public class DataIniter {
 		inspectDomainService.clearInspectApplyItems();
 		// 清空检查项目
 		inspectDomainService.clearInspectItems();
+		// 清空手术申请项目
+		surgeryDomainService.clearSurgeryApplyItems();
 		// 清空手术项目
 		surgeryDomainService.clearSurgeryTypes();
 		// 清空挂号类型

@@ -13,13 +13,18 @@ public class SurgeryDomainService {
 	@Autowired
 	private SurgeryTypeRepo surgeryTypeRepo;
 	
+	@Autowired
+	private SurgeryApplyItemRepo surgeryApplyItemRepo;
 	
 	public void createSurgeryTypes(List<SurgeryType> surgeryTypes) {
 		surgeryTypeRepo.save(surgeryTypes);
 	}
 	
-	
 	public void clearSurgeryTypes() {
 		surgeryTypeRepo.deleteAll();
+	}
+
+	public void clearSurgeryApplyItems() {
+		surgeryApplyItemRepo.deleteAll();
 	}
 }
