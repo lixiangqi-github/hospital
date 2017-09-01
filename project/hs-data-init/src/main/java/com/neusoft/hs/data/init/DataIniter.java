@@ -1488,7 +1488,7 @@ public class DataIniter {
 		inspectOrderType = new InspectOrderType();
 		inspectOrderType.setId("inspectOrderType");
 		inspectOrderType.setCode("inspectOrderType");
-		inspectOrderType.setName("检查");
+		inspectOrderType.setName("检查申请");
 
 		orderTypes.add(inspectOrderType);
 
@@ -1509,7 +1509,7 @@ public class DataIniter {
 		surgeryOrderType = new SurgeryOrderType();
 		surgeryOrderType.setId("surgeryOrderType");
 		surgeryOrderType.setCode("surgeryOrderType");
-		surgeryOrderType.setName("手术");
+		surgeryOrderType.setName("手术申请");
 
 		orderTypes.add(surgeryOrderType);
 
