@@ -10,4 +10,6 @@ interface DrugTypeRepo extends PagingAndSortingRepository<DrugType, String> {
 
 	List<DrugType> findByDrugTypeSpec(DrugTypeSpec drugTypeSpec);
 
+	List<DrugType> findByPharmacyAndDrugTypeSpec(Pharmacy pharmacy, DrugTypeSpec drugTypeSpec);
+
 }

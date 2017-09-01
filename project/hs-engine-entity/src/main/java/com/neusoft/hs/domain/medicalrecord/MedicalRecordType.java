@@ -55,9 +55,6 @@ public class MedicalRecordType extends SuperEntity {
 	@Column(name = "is_unique")
 	private boolean unique;
 
-	@OneToMany(mappedBy = "type")
-	private List<MedicalRecord> records;
-
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "domain_medical_record_type_item", joinColumns = {
 			@JoinColumn(name = "type_id", referencedColumnName = "id") }, inverseJoinColumns = {
@@ -121,14 +118,6 @@ public class MedicalRecordType extends SuperEntity {
 
 	public void setUnique(boolean unique) {
 		this.unique = unique;
-	}
-
-	public List<MedicalRecord> getRecords() {
-		return records;
-	}
-
-	public void setRecords(List<MedicalRecord> records) {
-		this.records = records;
 	}
 
 	public List<TreatmentItemSpec> getItems() {

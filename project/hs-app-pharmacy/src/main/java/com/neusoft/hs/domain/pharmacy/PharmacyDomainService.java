@@ -29,22 +29,10 @@ public class PharmacyDomainService {
 	private PharmacyRepo pharmacyRepo;
 
 	@Autowired
-	private DispenseDrugWinRepo dispenseDrugWinRepo;
-
-	@Autowired
 	private DrugTypeRepo drugTypeRepo;
 
 	@Autowired
-	private DrugUseModeRepo orderUseModeRepo;
-
-	@Autowired
-	private DrugUseModeAssistMaterialRepo orderUseModeAssistMaterialRepo;
-
-	@Autowired
 	private PrescriptionRepo prescriptionRepo;
-
-	@Autowired
-	private DispensingDrugBatchRepo dispensingDrugBatchRepo;
 
 	@Autowired
 	private DispensingDrugOrderRepo dispensingDrugOrderRepo;
@@ -78,8 +66,7 @@ public class PharmacyDomainService {
 	 * @param pharmacy
 	 * @roseuid 592E6DFF034D
 	 */
-	public DispensingDrugOrder createOrder(InPatientAreaDept area,
-			DispensingDrugBatch batch,
+	public DispensingDrugOrder createOrder(InPatientAreaDept area, DispensingDrugBatch batch,
 			List<DispensingDrugOrderExecute> executes, AbstractUser user) {
 		DispensingDrugOrder dispensingDrugOrder = new DispensingDrugOrder();
 
@@ -94,12 +81,10 @@ public class PharmacyDomainService {
 
 		dispensingDrugOrder.save();
 
-		applicationContext.publishEvent(new DispensingDrugOrderCreatedEvent(
-				dispensingDrugOrder));
+		applicationContext.publishEvent(new DispensingDrugOrderCreatedEvent(dispensingDrugOrder));
 
-		LogUtil.log(this.getClass(), "人员[{}]创建了住院病区[{}]批次为[{}]的摆药单[{}]",
-				user.getId(), area.getName(), batch.getName(),
-				dispensingDrugOrder.getId());
+		LogUtil.log(this.getClass(), "人员[{}]创建了住院病区[{}]批次为[{}]的摆药单[{}]", user.getId(),
+				area.getName(), batch.getName(), dispensingDrugOrder.getId());
 
 		return dispensingDrugOrder;
 
@@ -110,35 +95,31 @@ public class PharmacyDomainService {
 	 * @throws OrderExecuteException
 	 * @roseuid 5930F4D20354
 	 */
-	public void dispenseOrder(DispensingDrugOrder dispensingDrugOrder,
-			AbstractUser user) throws OrderExecuteException {
-		for (DispensingDrugOrderExecute execute : dispensingDrugOrder
-				.getExecutes()) {
+	public void dispenseOrder(DispensingDrugOrder dispensingDrugOrder, AbstractUser user)
+			throws OrderExecuteException {
+		for (DispensingDrugOrderExecute execute : dispensingDrugOrder.getExecutes()) {
 			orderExecuteDomainService.finish(execute, null, user);
 		}
 
 		dispensingDrugOrder.finish(user);
 
-		applicationContext.publishEvent(new DispensingDrugOrderFinishedEvent(
-				dispensingDrugOrder));
+		applicationContext.publishEvent(new DispensingDrugOrderFinishedEvent(dispensingDrugOrder));
 
 		LogUtil.log(this.getClass(), "人员[{}]将摆药单[{}]设置为已完成", user.getId(),
 				dispensingDrugOrder.getId());
 
 	}
 
-	public void distributeOrder(DispensingDrugOrder dispensingDrugOrder,
-			AbstractUser user) throws OrderExecuteException {
-		for (DispensingDrugOrderExecute execute : dispensingDrugOrder
-				.getExecutes()) {
+	public void distributeOrder(DispensingDrugOrder dispensingDrugOrder, AbstractUser user)
+			throws OrderExecuteException {
+		for (DispensingDrugOrderExecute execute : dispensingDrugOrder.getExecutes()) {
 			orderExecuteDomainService.finish(execute.getNext(), null, user);
 		}
 
 		dispensingDrugOrder.distribute(user);
 
 		applicationContext
-				.publishEvent(new DispensingDrugOrderDistributedEvent(
-						dispensingDrugOrder));
+				.publishEvent(new DispensingDrugOrderDistributedEvent(dispensingDrugOrder));
 
 		LogUtil.log(this.getClass(), "人员[{}]将摆药单[{}]设置为已发出", user.getId(),
 				dispensingDrugOrder.getId());
@@ -148,10 +129,9 @@ public class PharmacyDomainService {
 		return this.dispensingDrugOrderRepo.findOne(id);
 	}
 
-	public List<DispensingDrugOrder> findDispensingDrugOrder(
-			InPatientAreaDept area, DispensingDrugBatch batch, Pageable pageable) {
-		return this.dispensingDrugOrderRepo.findByAreaAndBatch(area, batch,
-				pageable);
+	public List<DispensingDrugOrder> findDispensingDrugOrder(InPatientAreaDept area,
+			DispensingDrugBatch batch, Pageable pageable) {
+		return this.dispensingDrugOrderRepo.findByAreaAndBatch(area, batch, pageable);
 	}
 
 	public Pharmacy findPharmacy(String id) {

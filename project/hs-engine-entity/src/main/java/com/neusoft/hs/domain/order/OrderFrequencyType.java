@@ -47,9 +47,6 @@ public abstract class OrderFrequencyType extends SuperEntity {
 	@Column(length = 32)
 	private String name;
 
-	@OneToMany(mappedBy = "frequencyType")
-	private List<LongOrder> orders;
-
 	public OrderFrequencyType() {
 		super();
 	}
@@ -97,14 +94,6 @@ public abstract class OrderFrequencyType extends SuperEntity {
 		this.name = name;
 	}
 
-	public List<LongOrder> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<LongOrder> orders) {
-		this.orders = orders;
-	}
-	
 	@Override
 	public String toString() {
 		return name;

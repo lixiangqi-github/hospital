@@ -51,18 +51,6 @@ public class ChargeItem extends SuperEntity {
 	@Column(name = "charging_mode", length = 16)
 	private String chargingMode;
 
-	@OneToMany(mappedBy = "chargeItem")
-	private List<ChargeRecord> chargeRecords;
-
-	@OneToMany(mappedBy = "chargeItem")
-	private List<OrderType> orderTypes;
-
-	@OneToMany(mappedBy = "chargeItem")
-	private List<OrderExecuteChargeItemRecord> orderExecuteChargeItemRecords;
-
-	@OneToMany(mappedBy = "chargeItem")
-	private List<VisitChargeItem> visitChargeItems;
-
 	public static final String ChargingMode_Day = "每天";
 	public static final String ChargingMode_Amount = "数量";
 
@@ -112,39 +100,6 @@ public class ChargeItem extends SuperEntity {
 
 	public void setChargingMode(String chargingMode) {
 		this.chargingMode = chargingMode;
-	}
-
-	public List<ChargeRecord> getChargeRecords() {
-		return chargeRecords;
-	}
-
-	public void setChargeRecords(List<ChargeRecord> chargeRecords) {
-		this.chargeRecords = chargeRecords;
-	}
-
-	public List<VisitChargeItem> getVisitChargeItems() {
-		return visitChargeItems;
-	}
-
-	public void setVisitChargeItems(List<VisitChargeItem> visitChargeItems) {
-		this.visitChargeItems = visitChargeItems;
-	}
-
-	public List<OrderType> getOrderTypes() {
-		return orderTypes;
-	}
-
-	public void setOrderTypes(List<OrderType> orderTypes) {
-		this.orderTypes = orderTypes;
-	}
-
-	public List<OrderExecuteChargeItemRecord> getOrderExecuteChargeItemRecords() {
-		return orderExecuteChargeItemRecords;
-	}
-
-	public void setOrderExecuteChargeItemRecords(
-			List<OrderExecuteChargeItemRecord> orderExecuteChargeItemRecords) {
-		this.orderExecuteChargeItemRecords = orderExecuteChargeItemRecords;
 	}
 
 	public void delete() {

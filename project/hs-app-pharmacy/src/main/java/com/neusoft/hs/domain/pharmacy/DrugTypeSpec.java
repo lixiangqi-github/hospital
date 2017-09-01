@@ -61,9 +61,6 @@ public class DrugTypeSpec extends SuperEntity {
 	@JoinColumn(name = "charge_item_id")
 	private ChargeItem chargeItem;
 
-	@OneToMany(mappedBy = "drugTypeSpec")
-	private List<DrugType> drugTypes;
-
 	public String getId() {
 		return id;
 	}
@@ -119,20 +116,4 @@ public class DrugTypeSpec extends SuperEntity {
 	public void setChargeItem(ChargeItem chargeItem) {
 		this.chargeItem = chargeItem;
 	}
-
-	public List<DrugType> getDrugTypes() {
-		return drugTypes;
-	}
-
-	public void setDrugTypes(List<DrugType> drugTypes) {
-		this.drugTypes = drugTypes;
-	}
-
-	public void addDrugType(DrugType drugType) {
-		if (this.drugTypes == null) {
-			this.drugTypes = new ArrayList<DrugType>();
-		}
-		this.drugTypes.add(drugType);
-	}
-
 }

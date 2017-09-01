@@ -32,11 +32,6 @@ public class Doctor extends AbstractUser {
 	@OneToMany(mappedBy = "superior")
 	private List<Doctor> subordinates;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "creator")
-	@OrderBy("createDate DESC")
-	private List<Order> orders;
-
 	@Override
 	public String getDeptId() {
 		// TODO Auto-generated method stub
@@ -71,14 +66,6 @@ public class Doctor extends AbstractUser {
 	public void setRoleIds(List<String> roleIds) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
 	}
 
 	public Doctor getSuperior() {

@@ -63,9 +63,6 @@ public abstract class OrderType extends SuperEntity {
 	@OneToMany(mappedBy = "parent")
 	private List<OrderType> children;
 
-	@OneToMany(mappedBy = "orderType")
-	private List<Order> orders;
-
 	/**
 	 * 医嘱创建时的检查回调函数
 	 * 

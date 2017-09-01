@@ -22,10 +22,6 @@ public class Nurse extends AbstractUser {
 	@JoinColumn(name = "dept_id")
 	private Dept dept;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "respNurse")
-	private List<Visit> visits;
-
 	public Nurse() {
 	}
 
@@ -67,14 +63,6 @@ public class Nurse extends AbstractUser {
 	public void setRoleIds(List<String> roleIds) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public List<Visit> getVisits() {
-		return visits;
-	}
-
-	public void setVisits(List<Visit> visits) {
-		this.visits = visits;
 	}
 
 	public Dept getDept() {

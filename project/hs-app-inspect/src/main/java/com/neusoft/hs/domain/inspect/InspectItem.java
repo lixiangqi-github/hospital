@@ -48,9 +48,6 @@ public class InspectItem extends SuperEntity {
 	@JoinColumn(name = "charge_item_id")
 	private ChargeItem chargeItem;
 
-	@OneToMany(mappedBy = "inspectItem")
-	private List<InspectApplyItem> inspectApplyItems;
-
 	public String getId() {
 		return id;
 	}
@@ -81,13 +78,5 @@ public class InspectItem extends SuperEntity {
 
 	public void setChargeItem(ChargeItem chargeItem) {
 		this.chargeItem = chargeItem;
-	}
-
-	public List<InspectApplyItem> getInspectApplyItems() {
-		return inspectApplyItems;
-	}
-
-	public void setInspectApplyItems(List<InspectApplyItem> inspectApplyItems) {
-		this.inspectApplyItems = inspectApplyItems;
 	}
 }

@@ -26,19 +26,14 @@ public class Pharmacy extends Dept {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "pharmacy", cascade = { CascadeType.REMOVE })
-	private List<DrugType> drugTypes;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "pharmacy", cascade = { CascadeType.REMOVE })
 	private List<DispenseDrugWin> dispenseDrugWins;
 
-	public List<DrugTypeConsumeRecord> withhold(DrugTypeSpec drugTypeSpec,
-			Integer count) throws PharmacyException {
+	public List<DrugTypeConsumeRecord> withhold(DrugTypeSpec drugTypeSpec, Integer count)
+			throws PharmacyException {
 
 		List<DrugType> theDrugTypes = this.getTheDrugTypes(drugTypeSpec);
 		if (theDrugTypes == null || theDrugTypes.size() == 0) {
-			throw new PharmacyException("药房[%s]没有[%s]药品", this.getName(),
-					drugTypeSpec.getName());
+			throw new PharmacyException("药房[%s]没有[%s]药品", this.getName(), drugTypeSpec.getName());
 		}
 		DrugType theDrugType = theDrugTypes.get(0);
 
@@ -58,21 +53,19 @@ public class Pharmacy extends Dept {
 
 	}
 
-	public void unWithhold(List<DrugTypeConsumeRecord> consumeRecords)
-			throws PharmacyException {
+	public void unWithhold(List<DrugTypeConsumeRecord> consumeRecords) throws PharmacyException {
 		for (DrugTypeConsumeRecord consumeRecord : consumeRecords) {
 			consumeRecord.getDrugType().unWithhold(consumeRecord.getCount());
 		}
 
 	}
 
-	public List<DrugTypeConsumeRecord> send(DrugTypeSpec drugTypeSpec,
-			Integer count) throws PharmacyException {
+	public List<DrugTypeConsumeRecord> send(DrugTypeSpec drugTypeSpec, Integer count)
+			throws PharmacyException {
 
 		List<DrugType> theDrugTypes = this.getTheDrugTypes(drugTypeSpec);
 		if (theDrugTypes == null || theDrugTypes.size() == 0) {
-			throw new PharmacyException("药房[%s]没有[%s]药品", this.getName(),
-					drugTypeSpec.getName());
+			throw new PharmacyException("药房[%s]没有[%s]药品", this.getName(), drugTypeSpec.getName());
 		}
 		DrugType theDrugType = theDrugTypes.get(0);
 
@@ -92,19 +85,10 @@ public class Pharmacy extends Dept {
 
 	}
 
-	public void unSend(List<DrugTypeConsumeRecord> consumeRecords)
-			throws PharmacyException {
+	public void unSend(List<DrugTypeConsumeRecord> consumeRecords) throws PharmacyException {
 		for (DrugTypeConsumeRecord consumeRecord : consumeRecords) {
 			consumeRecord.getDrugType().unSend(consumeRecord.getCount());
 		}
-	}
-
-	public List<DrugType> getDrugTypes() {
-		return drugTypes;
-	}
-
-	public void setDrugTypes(List<DrugType> drugTypes) {
-		this.drugTypes = drugTypes;
 	}
 
 	public List<DispenseDrugWin> getDispenseDrugWins() {
@@ -116,7 +100,7 @@ public class Pharmacy extends Dept {
 	}
 
 	public List<DrugType> getTheDrugTypes(DrugTypeSpec drugTypeSpec) {
-		return this.getService(DrugTypeRepo.class).findByDrugTypeSpec(
+		return this.getService(DrugTypeRepo.class).findByPharmacyAndDrugTypeSpec(this,
 				drugTypeSpec);
 	}
 

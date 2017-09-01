@@ -140,7 +140,6 @@ public class DrugType extends IdEntity {
 
 	public void setDrugTypeSpec(DrugTypeSpec drugTypeSpec) {
 		this.drugTypeSpec = drugTypeSpec;
-		drugTypeSpec.addDrugType(this);
 	}
 
 	public String getProductionBatch() {

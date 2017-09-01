@@ -55,9 +55,6 @@ public abstract class TreatmentItemSpec extends SuperEntity {
 	@Column(name = "repeat_create")
 	private boolean repeatCreate = false;
 
-	@OneToMany(mappedBy = "treatmentItemSpec")
-	private List<TreatmentItem> treatmentItems;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "resp_role_id")
 	public Role respRole;
@@ -155,14 +152,6 @@ public abstract class TreatmentItemSpec extends SuperEntity {
 
 	public void setRepeatCreate(boolean repeatCreate) {
 		this.repeatCreate = repeatCreate;
-	}
-
-	public List<TreatmentItem> getTreatmentItems() {
-		return treatmentItems;
-	}
-
-	public void setTreatmentItems(List<TreatmentItem> treatmentItems) {
-		this.treatmentItems = treatmentItems;
 	}
 
 	public Role getRespRole() {

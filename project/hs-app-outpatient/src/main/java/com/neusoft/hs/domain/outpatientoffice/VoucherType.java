@@ -41,9 +41,6 @@ public class VoucherType extends SuperEntity {
 	@Column(length = 32)
 	private String name;
 
-	@OneToMany(mappedBy = "voucherType")
-	private List<OutPatientPlanRecord> planRecords;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "charge_item_id")
 	private ChargeItem chargeItem;
@@ -69,14 +66,6 @@ public class VoucherType extends SuperEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<OutPatientPlanRecord> getPlanRecords() {
-		return planRecords;
-	}
-
-	public void setPlanRecords(List<OutPatientPlanRecord> planRecords) {
-		this.planRecords = planRecords;
 	}
 
 	public ChargeItem getChargeItem() {
