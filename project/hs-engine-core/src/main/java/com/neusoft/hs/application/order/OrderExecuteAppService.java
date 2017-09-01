@@ -104,8 +104,23 @@ public class OrderExecuteAppService {
 		}
 	}
 
-	public List<OrderExecute> find(OrderExecuteFilter filter, Map<String, Object> params, AbstractUser user,
-			Pageable pageable) throws HsException {
+	/**
+	 * 取消执行条目
+	 * 
+	 * @param executeId
+	 * @param user
+	 * @throws OrderExecuteException
+	 */
+	public void cancel(String executeId, AbstractUser user) throws OrderExecuteException {
+		OrderExecute execute = orderExecuteDomainService.find(executeId);
+		if (execute == null) {
+			throw new OrderExecuteException(null, "executeId=[%s]不存在", executeId);
+		}
+		orderExecuteDomainService.cancel(execute, user);
+	}
+
+	public List<OrderExecute> find(OrderExecuteFilter filter, Map<String, Object> params,
+			AbstractUser user, Pageable pageable) throws HsException {
 		return orderExecuteDomainService.find(filter, params, user, pageable);
 	}
 
@@ -130,7 +145,8 @@ public class OrderExecuteAppService {
 	 */
 	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user, Pageable pageable) {
 		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), NeedExecuteOrderMinute);
-		return orderExecuteDomainService.findNeedExecuteOrderExecutes(user, planStartDate, pageable);
+		return orderExecuteDomainService.findNeedExecuteOrderExecutes(user, planStartDate,
+				pageable);
 	}
 
 	/**
@@ -140,7 +156,8 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user, Pageable pageable) {
+	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user,
+			Pageable pageable) {
 		return orderExecuteDomainService.findAllNeedExecuteOrderExecutes(user, pageable);
 	}
 
@@ -153,10 +170,11 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedExecuteOrderExecutes(Visit visit, String type, AbstractUser user,
-			Pageable pageable) {
+	public List<OrderExecute> getNeedExecuteOrderExecutes(Visit visit, String type,
+			AbstractUser user, Pageable pageable) {
 		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), NeedExecuteOrderMinute);
-		return orderExecuteDomainService.findNeedExecuteOrderExecutes(visit, type, user, planStartDate, pageable);
+		return orderExecuteDomainService.findNeedExecuteOrderExecutes(visit, type, user,
+				planStartDate, pageable);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.neusoft.hs.domain.surgery;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,14 @@ public class SurgeryApply extends Apply {
 
 	public void setSurgeryApplyItems(List<SurgeryApplyItem> surgeryApplyItems) {
 		this.surgeryApplyItems = surgeryApplyItems;
+	}
+	
+	public void addSurgeryApplyItem(SurgeryApplyItem surgeryApplyItem){
+		if(this.surgeryApplyItems == null){
+			this.surgeryApplyItems = new ArrayList<SurgeryApplyItem>();
+		}
+		surgeryApplyItem.setSurgeryApply(this);
+		this.surgeryApplyItems.add(surgeryApplyItem);
 	}
 
 	public Dept getArrangeDept() {

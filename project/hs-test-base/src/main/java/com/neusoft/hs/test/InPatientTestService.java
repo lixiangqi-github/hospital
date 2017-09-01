@@ -15,6 +15,8 @@ import com.neusoft.hs.domain.medicalrecord.MedicalRecord;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
 import com.neusoft.hs.domain.order.EnterHospitalIntoWardOrderExecute;
 import com.neusoft.hs.domain.order.EnterHospitalSupplyCostOrderExecute;
+import com.neusoft.hs.domain.order.NursingOrderBuilder;
+import com.neusoft.hs.domain.order.NursingOrderType;
 import com.neusoft.hs.domain.order.Order;
 import com.neusoft.hs.domain.order.OrderCreateCommand;
 import com.neusoft.hs.domain.order.OrderExecute;
@@ -234,6 +236,8 @@ public abstract class InPatientTestService extends AppTestService {
 		List<Order> orders;
 		Visit visit;
 
+		NursingOrderBuilder nursingOrderBuilder;
+
 		// 2017-01-07
 		DateUtil.setSysDate(DateUtil.createDay("2017-01-07", dayCount));
 		patientNightTestService.calculate(admin001);
@@ -268,6 +272,77 @@ public abstract class InPatientTestService extends AppTestService {
 		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
 
 		assertTrue(executes.size() == 3);
+
+		// 完成医嘱执行条目
+		for (OrderExecute execute : executes) {
+			if (execute.getVisitName().equals(visit004.getName())
+					&& execute.getType().equals(secondNursingOrderType.getName())) {
+				orderExecuteAppService.cancel(execute.getId(), user003);
+			} else {
+				orderExecuteAppService.finish(execute.getId(), null, user003);
+			}
+		}
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 15:00", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
+
+		assertTrue(executes.size() == 1);
+
+		// 完成术前操作执行条目
+		for (OrderExecute execute : executes) {
+			orderExecuteAppService.finish(execute.getId(), null, user003);
+		}
+
+		visit = visitDomainService.find(visit004.getId());
+
+		assertTrue(visit.getState().equals(Visit.State_Surgerying));
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 17:00", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(usere01, pageable);
+
+		assertTrue(executes.size() == 1);
+
+		// 完成术后操作执行条目
+		for (OrderExecute execute : executes) {
+			orderExecuteAppService.finish(execute.getId(), null, usere01);
+		}
+
+		visit = visitDomainService.find(visit004.getId());
+
+		assertTrue(visit.getState().equals(Visit.State_IntoWard));
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 17:10", dayCount));
+
+		// 为004开立一级护理长期医嘱
+		nursingOrderBuilder = new NursingOrderBuilder();
+		nursingOrderBuilder.setVisit(visit004);
+		nursingOrderBuilder.setFrequencyType(orderFrequencyType_0H);
+		nursingOrderBuilder.setOrderType(firstNursingOrderType);
+
+		orderAppService.create(nursingOrderBuilder, userd02);
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 17:20", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		orders = orderAppService.findNeedVerifyOrders(user003, pageable);
+
+		assertTrue(orders.size() == 1);
+
+		// 核对医嘱
+		for (Order order : orders) {
+			orderAppService.verify(order.getId(), user003);
+		}
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 17:30", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(user003, pageable);
+
+		assertTrue(executes.size() == 1);
 
 		// 完成医嘱执行条目
 		for (OrderExecute execute : executes) {

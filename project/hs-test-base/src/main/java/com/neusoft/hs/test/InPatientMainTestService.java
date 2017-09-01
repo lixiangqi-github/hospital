@@ -17,7 +17,7 @@ import com.neusoft.hs.domain.cost.ChargeRecord;
 import com.neusoft.hs.domain.inspect.InspectApply;
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecord;
-import com.neusoft.hs.domain.order.EnterHospitalIntoWardOrderExecute;
+import com.neusoft.hs.domain.order.InspectArrangeOrderExecute;
 import com.neusoft.hs.domain.order.InspectOrderBuilder;
 import com.neusoft.hs.domain.order.LongDrugOrderBuilder;
 import com.neusoft.hs.domain.order.LongOrder;
@@ -25,17 +25,19 @@ import com.neusoft.hs.domain.order.NursingOrderBuilder;
 import com.neusoft.hs.domain.order.Order;
 import com.neusoft.hs.domain.order.OrderCreateCommand;
 import com.neusoft.hs.domain.order.OrderExecute;
+import com.neusoft.hs.domain.order.SurgeryArrangeOrderExecute;
 import com.neusoft.hs.domain.order.TemporaryDrugOrderBuilder;
 import com.neusoft.hs.domain.order.TemporaryOrder;
 import com.neusoft.hs.domain.order.TransferDeptConfirmOrderExecute;
 import com.neusoft.hs.domain.order.TransferDeptOrderBuilder;
 import com.neusoft.hs.domain.pharmacy.ConfigureFluidOrder;
 import com.neusoft.hs.domain.pharmacy.DispensingDrugOrder;
+import com.neusoft.hs.domain.surgery.SurgeryApply;
+import com.neusoft.hs.domain.surgery.SurgeryApplyItem;
 import com.neusoft.hs.domain.treatment.Itemable;
 import com.neusoft.hs.domain.treatment.SimpleTreatmentItemValue;
 import com.neusoft.hs.domain.treatment.TreatmentItem;
 import com.neusoft.hs.domain.treatment.TreatmentItemSpec;
-import com.neusoft.hs.domain.visit.ReceiveVisitVO;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
@@ -921,21 +923,66 @@ public class InPatientMainTestService extends InPatientTestService {
 		for (OrderExecute execute : executes) {
 			orderExecuteAppService.finish(execute.getId(), null, user003);
 		}
-		
-//		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 15:00", dayCount));
-//		
-//		//为患者004开立手术医嘱
-//		surgeryTemporaryOrder = new TemporaryOrder();
-//		surgeryTemporaryOrder.setVisit(visit004);
-//		surgeryTemporaryOrder.setOrderType(surgeryOrderType);
-//		surgeryTemporaryOrder.setName(surgeryOrderType.getName());
-//		surgeryTemporaryOrder.setDescribe("眼底切除");
-//
-//		surgeryTemporaryOrder.setBelongDept(dept000);
-//		surgeryTemporaryOrder.setExecuteDept(depteee);
-//		surgeryTemporaryOrder.setPlanStartDate(DateUtil.getSysDate());
-//
-//		orderAppService.create(surgeryTemporaryOrder, userd02);
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 15:00", dayCount));
+
+		// 为患者004开立手术医嘱
+		surgeryTemporaryOrder = new TemporaryOrder();
+		surgeryTemporaryOrder.setVisit(visit004);
+		surgeryTemporaryOrder.setOrderType(surgeryOrderType);
+		surgeryTemporaryOrder.setName(surgeryOrderType.getName());
+
+		surgeryTemporaryOrder.setBelongDept(dept000);
+		surgeryTemporaryOrder.setExecuteDept(depteee);
+		surgeryTemporaryOrder.setPlanStartDate(DateUtil.addDay(DateUtil.getSysDate(), 1));
+
+		SurgeryApply surgeryApply = new SurgeryApply();
+
+		SurgeryApplyItem surgeryApplyItem = new SurgeryApplyItem();
+		surgeryApplyItem.setSurgeryType(surgeryType001);
+		surgeryApply.addSurgeryApplyItem(surgeryApplyItem);
+
+		surgeryTemporaryOrder.setApply(surgeryApply);
+
+		orderAppService.create(surgeryTemporaryOrder, userd02);
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 15:10", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		orders = orderAppService.findNeedVerifyOrders(user003, pageable);
+
+		assertTrue(orders.size() == 1);
+
+		for (Order order : orders) {
+			orderAppService.verify(order.getId(), user003);
+		}
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 15:12", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		executes = orderExecuteAppService.findNeedSendOrderExecutes(user003, pageable);
+
+		assertTrue(executes.size() == 1);
+
+		// 发送医嘱执行条目
+		for (OrderExecute execute : executes) {
+			orderExecuteAppService.send(execute.getId(), user003);
+		}
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-06 16:00", dayCount));
+
+		pageable = new PageRequest(0, Integer.MAX_VALUE);
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(usere01, pageable);
+
+		assertTrue(executes.size() == 1);
+
+		// 完成手术安排临嘱
+		params = new HashMap<String, Object>();
+		params.put(SurgeryArrangeOrderExecute.PlanExecuteDate,
+				surgeryTemporaryOrder.getPlanStartDate());
+		params.put(SurgeryArrangeOrderExecute.SurgeryPlace, "眼科第一手术室");
+
+		orderExecuteAppService.finish(executes.get(0).getId(), params, usere01);
 
 	}
 }

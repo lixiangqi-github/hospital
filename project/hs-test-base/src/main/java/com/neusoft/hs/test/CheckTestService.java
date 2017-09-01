@@ -47,7 +47,7 @@ public class CheckTestService extends AppTestService {
 
 		balance = this.visitDomainService.find(visit004.getId()).getChargeBill().getConsume();
 
-		assertTrue(balance == 464F);
+		assertTrue(balance == 806F);
 
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<OrderExecute> orderExecutes;
@@ -55,21 +55,21 @@ public class CheckTestService extends AppTestService {
 		orderExecutes = orderExecuteDomainService.findByState(OrderExecute.State_Finished,
 				pageable);
 
-		assertTrue(orderExecutes.size() == 96);
+		assertTrue(orderExecutes.size() == 99);
 
 		orderExecutes = orderExecuteDomainService.findByState(OrderExecute.State_Canceled,
 				pageable);
 
-		assertTrue(orderExecutes.size() == 4);
+		assertTrue(orderExecutes.size() == 5);
 
 		orderExecutes = orderExecuteDomainService.findByState(OrderExecute.State_Stoped, pageable);
 
-		assertTrue(orderExecutes.size() == 4);
+		assertTrue(orderExecutes.size() == 5);
 
 		orderExecutes = orderExecuteDomainService.findByChargeState(OrderExecute.ChargeState_Charge,
 				pageable);
 
-		assertTrue(orderExecutes.size() == 59);
+		assertTrue(orderExecutes.size() == 60);
 
 		orderExecutes = orderExecuteDomainService
 				.findByChargeState(OrderExecute.ChargeState_BackCharge, pageable);
@@ -79,19 +79,19 @@ public class CheckTestService extends AppTestService {
 		orderExecutes = orderExecuteDomainService
 				.findByChargeState(OrderExecute.ChargeState_NoCharge, pageable);
 
-		assertTrue(orderExecutes.size() == 5);
+		assertTrue(orderExecutes.size() == 7);
 
 		orders = orderAdminDomainService.findAll(pageable);
 
-		assertTrue(orders.size() == 22);
+		assertTrue(orders.size() == 24);
 
 		orders = orderAdminDomainService.find(Order.State_Finished, pageable);
 
-		assertTrue(orders.size() == 17);
+		assertTrue(orders.size() == 18);
 		
 		orders = orderAdminDomainService.find(Order.State_Stoped, pageable);
 
-		assertTrue(orders.size() == 4);
+		assertTrue(orders.size() == 5);
 		
 		orders = orderAdminDomainService.find(Order.State_Canceled, pageable);
 

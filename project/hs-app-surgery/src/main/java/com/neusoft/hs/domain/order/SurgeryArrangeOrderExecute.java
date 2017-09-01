@@ -7,6 +7,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 import com.neusoft.hs.domain.organization.AbstractUser;
+import com.neusoft.hs.domain.surgery.SurgeryApply;
 import com.neusoft.hs.platform.util.DateUtil;
 
 @Entity
@@ -55,6 +56,10 @@ public class SurgeryArrangeOrderExecute extends OrderExecute {
 		orderInteraction.setMessage(messageBuilder.toString());
 
 		this.getOrder().addOrderInteraction(orderInteraction);
+		
+		SurgeryApply surgeryApply = (SurgeryApply)this.getOrder().getApply();
+		surgeryApply.setPlanExecuteDate(planExecuteDate);
+		surgeryApply.setSurgeryPlace(surgeryPlace);
 
 		// 修改之后的两条执行条目计划执行时间
 		OrderExecute next = this.getNext();
