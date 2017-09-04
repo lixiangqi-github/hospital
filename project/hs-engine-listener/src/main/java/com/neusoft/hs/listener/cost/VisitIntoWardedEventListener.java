@@ -14,7 +14,7 @@ import com.neusoft.hs.domain.visit.VisitIntoWardedEvent;
 import com.neusoft.hs.platform.util.DateUtil;
 
 @Service
-public class VisitIntoWardedEventListenter implements
+public class VisitIntoWardedEventListener implements
 		ApplicationListener<VisitIntoWardedEvent> {
 
 	@Autowired

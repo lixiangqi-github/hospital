@@ -13,7 +13,7 @@ import com.neusoft.hs.domain.visit.VisitOutWardedEvent;
 import com.neusoft.hs.platform.util.DateUtil;
 
 @Service
-public class VisitOutWardedEventListenter implements
+public class VisitOutWardedEventListener implements
 		ApplicationListener<VisitOutWardedEvent> {
 
 	@Override

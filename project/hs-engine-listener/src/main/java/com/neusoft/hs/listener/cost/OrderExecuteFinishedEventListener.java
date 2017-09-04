@@ -12,7 +12,7 @@ import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.OrderExecuteFinishedEvent;
 
 @Service
-public class OrderExecuteFinishedEventListenter implements
+public class OrderExecuteFinishedEventListener implements
 		ApplicationListener<OrderExecuteFinishedEvent> {
 
 	@Autowired
