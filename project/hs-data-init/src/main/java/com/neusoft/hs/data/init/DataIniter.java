@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.neusoft.hs.application.pharmacy.ConfigureFluidAppService;
+import com.neusoft.hs.application.surgery.SurgeryAppService;
 import com.neusoft.hs.domain.cost.ChargeItem;
 import com.neusoft.hs.domain.cost.CostAdminDomainService;
 import com.neusoft.hs.domain.cost.CostDomainService;
@@ -387,6 +388,9 @@ public class DataIniter {
 
 	@Autowired
 	private ConfigureFluidDomainService configureFluidDomainService;
+	
+	@Autowired
+	protected SurgeryAppService surgeryAppService;
 
 	@Autowired
 	protected SurgeryDomainService surgeryDomainService;

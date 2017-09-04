@@ -47,7 +47,7 @@ public class CheckTestService extends AppTestService {
 
 		balance = this.visitDomainService.find(visit004.getId()).getChargeBill().getConsume();
 
-		assertTrue(balance == 806F);
+		assertTrue(balance == 1606F);
 
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<OrderExecute> orderExecutes;

@@ -1,4 +1,4 @@
-package com.neusoft.hs.test;
+package com.neusoft.hs.application.surgery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import com.neusoft.hs.domain.surgery.SurgeryType;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class SurgeryTestService {
+public class SurgeryAppService {
 
 	@Autowired
 	private SurgeryDomainService surgeryDomainService;
@@ -28,6 +28,12 @@ public class SurgeryTestService {
 		SurgeryApply surgeryApply = surgeryDomainService
 				.findSurgeryApply(execute.getOrder().getApply().getId());
 
+		SurgeryApplyItem surgeryApplyItem = new SurgeryApplyItem();
+		surgeryApplyItem.setSurgeryType(surgeryType);
+
+		surgeryDomainService.addSurgeryApplyItem(surgeryApply, surgeryApplyItem);
+
+		execute.addChargeItem(surgeryType.getChargeItem());
 	}
 
 }

@@ -299,13 +299,17 @@ public abstract class InPatientTestService extends AppTestService {
 		visit = visitDomainService.find(visit004.getId());
 
 		assertTrue(visit.getState().equals(Visit.State_Surgerying));
-
-		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 17:00", dayCount));
-
+		
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 16:40", dayCount));
+		
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
 		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(usere01, pageable);
 
 		assertTrue(executes.size() == 1);
+		
+		surgeryAppService.addSurgeryApplyItem(executes.get(0).getId(), surgeryType002);
+
+		DateUtil.setSysDate(DateUtil.createMinute("2017-01-07 17:00", dayCount));
 
 		// 完成术后操作执行条目
 		for (OrderExecute execute : executes) {

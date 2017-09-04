@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.neusoft.hs.platform.entity.IdEntity;
 
@@ -15,7 +16,8 @@ import com.neusoft.hs.platform.entity.IdEntity;
  *
  */
 @Entity
-@Table(name = "app_surgery_apply_item")
+@Table(name = "app_surgery_apply_item", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "surgery_apply_id", "surgery_type_id" }) })
 public class SurgeryApplyItem extends IdEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
