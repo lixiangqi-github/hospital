@@ -529,12 +529,30 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 	}
 
 	/**
+	 * 判断该医嘱是否是在患者门诊期间创建的
+	 * 
+	 * @return
+	 */
+	public boolean isOutPatient() {
+		return this.placeType.equals(OrderCreateCommand.PlaceType_OutPatient);
+	}
+
+	/**
 	 * 判断该医嘱是否是在患者住院期间创建的
 	 * 
 	 * @return
 	 */
 	public boolean isInPatient() {
 		return this.placeType.equals(OrderCreateCommand.PlaceType_InPatient);
+	}
+
+	/**
+	 * 判断该医嘱是否是在患者手术期间创建的
+	 * 
+	 * @return
+	 */
+	public boolean isSurgery() {
+		return this.placeType.equals(OrderCreateCommand.PlaceType_Surgery);
 	}
 
 	public Object getParam(String key) {
@@ -575,7 +593,7 @@ public abstract class Order extends IdEntity implements OrderCreateCommand {
 			this.orderInteractions = new ArrayList<OrderInteraction>();
 		}
 		orderInteraction.setOrder(this);
-		if(orderInteraction.getCreateDate() == null){
+		if (orderInteraction.getCreateDate() == null) {
 			orderInteraction.setCreateDate(DateUtil.getSysDate());
 		}
 		this.orderInteractions.add(orderInteraction);

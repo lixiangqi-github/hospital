@@ -82,8 +82,12 @@ public class OrderDomainService {
 			}
 			// 根据患者状态计算医嘱开立位置
 			if (order.getPlaceType() == null) {
-				if (order.getVisit().getState().equals(Visit.State_Diagnosing)) {
+				String visitState = order.getVisit().getState();
+				if (visitState.equals(Visit.State_Diagnosing)
+						|| visitState.equals(Visit.State_Diagnosed_Executing)) {
 					order.setPlaceType(Order.PlaceType_OutPatient);
+				} else if (visitState.equals(Visit.State_Surgerying)) {
+					order.setPlaceType(Order.PlaceType_Surgery);
 				} else {
 					order.setPlaceType(Order.PlaceType_InPatient);
 				}

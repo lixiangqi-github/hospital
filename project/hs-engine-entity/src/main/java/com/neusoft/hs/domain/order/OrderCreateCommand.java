@@ -37,4 +37,6 @@ public interface OrderCreateCommand {
 	public static final String PlaceType_OutPatient = "门诊";
 
 	public static final String PlaceType_InPatient = "住院";
+	
+	public static final String PlaceType_Surgery = "手术";
 }
