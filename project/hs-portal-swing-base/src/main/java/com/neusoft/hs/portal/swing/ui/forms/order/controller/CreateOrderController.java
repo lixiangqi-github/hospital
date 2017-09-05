@@ -18,39 +18,27 @@ import org.springframework.stereotype.Controller;
 
 import com.neusoft.hs.application.order.OrderAppService;
 import com.neusoft.hs.application.outpatientdept.OutPatientDeptAppService;
-import com.neusoft.hs.domain.inspect.InspectApply;
-import com.neusoft.hs.domain.inspect.InspectApplyItem;
-import com.neusoft.hs.domain.inspect.InspectDomainService;
-import com.neusoft.hs.domain.inspect.InspectItem;
-import com.neusoft.hs.domain.order.DescribeOrderType;
-import com.neusoft.hs.domain.order.DrugOrderType;
-import com.neusoft.hs.domain.order.DrugOrderTypeApp;
-import com.neusoft.hs.domain.order.EnterHospitalOrderType;
 import com.neusoft.hs.domain.order.InspectOrderType;
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.Order;
 import com.neusoft.hs.domain.order.OrderAdminDomainService;
 import com.neusoft.hs.domain.order.OrderFrequencyType;
 import com.neusoft.hs.domain.order.OrderType;
+import com.neusoft.hs.domain.order.SurgeryOrderType;
 import com.neusoft.hs.domain.order.TemporaryOrder;
-import com.neusoft.hs.domain.order.TransferDeptOrderType;
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.organization.Doctor;
-import com.neusoft.hs.domain.organization.InPatientDept;
 import com.neusoft.hs.domain.organization.OrganizationAdminDomainService;
 import com.neusoft.hs.domain.outpatientoffice.OutPatientRoom;
 import com.neusoft.hs.domain.pharmacy.DrugUseMode;
-import com.neusoft.hs.domain.pharmacy.Pharmacy;
 import com.neusoft.hs.domain.pharmacy.PharmacyAdminService;
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 import com.neusoft.hs.portal.businessview.visit.VisitBusinessView;
-import com.neusoft.hs.portal.framework.exception.UIException;
 import com.neusoft.hs.portal.framework.security.UserUtil;
 import com.neusoft.hs.portal.swing.ui.forms.order.view.CreateOrderFrame;
-import com.neusoft.hs.portal.swing.ui.forms.order.view.InspectApplyDialog;
 import com.neusoft.hs.portal.swing.ui.shared.controller.AbstractFrameController;
 import com.neusoft.hs.portal.swing.ui.shared.model.DeptComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.DrugUseModeComboBoxModel;
@@ -68,7 +56,7 @@ public class CreateOrderController extends AbstractFrameController {
 	private CreateOrderFrame createOrderFrame;
 
 	@Autowired
-	private InspectApplyDialog inspectApplyDialog;
+	private ApplyController applyController;
 
 	@Autowired
 	private OrderAppService orderAppService;
@@ -86,9 +74,6 @@ public class CreateOrderController extends AbstractFrameController {
 	private OutPatientDeptAppService outPatientDeptAppService;
 
 	@Autowired
-	private InspectDomainService inspectDomainService;
-
-	@Autowired
 	private VisitBusinessView visitBusinessView;
 
 	@Autowired
@@ -104,8 +89,6 @@ public class CreateOrderController extends AbstractFrameController {
 
 	private DeptComboBoxModel executeDeptComboBoxModel;
 
-	private InspectApply inspectApply;
-
 	@PostConstruct
 	private void prepareListeners() {
 		registerAction(createOrderFrame.getCreateOrderPanel().getOrderTypeCB(),
@@ -113,10 +96,6 @@ public class CreateOrderController extends AbstractFrameController {
 		registerAction(createOrderFrame.getCompsiteBtn(), (e) -> compsite());
 		registerAction(createOrderFrame.getConfirmBtn(), (e) -> create());
 		registerAction(createOrderFrame.getCloseBtn(), (e) -> closeWindow());
-
-		registerAction(inspectApplyDialog.getConfirmBtn(), (e) -> createInspectApply());
-		registerAction(inspectApplyDialog.getCloseBtn(), (e) -> closeInspectApplyDialog());
-
 	}
 
 	@Override
@@ -128,7 +107,7 @@ public class CreateOrderController extends AbstractFrameController {
 		loadDepts();
 		loadOrderUseModes();
 
-		inspectApply = null;
+		this.applyController.clear();
 		createOrderFrame.setVisible(true);
 	}
 
@@ -259,9 +238,12 @@ public class CreateOrderController extends AbstractFrameController {
 			order.setCount(count);
 			order.setDescribe(describe);
 			order.setExecuteDept(executeDept);
-
-			if (this.inspectApply != null) {
-				order.setApply(this.inspectApply);
+			
+			
+			if (orderType instanceof InspectOrderType){
+				order.setApply(this.applyController.getInspectApply());
+			}else if (orderType instanceof SurgeryOrderType){
+				order.setApply(this.applyController.getSurgeryApply());
 			}
 
 			CreateOrderInfo createOrderInfo = new CreateOrderInfo();
@@ -307,44 +289,9 @@ public class CreateOrderController extends AbstractFrameController {
 	private void changeOrderType(ItemEvent e) {
 		OrderType orderType = this.createOrderFrame.getCreateOrderPanel()
 				.getOrderTypeComboBoxModel().getSelectedItem();
-		if (orderType != null) {
-			if (orderType instanceof InspectOrderType) {
-				Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-				List<InspectItem> items = inspectDomainService.findInspectItem(pageable);
 
-				inspectApplyDialog.setInspectApply(inspectApply);
-				inspectApplyDialog.refreshItems(items);
-				inspectApplyDialog.load();
+		applyController.changeOrderType(orderType, e);
 
-				inspectApplyDialog.setVisible(true);
-			}
-		}
-
-	}
-
-	private void createInspectApply() {
-
-		List<InspectItem> inspectItems = inspectApplyDialog.getSelectedInspectItems();
-		if (inspectItems == null || inspectItems.size() == 0) {
-			Notifications.showFormValidationAlert("请选择检查项目");
-			return;
-		}
-		inspectApply = new InspectApply();
-		inspectApply.setGoal(inspectApplyDialog.getGoalTA().getText());
-
-		InspectApplyItem inspectApplyItem;
-		for (InspectItem inspectItem : inspectItems) {
-			inspectApplyItem = new InspectApplyItem();
-			inspectApplyItem.setInspectItem(inspectItem);
-
-			inspectApply.addInspectApplyItem(inspectApplyItem);
-		}
-
-		inspectApplyDialog.dispose();
-	}
-
-	private void closeInspectApplyDialog() {
-		inspectApplyDialog.dispose();
 	}
 
 	private void closeWindow() {

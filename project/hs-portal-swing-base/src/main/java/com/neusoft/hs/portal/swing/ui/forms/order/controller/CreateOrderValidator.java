@@ -14,12 +14,14 @@ import com.neusoft.hs.domain.order.EnterHospitalOrderType;
 import com.neusoft.hs.domain.order.InspectOrderType;
 import com.neusoft.hs.domain.order.Order;
 import com.neusoft.hs.domain.order.OrderType;
+import com.neusoft.hs.domain.order.SurgeryOrderType;
 import com.neusoft.hs.domain.order.TransferDeptOrderType;
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.organization.InPatientDept;
 import com.neusoft.hs.domain.organization.OrganizationAdminDomainService;
 import com.neusoft.hs.domain.pharmacy.DrugUseMode;
 import com.neusoft.hs.domain.pharmacy.Pharmacy;
+import com.neusoft.hs.domain.surgery.SurgeryApply;
 import com.neusoft.hs.portal.swing.validation.ValidationError;
 import com.neusoft.hs.portal.swing.validation.ValidationSupport;
 import com.neusoft.hs.portal.swing.validation.Validator;
@@ -91,6 +93,16 @@ public class CreateOrderValidator extends ValidationSupport implements Validator
 			} else if (orderType instanceof DescribeOrderType) {
 				if (order.getDescribe() == null) {
 					return Optional.of(new ValidationError("请录入描述"));
+				}
+				if (order.getExecuteDept() == null) {
+					return Optional.of(new ValidationError("请选择执行科室"));
+				}
+			} else if (orderType instanceof SurgeryOrderType) {
+				if (order.getApply() == null) {
+					return Optional.of(new ValidationError("请创建手术申请单"));
+				}
+				if (!(order.getApply() instanceof SurgeryApply)) {
+					return Optional.of(new ValidationError("申请单不是手术申请单"));
 				}
 				if (order.getExecuteDept() == null) {
 					return Optional.of(new ValidationError("请选择执行科室"));

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,10 @@ public class SurgeryDomainService {
 	public void addSurgeryApplyItem(SurgeryApply surgeryApply, SurgeryApplyItem surgeryApplyItem) {
 		surgeryApply.addSurgeryApplyItem(surgeryApplyItem);
 		applicationContext.publishEvent(new SurgeryApplyItemAddedEvent(surgeryApplyItem));
+	}
+
+	public List<SurgeryType> findSurgeryType(Pageable pageable) {
+		return surgeryTypeRepo.findAll(pageable).getContent();
 	}
 
 	public void createSurgeryTypes(List<SurgeryType> surgeryTypes) {

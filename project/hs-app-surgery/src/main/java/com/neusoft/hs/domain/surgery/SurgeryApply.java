@@ -48,9 +48,9 @@ public class SurgeryApply extends Apply {
 	public void setSurgeryApplyItems(List<SurgeryApplyItem> surgeryApplyItems) {
 		this.surgeryApplyItems = surgeryApplyItems;
 	}
-	
-	public void addSurgeryApplyItem(SurgeryApplyItem surgeryApplyItem){
-		if(this.surgeryApplyItems == null){
+
+	public void addSurgeryApplyItem(SurgeryApplyItem surgeryApplyItem) {
+		if (this.surgeryApplyItems == null) {
 			this.surgeryApplyItems = new ArrayList<SurgeryApplyItem>();
 		}
 		surgeryApplyItem.setSurgeryApply(this);
