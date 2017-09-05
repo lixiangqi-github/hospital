@@ -56,6 +56,7 @@
       <archive location="/lib/hs-app-outpatient-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-app-pharmacy-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-app-recordroom-0.0.1-SNAPSHOT.jar" failOnError="false" />
+      <archive location="/lib/hs-app-surgery-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-data-history-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-data-init-0.0.1-SNAPSHOT.jar" failOnError="false" />
       <archive location="/lib/hs-engine-core-0.0.1-SNAPSHOT.jar" failOnError="false" />
