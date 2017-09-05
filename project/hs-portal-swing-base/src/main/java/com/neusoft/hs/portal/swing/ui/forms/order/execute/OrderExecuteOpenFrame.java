@@ -14,6 +14,7 @@ import com.neusoft.hs.domain.order.EnterHospitalIntoWardOrderExecute;
 import com.neusoft.hs.domain.order.EnterHospitalSupplyCostOrderExecute;
 import com.neusoft.hs.domain.order.InspectArrangeOrderExecute;
 import com.neusoft.hs.domain.order.OrderExecute;
+import com.neusoft.hs.domain.order.SurgeryArrangeOrderExecute;
 import com.neusoft.hs.domain.order.TransferDeptConfirmOrderExecute;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.portal.swing.util.ConstMessagesCN;
@@ -42,6 +43,8 @@ public class OrderExecuteOpenFrame extends JFrame {
 			panel = new TransferDeptConfirmOrderExecutePanel(orderExecute);
 		} else if (orderExecute instanceof InspectArrangeOrderExecute) {
 			panel = new InspectArrangeOrderExecutePanel(orderExecute);
+		}else if (orderExecute instanceof SurgeryArrangeOrderExecute) {
+			panel = new SurgeryArrangeOrderExecutePanel(orderExecute);
 		} else {
 			throw new HsException("该执行条目可以直接完成");
 		}
