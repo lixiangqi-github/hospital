@@ -34,7 +34,7 @@ public class SurgeryOrderType extends OrderType {
 		arrange.setPlanStartDate(DateUtil.getSysDate());
 		arrange.setPlanEndDate(DateUtil.getSysDate());
 
-		arrange.setType(OrderExecute.Type_Arrange_Inspect);
+		arrange.setType(OrderExecute.Type_Arrange_Surgery);
 		arrange.setState(OrderExecute.State_NeedSend);
 
 		team.addOrderExecute(arrange);
