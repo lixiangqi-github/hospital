@@ -1,10 +1,10 @@
 package com.neusoft.hs.portal.swing.ui.forms.order.execute;
 
-import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.SurgeryArrangeOrderExecute;
@@ -16,16 +16,22 @@ public class SurgeryArrangeOrderExecutePanel extends OrderExecutePanel {
 
 	private SpinnerDate executeDateSD;
 
+	private JTextField placeTF;
+
 	public SurgeryArrangeOrderExecutePanel(OrderExecute orderExecute) {
 		super(orderExecute);
 
-		this.setLayout(new BorderLayout());
-
 		JLabel balanceLbl = new JLabel(ConstMessagesCN.Labels.PlanSurgeryDate);
-		add(balanceLbl, BorderLayout.WEST);
+		add(balanceLbl);
 
 		executeDateSD = new SpinnerDate("yyyy-MM-dd HH:mm");
-		add(executeDateSD, BorderLayout.CENTER);
+		add(executeDateSD);
+
+		JLabel placeLbl = new JLabel(ConstMessagesCN.Labels.PlanSurgeryPlace);
+		add(placeLbl);
+
+		placeTF = new JTextField();
+		add(placeTF);
 	}
 
 	@Override
@@ -33,9 +39,14 @@ public class SurgeryArrangeOrderExecutePanel extends OrderExecutePanel {
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		if (executeDateSD.getDate() == null) {
-			throw new UIException("请录入计划手术时间");
+			throw new UIException("请录入手术时间");
 		}
 		params.put(SurgeryArrangeOrderExecute.PlanExecuteDate, executeDateSD.getDate());
+
+		if (placeTF.getText() == null) {
+			throw new UIException("请录入手术地点");
+		}
+		params.put(SurgeryArrangeOrderExecute.SurgeryPlace, placeTF.getText());
 
 		return params;
 	}
