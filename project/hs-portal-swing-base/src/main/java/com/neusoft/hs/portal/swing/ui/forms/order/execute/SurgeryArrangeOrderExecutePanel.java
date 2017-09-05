@@ -17,6 +17,8 @@ public class SurgeryArrangeOrderExecutePanel extends OrderExecutePanel {
 	private SpinnerDate executeDateSD;
 
 	private JTextField placeTF;
+	
+	private static final int TEXT_FIELD_COLUMNS = 20;
 
 	public SurgeryArrangeOrderExecutePanel(OrderExecute orderExecute) {
 		super(orderExecute);
@@ -30,7 +32,7 @@ public class SurgeryArrangeOrderExecutePanel extends OrderExecutePanel {
 		JLabel placeLbl = new JLabel(ConstMessagesCN.Labels.PlanSurgeryPlace);
 		add(placeLbl);
 
-		placeTF = new JTextField();
+		placeTF = new JTextField(TEXT_FIELD_COLUMNS);
 		add(placeTF);
 	}
 
