@@ -932,7 +932,7 @@ public class InPatientMainTestService extends InPatientTestService {
 		surgeryTemporaryOrder.setOrderType(surgeryOrderType);
 		surgeryTemporaryOrder.setName(surgeryOrderType.getName());
 
-		surgeryTemporaryOrder.setBelongDept(dept000);
+		surgeryTemporaryOrder.setBelongDept(deptddd);
 		surgeryTemporaryOrder.setExecuteDept(depteee);
 		surgeryTemporaryOrder.setPlanStartDate(DateUtil.addDay(DateUtil.getSysDate(), 1));
 

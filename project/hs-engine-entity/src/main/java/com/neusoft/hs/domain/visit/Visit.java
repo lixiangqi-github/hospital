@@ -437,7 +437,6 @@ public class Visit extends IdEntity {
 		visitLog.setCreateDate(sysDate);
 
 		visitLog.save();
-
 	}
 
 	public void afterSurgery(Dept dept, AbstractUser user) throws VisitException {

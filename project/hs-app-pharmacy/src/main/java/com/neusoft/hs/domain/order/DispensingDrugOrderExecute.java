@@ -39,9 +39,11 @@ public class DispensingDrugOrderExecute extends DrugOrderExecute {
 	}
 
 	@Override
-	protected void doFinish(Map<String, Object> params, AbstractUser user) throws OrderExecuteException {
+	protected void doFinish(Map<String, Object> params, AbstractUser user)
+			throws OrderExecuteException {
 		try {
-			List<DrugTypeConsumeRecord> consumeRecords = this.getPharmacy().send(this.getDrugTypeSpec(), getCount());
+			List<DrugTypeConsumeRecord> consumeRecords = this.getPharmacy()
+					.send(this.getDrugTypeSpec(), getCount());
 			this.setConsumeRecords(consumeRecords);
 		} catch (HsException e) {
 			throw new OrderExecuteException(this, e);
