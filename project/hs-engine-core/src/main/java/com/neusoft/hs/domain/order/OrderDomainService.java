@@ -291,6 +291,10 @@ public class OrderDomainService {
 		return orderRepo.findByVisitAndState(visit, state, pageable);
 	}
 
+	public List<LongOrder> findLong(Visit visit, String state, Pageable pageable) {
+		return orderRepo.findLongOrder(visit, state, pageable);
+	}
+
 	public List<Order> findByBelongDept(Dept dept, Pageable pageable) {
 		return orderRepo.findByBelongDept(dept, pageable);
 	}

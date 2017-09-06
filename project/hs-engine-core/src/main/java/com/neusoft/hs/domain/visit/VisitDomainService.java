@@ -204,7 +204,7 @@ public class VisitDomainService {
 	public void outHospitalRegister(Visit visit, Order currentOrder, AbstractUser user)
 			throws VisitException, OrderExecuteException {
 
-		beforeChangeDept(visit, currentOrder, "出院登记", user);
+		beforeOutHospital(visit, currentOrder, "出院登记", user);
 		visit.leaveWard(user);
 
 		// 发出患者离开病房事件
@@ -272,7 +272,6 @@ public class VisitDomainService {
 			throws OrderExecuteException, VisitException {
 		beforeChangeDept(visit, currentOrder, "术前操作", user);
 		visit.beforeSurgery(currentOrder.getExecuteDept(), user);
-
 		// 发出患者手术事件
 		applicationContext.publishEvent(new VisitBeforeSurgeryEvent(visit));
 	}
@@ -295,20 +294,34 @@ public class VisitDomainService {
 			AbstractUser user) throws OrderExecuteException, VisitException {
 
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<LongOrder> executingLongOrders = this.orderDomainService.findLong(visit,
+				Order.State_Executing, pageable);
+
+		for (LongOrder order : executingLongOrders) {
+			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
+				order.stop(user);
+				// 发出停止长嘱事件
+				applicationContext.publishEvent(new OrderStopedEvent(visit));
+			}
+		}
+	}
+
+	private void beforeOutHospital(Visit visit, Order currentOrder, String operation,
+			AbstractUser user) throws OrderExecuteException, VisitException {
+
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
 				pageable);
 
 		for (Order order : executingOrders) {
 			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
-				if (order.getState().equals(Order.State_Executing)) {
-					if (order instanceof LongOrder) {
-						((LongOrder) order).stop(user);
-						// 发出停止长嘱事件
-						applicationContext.publishEvent(new OrderStopedEvent(visit));
-					} else {
-						throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理[%s]", order.getName(),
-								operation);
-					}
+				if (order instanceof LongOrder) {
+					((LongOrder) order).stop(user);
+					// 发出停止长嘱事件
+					applicationContext.publishEvent(new OrderStopedEvent(visit));
+				} else {
+					throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理[%s]", order.getName(),
+							operation);
 				}
 			}
 		}
