@@ -426,8 +426,7 @@ public class Visit extends IdEntity {
 		}
 
 		this.setState(State_Surgerying);
-		this.setDept(surgeryDept);
-
+		
 		Date sysDate = DateUtil.getSysDate();
 
 		VisitLog visitLog = new VisitLog();
@@ -446,8 +445,7 @@ public class Visit extends IdEntity {
 		}
 
 		this.setState(State_IntoWard);
-		this.setDept(dept);
-
+		
 		Date sysDate = DateUtil.getSysDate();
 
 		VisitLog visitLog = new VisitLog();
