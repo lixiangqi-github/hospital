@@ -11,10 +11,11 @@ import javax.persistence.Table;
 
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.organization.Dept;
+import com.neusoft.hs.platform.entity.IdEntity;
 
 @Entity
 @Table(name = "domain_visit_plan_rcord")
-public class VisitPlanRecord {
+public class VisitPlanRecord extends IdEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "visit_id")
@@ -52,6 +53,7 @@ public class VisitPlanRecord {
 
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+		this.visitName = visit.getName();
 	}
 
 	public String getVisitName() {
@@ -92,6 +94,7 @@ public class VisitPlanRecord {
 
 	public void setDept(Dept dept) {
 		this.dept = dept;
+		this.deptName = dept.getName();
 	}
 
 	public String getDeptName() {
@@ -108,6 +111,7 @@ public class VisitPlanRecord {
 
 	public void setOperator(AbstractUser operator) {
 		this.operator = operator;
+		this.operatorName = operator.getName();
 	}
 
 	public String getOperatorName() {
@@ -116,6 +120,10 @@ public class VisitPlanRecord {
 
 	public void setOperatorName(String operatorName) {
 		this.operatorName = operatorName;
+	}
+
+	public void save() {
+		this.getService(VisitPlanRecordRepo.class).save(this);
 	}
 
 }

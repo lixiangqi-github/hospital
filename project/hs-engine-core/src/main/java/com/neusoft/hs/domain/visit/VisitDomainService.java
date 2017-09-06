@@ -288,39 +288,8 @@ public class VisitDomainService {
 		applicationContext.publishEvent(new VisitAfterSurgeryEvent(visit));
 	}
 
-	private void stopLongOrder(Visit visit, AbstractUser user)
-			throws OrderExecuteException, VisitException {
-
-		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-		List<LongOrder> executingLongOrders = this.orderDomainService.findLong(visit,
-				Order.State_Executing, pageable);
-
-		for (LongOrder order : executingLongOrders) {
-			order.stop(user);
-			// 发出停止长嘱事件
-			applicationContext.publishEvent(new OrderStopedEvent(visit));
-		}
-	}
-
-	private void beforeOutHospital(Visit visit, Order currentOrder, String operation,
-			AbstractUser user) throws OrderExecuteException, VisitException {
-
-		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
-				pageable);
-
-		for (Order order : executingOrders) {
-			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
-				if (order instanceof LongOrder) {
-					((LongOrder) order).stop(user);
-					// 发出停止长嘱事件
-					applicationContext.publishEvent(new OrderStopedEvent(visit));
-				} else {
-					throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理[%s]", order.getName(),
-							operation);
-				}
-			}
-		}
+	public void createVisitPlanRecord(VisitPlanRecord visitPlanRecord){
+		visitPlanRecord.save();
 	}
 
 	/**
@@ -370,5 +339,40 @@ public class VisitDomainService {
 
 	public List<Visit> listVisit(Pageable pageable) {
 		return visitRepo.findAll(pageable).getContent();
+	}
+	
+	private void stopLongOrder(Visit visit, AbstractUser user)
+			throws OrderExecuteException, VisitException {
+
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<LongOrder> executingLongOrders = this.orderDomainService.findLong(visit,
+				Order.State_Executing, pageable);
+
+		for (LongOrder order : executingLongOrders) {
+			order.stop(user);
+			// 发出停止长嘱事件
+			applicationContext.publishEvent(new OrderStopedEvent(visit));
+		}
+	}
+
+	private void beforeOutHospital(Visit visit, Order currentOrder, String operation,
+			AbstractUser user) throws OrderExecuteException, VisitException {
+
+		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
+		List<Order> executingOrders = this.orderDomainService.find(visit, Order.State_Executing,
+				pageable);
+
+		for (Order order : executingOrders) {
+			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
+				if (order instanceof LongOrder) {
+					((LongOrder) order).stop(user);
+					// 发出停止长嘱事件
+					applicationContext.publishEvent(new OrderStopedEvent(visit));
+				} else {
+					throw new VisitException(visit, "医嘱[%s]状态处于执行中，不能办理[%s]", order.getName(),
+							operation);
+				}
+			}
+		}
 	}
 }
