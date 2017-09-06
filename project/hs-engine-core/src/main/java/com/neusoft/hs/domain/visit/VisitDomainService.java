@@ -16,7 +16,6 @@ import com.neusoft.hs.domain.cost.CostDomainService;
 import com.neusoft.hs.domain.medicalrecord.MedicalRecordClip;
 import com.neusoft.hs.domain.order.LongOrder;
 import com.neusoft.hs.domain.order.Order;
-import com.neusoft.hs.domain.order.OrderDAO;
 import com.neusoft.hs.domain.order.OrderDomainService;
 import com.neusoft.hs.domain.order.OrderExecuteException;
 import com.neusoft.hs.domain.order.OrderStopedEvent;
@@ -25,7 +24,6 @@ import com.neusoft.hs.domain.organization.Admin;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.patient.Patient;
 import com.neusoft.hs.domain.patient.PatientDomainService;
-import com.neusoft.hs.platform.bean.ApplicationContextUtil;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.log.LogUtil;
 import com.neusoft.hs.platform.util.DateUtil;
@@ -373,34 +371,4 @@ public class VisitDomainService {
 	public List<Visit> listVisit(Pageable pageable) {
 		return visitRepo.findAll(pageable).getContent();
 	}
-
-	/**
-	 * 自动切换患者一次就诊状态
-	 * 
-	 * @return
-	 */
-	public int changeVisitState(Admin admin) {
-		Date changeDate = DateUtil.reduceHour(DateUtil.getSysDate(), 10);
-		List<Visit> visits = visitRepo
-				.findByStateAndVoucherDateLessThan(Visit.State_Diagnosed_Executing, changeDate);
-		for (Visit visit : visits) {
-			visit.setState(Visit.State_LeaveHospital);
-			visit.save();
-
-			VisitLog visitLog = new VisitLog();
-			visitLog.setVisit(visit);
-			visitLog.setType(VisitLog.Type_LeaveHospital);
-			visitLog.setOperator(admin);
-			visitLog.setCreateDate(DateUtil.getSysDate());
-
-			visitLog.save();
-
-		}
-
-		LogUtil.log(this.getClass(), "系统修改患者状态由[{}]到[{}]{}个", Visit.State_Diagnosed_Executing,
-				Visit.State_LeaveHospital, visits.size());
-
-		return visits.size();
-	}
-
 }

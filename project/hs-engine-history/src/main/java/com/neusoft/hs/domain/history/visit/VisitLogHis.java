@@ -4,8 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.platform.entity.HisEntity;
 
 @Entity
@@ -23,6 +27,12 @@ public class VisitLogHis extends HisEntity {
 
 	@Column(length = 256)
 	private String info;
+
+	@Column(name = "dept_id", length = 36)
+	private String deptId;
+
+	@Column(name = "dept_name", length = 32)
+	private String deptName;
 
 	@Column(name = "operator_id", length = 36)
 	private String operatorId;
@@ -63,6 +73,22 @@ public class VisitLogHis extends HisEntity {
 
 	public void setInfo(String info) {
 		this.info = info;
+	}
+
+	public String getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 
 	public String getOperatorId() {

@@ -337,6 +337,9 @@ public class DataIniter {
 
 	@Autowired
 	protected VisitDomainService visitDomainService;
+	
+	@Autowired
+	protected VisitAdminDomainService visitAdminDomainService;
 
 	@Autowired
 	protected OrderDomainService orderDomainService;
@@ -382,9 +385,6 @@ public class DataIniter {
 
 	@Autowired
 	private TreatmentAdminDomainService treatmentAdminDomainService;
-
-	@Autowired
-	private VisitAdminDomainService visitAdminDomainService;
 
 	@Autowired
 	private ConfigureFluidDomainService configureFluidDomainService;

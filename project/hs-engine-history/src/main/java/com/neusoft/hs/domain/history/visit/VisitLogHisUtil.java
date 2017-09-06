@@ -10,7 +10,8 @@ import com.neusoft.hs.domain.visit.VisitLog;
 @Service
 public class VisitLogHisUtil {
 
-	public VisitLogHis convert(VisitLog visitLog) throws IllegalAccessException, InvocationTargetException {
+	public VisitLogHis convert(VisitLog visitLog)
+			throws IllegalAccessException, InvocationTargetException {
 
 		VisitLogHis visitLogHis = new VisitLogHis();
 
@@ -21,6 +22,9 @@ public class VisitLogHisUtil {
 		}
 		if (visitLog.getOperator() != null) {
 			visitLogHis.setOperatorId(visitLog.getOperator().getId());
+		}
+		if (visitLog.getDept() != null) {
+			visitLogHis.setDeptId(visitLog.getDept().getId());
 		}
 
 		return visitLogHis;

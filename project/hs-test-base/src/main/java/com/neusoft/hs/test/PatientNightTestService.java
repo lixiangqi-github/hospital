@@ -9,9 +9,8 @@ import com.neusoft.hs.domain.organization.Admin;
 @Service
 public class PatientNightTestService extends AppTestService {
 
-	public void calculate(Admin admin) throws OrderExecuteException,
-			CostException {
-		visitDomainService.changeVisitState(admin);
+	public void calculate(Admin admin) throws OrderExecuteException, CostException {
+		visitAdminDomainService.changeVisitState(admin);
 		orderAppService.resolve(admin);
 		orderExecuteAppService.start(admin);
 		costDomainService.calculate(admin);
