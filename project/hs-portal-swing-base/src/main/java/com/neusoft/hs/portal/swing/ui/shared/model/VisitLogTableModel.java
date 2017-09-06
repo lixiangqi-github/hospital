@@ -17,8 +17,10 @@ public class VisitLogTableModel extends DefaultTableModel<VisitLog> {
 		case 2:
 			return visitLog.getInfo();
 		case 3:
-			return visitLog.getOperatorName();
+			return visitLog.getDeptName();
 		case 4:
+			return visitLog.getOperatorName();
+		case 5:
 			return DateFormatter.formatDateTime(visitLog.getCreateDate());
 		default:
 			return "";
@@ -27,9 +29,8 @@ public class VisitLogTableModel extends DefaultTableModel<VisitLog> {
 
 	@Override
 	public String[] getColumnLabels() {
-		return new String[] { ConstMessagesCN.Labels.ID,
-				ConstMessagesCN.Labels.Type, ConstMessagesCN.Labels.Info,
-				ConstMessagesCN.Labels.Operator,
-				ConstMessagesCN.Labels.CreateDate };
+		return new String[] { ConstMessagesCN.Labels.ID, ConstMessagesCN.Labels.Type,
+				ConstMessagesCN.Labels.Info, ConstMessagesCN.Labels.CurrentDept,
+				ConstMessagesCN.Labels.Operator, ConstMessagesCN.Labels.CreateDate };
 	}
 }

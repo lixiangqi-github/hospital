@@ -4,7 +4,6 @@ package com.neusoft.hs.domain.visit;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,13 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.neusoft.hs.domain.organization.AbstractUser;
+import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.platform.entity.IdEntity;
 
 @Entity
 @Table(name = "domain_visit_log")
 public class VisitLog extends IdEntity {
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "visit_id")
 	private Visit visit;
 
@@ -31,6 +31,13 @@ public class VisitLog extends IdEntity {
 
 	@Column(length = 256)
 	private String info;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "dept_id")
+	private Dept dept;
+
+	@Column(name = "dept_name", length = 32)
+	private String deptName;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "operator_id")
@@ -65,6 +72,8 @@ public class VisitLog extends IdEntity {
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		this.visitName = visit.getName();
+		this.dept = visit.getDept();
+		this.deptName = visit.getDeptName();
 	}
 
 	public String getVisitName() {
@@ -89,6 +98,23 @@ public class VisitLog extends IdEntity {
 
 	public void setInfo(String info) {
 		this.info = info;
+	}
+
+	public Dept getDept() {
+		return dept;
+	}
+
+	public void setDept(Dept dept) {
+		this.dept = dept;
+		this.deptName = dept.getName();
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 
 	public AbstractUser getOperator() {

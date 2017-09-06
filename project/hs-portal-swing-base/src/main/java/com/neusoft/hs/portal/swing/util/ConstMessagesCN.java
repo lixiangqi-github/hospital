@@ -157,6 +157,7 @@ public interface ConstMessagesCN {
 		String Type = "类型";
 		String Tip = "提示";
 		String Info = "信息";
+		String CurrentDept = "当前科室";
 		String Doctor = "医生";
 		String VoucherType = "挂号类型";
 		String OutPatientRoom = "诊室";
