@@ -144,6 +144,11 @@ public class Visit extends IdEntity {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "visit", cascade = { CascadeType.REMOVE })
+	@OrderBy("planExecuteDate DESC")
+	private List<VisitPlanRecord> planRecords;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "visit", cascade = { CascadeType.REMOVE })
 	@OrderBy("createDate DESC")
 	private List<VisitLog> logs;
 
@@ -787,6 +792,14 @@ public class Visit extends IdEntity {
 
 	public void setTreatmentItems(List<TreatmentItem> treatmentItems) {
 		this.treatmentItems = treatmentItems;
+	}
+
+	public List<VisitPlanRecord> getPlanRecords() {
+		return planRecords;
+	}
+
+	public void setPlanRecords(List<VisitPlanRecord> planRecords) {
+		this.planRecords = planRecords;
 	}
 
 	@Override

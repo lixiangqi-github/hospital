@@ -2,7 +2,6 @@
 
 package com.neusoft.hs.domain.visit;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import com.neusoft.hs.domain.order.OrderDomainService;
 import com.neusoft.hs.domain.order.OrderExecuteException;
 import com.neusoft.hs.domain.order.OrderStopedEvent;
 import com.neusoft.hs.domain.organization.AbstractUser;
-import com.neusoft.hs.domain.organization.Admin;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.patient.Patient;
 import com.neusoft.hs.domain.patient.PatientDomainService;
@@ -288,7 +286,12 @@ public class VisitDomainService {
 		applicationContext.publishEvent(new VisitAfterSurgeryEvent(visit));
 	}
 
-	public void createVisitPlanRecord(VisitPlanRecord visitPlanRecord){
+	/**
+	 * 创建患者计划日程记录
+	 * 
+	 * @param visitPlanRecord
+	 */
+	public void createVisitPlanRecord(VisitPlanRecord visitPlanRecord) {
 		visitPlanRecord.save();
 	}
 
@@ -340,7 +343,7 @@ public class VisitDomainService {
 	public List<Visit> listVisit(Pageable pageable) {
 		return visitRepo.findAll(pageable).getContent();
 	}
-	
+
 	private void stopLongOrder(Visit visit, AbstractUser user)
 			throws OrderExecuteException, VisitException {
 

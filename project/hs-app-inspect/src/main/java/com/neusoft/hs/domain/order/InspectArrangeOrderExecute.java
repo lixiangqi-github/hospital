@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.organization.AbstractUser;
+import com.neusoft.hs.domain.visit.VisitDomainService;
+import com.neusoft.hs.domain.visit.VisitPlanRecord;
 import com.neusoft.hs.platform.log.LogUtil;
 
 @Entity
@@ -40,6 +42,17 @@ public class InspectArrangeOrderExecute extends OrderExecute {
 		String inspectPlace = (String) params.get(InspectPlace);
 
 		inspectApplyItem.setInspectPlace(inspectPlace);
+
+		// 创建计划日程
+		VisitPlanRecord visitPlanRecord = new VisitPlanRecord();
+		visitPlanRecord.setVisit(this.getVisit());
+		visitPlanRecord.setType(this.getType());
+		visitPlanRecord.setDescribe(this.getTip());
+		visitPlanRecord.setPlanExecuteDate(planExecuteDate);
+		visitPlanRecord.setOperator(user);
+		visitPlanRecord.setDept(user.getDept());
+
+		this.getService(VisitDomainService.class).createVisitPlanRecord(visitPlanRecord);
 
 		LogUtil.log(this.getClass(), "用户[{}]为患者一次就诊[{}]安排检查[{}]时间为[{}]，地点为[{}]", user.getId(),
 				this.getVisit().getName(), inspectApplyItem.getId(), planExecuteDate, inspectPlace);
