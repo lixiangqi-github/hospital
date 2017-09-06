@@ -17,7 +17,7 @@ public class VisitTableModel extends DefaultTableModel<Visit> {
 		case 2:
 			return visit.getState();
 		case 3:
-			return DateFormatter.formatDate(visit.getIntoWardDate());
+			return DateFormatter.formatDateTime(visit.getIntoWardDate());
 		default:
 			return "";
 		}
