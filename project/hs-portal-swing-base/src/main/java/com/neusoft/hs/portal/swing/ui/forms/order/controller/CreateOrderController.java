@@ -238,11 +238,10 @@ public class CreateOrderController extends AbstractFrameController {
 			order.setCount(count);
 			order.setDescribe(describe);
 			order.setExecuteDept(executeDept);
-			
-			
-			if (orderType instanceof InspectOrderType){
+
+			if (orderType instanceof InspectOrderType) {
 				order.setApply(this.applyController.getInspectApply());
-			}else if (orderType instanceof SurgeryOrderType){
+			} else if (orderType instanceof SurgeryOrderType) {
 				order.setApply(this.applyController.getSurgeryApply());
 			}
 
@@ -287,11 +286,11 @@ public class CreateOrderController extends AbstractFrameController {
 	}
 
 	private void changeOrderType(ItemEvent e) {
-		OrderType orderType = this.createOrderFrame.getCreateOrderPanel()
-				.getOrderTypeComboBoxModel().getSelectedItem();
-
-		applyController.changeOrderType(orderType, e);
-
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			OrderType orderType = this.createOrderFrame.getCreateOrderPanel()
+					.getOrderTypeComboBoxModel().getSelectedItem();
+			applyController.changeOrderType(orderType, e);
+		}
 	}
 
 	private void closeWindow() {

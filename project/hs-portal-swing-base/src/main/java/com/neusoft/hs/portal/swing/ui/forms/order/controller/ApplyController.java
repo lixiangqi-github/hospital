@@ -81,7 +81,6 @@ public class ApplyController extends AbstractFrameController {
 				surgeryApplyDialog.setVisible(true);
 			}
 		}
-
 	}
 
 	public void createInspectApply() {
