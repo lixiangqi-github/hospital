@@ -18,8 +18,7 @@ public class SurgeryBeforeOrderExecute extends OrderExecute {
 			throws OrderExecuteException {
 
 		try {
-			this.getService(VisitDomainService.class).beforeSurgery(this.getVisit(),
-					this.getOrder(), user);
+			this.getService(VisitDomainService.class).beforeSurgery(this.getVisit(), user);
 		} catch (VisitException e) {
 			e.printStackTrace();
 			throw new OrderExecuteException(this, e);

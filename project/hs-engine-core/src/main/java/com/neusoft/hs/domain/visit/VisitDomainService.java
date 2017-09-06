@@ -237,9 +237,9 @@ public class VisitDomainService {
 	 * @throws OrderExecuteException
 	 * @throws VisitException
 	 */
-	public void transferDeptSend(Visit visit, Order currentOrder, AbstractUser user)
+	public void transferDeptSend(Visit visit, AbstractUser user)
 			throws OrderExecuteException, VisitException {
-		beforeChangeDept(visit, currentOrder, "转科发起", user);
+		stopLongOrder(visit, user);
 		visit.transferDeptSend(user);
 	}
 
@@ -268,10 +268,10 @@ public class VisitDomainService {
 	 * @throws VisitException
 	 * @throws OrderExecuteException
 	 */
-	public void beforeSurgery(Visit visit, Order currentOrder, AbstractUser user)
+	public void beforeSurgery(Visit visit, AbstractUser user)
 			throws OrderExecuteException, VisitException {
-		beforeChangeDept(visit, currentOrder, "术前操作", user);
-		visit.beforeSurgery(currentOrder.getExecuteDept(), user);
+		stopLongOrder(visit, user);
+		visit.beforeSurgery(user);
 		// 发出患者手术事件
 		applicationContext.publishEvent(new VisitBeforeSurgeryEvent(visit));
 	}
@@ -284,25 +284,23 @@ public class VisitDomainService {
 	 * @param user
 	 * @throws VisitException
 	 */
-	public void afterSurgery(Visit visit, Order order, AbstractUser user) throws VisitException {
-		visit.afterSurgery(order.getBelongDept(), user);
+	public void afterSurgery(Visit visit, AbstractUser user) throws VisitException {
+		visit.afterSurgery(user);
 		// 发出患者手术完成事件
 		applicationContext.publishEvent(new VisitAfterSurgeryEvent(visit));
 	}
 
-	private void beforeChangeDept(Visit visit, Order currentOrder, String operation,
-			AbstractUser user) throws OrderExecuteException, VisitException {
+	private void stopLongOrder(Visit visit, AbstractUser user)
+			throws OrderExecuteException, VisitException {
 
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<LongOrder> executingLongOrders = this.orderDomainService.findLong(visit,
 				Order.State_Executing, pageable);
 
 		for (LongOrder order : executingLongOrders) {
-			if (currentOrder == null || !currentOrder.getId().equals(order.getId())) {
-				order.stop(user);
-				// 发出停止长嘱事件
-				applicationContext.publishEvent(new OrderStopedEvent(visit));
-			}
+			order.stop(user);
+			// 发出停止长嘱事件
+			applicationContext.publishEvent(new OrderStopedEvent(visit));
 		}
 	}
 

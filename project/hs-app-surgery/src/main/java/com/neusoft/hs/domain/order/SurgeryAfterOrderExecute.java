@@ -20,11 +20,10 @@ public class SurgeryAfterOrderExecute extends OrderExecute {
 			throws OrderExecuteException {
 
 		try {
-			SurgeryApply surgeryApply = (SurgeryApply)this.getOrder().getApply();
+			SurgeryApply surgeryApply = (SurgeryApply) this.getOrder().getApply();
 			surgeryApply.setExecuteDate(DateUtil.getSysDate());
-			
-			this.getService(VisitDomainService.class).afterSurgery(this.getVisit(), this.getOrder(),
-					user);
+
+			this.getService(VisitDomainService.class).afterSurgery(this.getVisit(), user);
 		} catch (VisitException e) {
 			e.printStackTrace();
 			throw new OrderExecuteException(this, e);

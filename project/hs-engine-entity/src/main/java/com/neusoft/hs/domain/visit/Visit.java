@@ -358,6 +358,7 @@ public class Visit extends IdEntity {
 	/**
 	 * 转科申请
 	 * 
+	 * @param dept
 	 * @param user
 	 * @throws VisitException
 	 */
@@ -419,14 +420,14 @@ public class Visit extends IdEntity {
 	 * @param user
 	 * @throws VisitException
 	 */
-	public void beforeSurgery(Dept surgeryDept, AbstractUser user) throws VisitException {
+	public void beforeSurgery(AbstractUser user) throws VisitException {
 
 		if (!State_IntoWard.equals(this.getState())) {
 			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_IntoWard);
 		}
 
 		this.setState(State_Surgerying);
-		
+
 		Date sysDate = DateUtil.getSysDate();
 
 		VisitLog visitLog = new VisitLog();
@@ -438,14 +439,14 @@ public class Visit extends IdEntity {
 		visitLog.save();
 	}
 
-	public void afterSurgery(Dept dept, AbstractUser user) throws VisitException {
+	public void afterSurgery(AbstractUser user) throws VisitException {
 
 		if (!State_Surgerying.equals(this.getState())) {
 			throw new VisitException(this, "visit=[%s]的状态应为[%s]", this.getName(), State_Surgerying);
 		}
 
 		this.setState(State_IntoWard);
-		
+
 		Date sysDate = DateUtil.getSysDate();
 
 		VisitLog visitLog = new VisitLog();
