@@ -19,7 +19,7 @@ public class VisitLogTableModel extends DefaultTableModel<VisitLog> {
 		case 3:
 			return visitLog.getOperatorName();
 		case 4:
-			return DateFormatter.formatDate(visitLog.getCreateDate());
+			return DateFormatter.formatDateTime(visitLog.getCreateDate());
 		default:
 			return "";
 		}

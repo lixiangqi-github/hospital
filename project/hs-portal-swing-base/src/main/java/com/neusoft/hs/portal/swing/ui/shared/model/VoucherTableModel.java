@@ -17,7 +17,7 @@ public class VoucherTableModel extends DefaultTableModel<Voucher> {
 		case 2:
 			return voucher.getNumber();
 		case 3:
-			return DateFormatter.formatDate(voucher.getCreateDate());
+			return DateFormatter.formatDateTime(voucher.getCreateDate());
 		case 4:
 			return voucher.getVisit().getState();
 		default:

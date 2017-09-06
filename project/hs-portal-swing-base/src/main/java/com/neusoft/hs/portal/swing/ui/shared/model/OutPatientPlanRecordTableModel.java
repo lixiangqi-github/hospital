@@ -18,9 +18,9 @@ public class OutPatientPlanRecordTableModel extends
 		case 2:
 			return record.getRoomName();
 		case 3:
-			return DateFormatter.formatDate(record.getPlanStartDate());
+			return DateFormatter.formatDateTime(record.getPlanStartDate());
 		case 4:
-			return DateFormatter.formatDate(record.getPlanEndDate());
+			return DateFormatter.formatDateTime(record.getPlanEndDate());
 		case 5:
 			return record.getFree();
 		case 6:

@@ -21,7 +21,7 @@ public class MedicalRecordTableModel extends DefaultTableModel<MedicalRecord> {
 		case 4:
 			return medicalRecord.getDoctorName();
 		case 5:
-			return DateFormatter.formatDate(medicalRecord.getCreateDate());
+			return DateFormatter.formatDateTime(medicalRecord.getCreateDate());
 		default:
 			return "";
 		}

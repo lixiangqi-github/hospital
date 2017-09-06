@@ -17,7 +17,7 @@ public class VisitHisTableModel extends DefaultTableModel<VisitHis> {
 		case 2:
 			return visitHis.getState();
 		case 3:
-			return DateFormatter.formatDate(visitHis.getCreateHistoryDate());
+			return DateFormatter.formatDateTime(visitHis.getCreateHistoryDate());
 		default:
 			return "";
 		}
