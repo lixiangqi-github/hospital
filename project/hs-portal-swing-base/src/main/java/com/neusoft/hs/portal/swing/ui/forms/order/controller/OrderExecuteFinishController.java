@@ -1,10 +1,13 @@
 package com.neusoft.hs.portal.swing.ui.forms.order.controller;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JCheckBox;
+import javax.swing.JTable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Controller;
 
 import com.neusoft.hs.application.order.OrderExecuteAppService;
 import com.neusoft.hs.domain.order.OrderExecute;
+import com.neusoft.hs.domain.order.SurgeryAfterOrderExecute;
 import com.neusoft.hs.domain.organization.Dept;
 import com.neusoft.hs.domain.organization.Doctor;
 import com.neusoft.hs.domain.organization.Nurse;
@@ -41,27 +45,24 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 	private OrderExecuteFinishFrame orderExecuteFinishFrame;
 
 	@Autowired
-	private OrderExecuteOpenFrame orderExecuteOpenFrame;
-
-	@Autowired
 	private OrderExecuteAppService orderExecuteAppService;
 
 	@Autowired
-	private UserAdminDomainService userAdminDomainService;
+	private OrderExecuteOpenController orderExecuteOpenController;
 
 	@PostConstruct
 	private void prepareListeners() {
-		registerAction(orderExecuteFinishFrame.getDisplayAllCB(),
-				(e) -> loadOrderExecutes());
+		registerAction(orderExecuteFinishFrame.getDisplayAllCB(), (e) -> loadOrderExecutes());
 		registerAction(orderExecuteFinishFrame.getOpenBtn(), (e) -> open());
 		registerAction(orderExecuteFinishFrame.getConfirmBtn(), (e) -> finish());
-		registerAction(orderExecuteFinishFrame.getCloseBtn(),
-				(e) -> closeWindow());
+		registerAction(orderExecuteFinishFrame.getCloseBtn(), (e) -> closeWindow());
 
-		registerAction(orderExecuteOpenFrame.getFinishBtn(),
-				(e) -> openFinish());
-		registerAction(orderExecuteOpenFrame.getCloseBtn(),
-				(e) -> closeOpenWindow());
+		registerAction(orderExecuteFinishFrame.getTable(), new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				refreshOperation(e);
+			}
+		});
 
 	}
 
@@ -71,21 +72,19 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 		orderExecuteFinishFrame.setVisible(true);
 	}
 
-	private void loadOrderExecutes() {
+	public void loadOrderExecutes() {
 		try {
 			Sort sort = new Sort(Direction.DESC, "planStartDate");
 			Pageable pageable = new PageRequest(0, Integer.MAX_VALUE, sort);
 
 			List<OrderExecute> entities = null;
-			JCheckBox displayAllCB = this.orderExecuteFinishFrame
-					.getDisplayAllCB();
+			JCheckBox displayAllCB = this.orderExecuteFinishFrame.getDisplayAllCB();
 			if (displayAllCB.isSelected()) {
 				entities = orderExecuteAppService
-						.findAllNeedExecuteOrderExecutes(UserUtil.getUser(),
-								pageable);
+						.findAllNeedExecuteOrderExecutes(UserUtil.getUser(), pageable);
 			} else {
-				entities = orderExecuteAppService.findNeedExecuteOrderExecutes(
-						UserUtil.getUser(), pageable);
+				entities = orderExecuteAppService.findNeedExecuteOrderExecutes(UserUtil.getUser(),
+						pageable);
 			}
 
 			OrderExecuteTableModel orderExecuteTableModel = this.orderExecuteFinishFrame
@@ -101,68 +100,11 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 
 	private void open() {
 		try {
-			List<OrderExecute> orderExecutes = this.orderExecuteFinishFrame
-					.getSelectedOrderExecutes();
-			if (orderExecutes == null || orderExecutes.size() != 1) {
-				Notifications.showFormValidationAlert("请选择一条执行条目");
-			}
-
-			this.prepareAndOpenPanel(orderExecutes.get(0));
-
-		} catch (Exception e) {
+			orderExecuteOpenController.prepareAndOpenFrame();
+		} catch (HsException e) {
 			e.printStackTrace();
 			Notifications.showFormValidationAlert(e.getMessage());
 		}
-	}
-
-	private void prepareAndOpenPanel(OrderExecute orderExecute)
-			throws HsException {
-
-		orderExecuteOpenFrame.init(orderExecute);
-
-		OrderExecutePanel orderExecutePanel = orderExecuteOpenFrame.getPanel();
-		if (orderExecutePanel instanceof EnterHospitalIntoWardOrderExecutePanel) {
-			loadNurses((EnterHospitalIntoWardOrderExecutePanel) orderExecutePanel);
-		} else if (orderExecutePanel instanceof TransferDeptConfirmOrderExecutePanel) {
-			loadDoctors((TransferDeptConfirmOrderExecutePanel) orderExecutePanel);
-			loadNurses((TransferDeptConfirmOrderExecutePanel) orderExecutePanel);
-		}
-
-		orderExecuteOpenFrame.setVisible(true);
-	}
-
-	private void loadDoctors(DoctorComboBoxModelPanel panel) throws HsException {
-		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-
-		List<Dept> depts = new ArrayList<Dept>();
-		Dept dept = panel.getOrderExecute().getExecuteDept();
-		depts.add(dept);
-
-		List<Doctor> doctors = this.userAdminDomainService.findDoctor(depts,
-				pageable);
-
-		DoctorComboBoxModel doctorComboBoxModel = panel
-				.getRespDoctorComboBoxModel();
-
-		doctorComboBoxModel.clear();
-		doctorComboBoxModel.addElements(doctors);
-	}
-
-	private void loadNurses(NurseComboBoxModelPanel panel) throws HsException {
-		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
-
-		List<Dept> depts = new ArrayList<Dept>();
-		Dept dept = UserUtil.getUser().getDept();
-		depts.add(dept);
-
-		List<Nurse> nurses = this.userAdminDomainService.findNurse(depts,
-				pageable);
-
-		NurseComboBoxModel nurseComboBoxModel = panel
-				.getRespNurseComboBoxModel();
-
-		nurseComboBoxModel.clear();
-		nurseComboBoxModel.addElements(nurses);
 	}
 
 	private void finish() {
@@ -175,8 +117,7 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 				orderExecuteIds.add(orderExecute.getId());
 			}
 
-			orderExecuteAppService.finish(orderExecuteIds, null,
-					UserUtil.getUser());
+			orderExecuteAppService.finish(orderExecuteIds, null, UserUtil.getUser());
 
 			loadOrderExecutes();
 
@@ -186,27 +127,26 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 		}
 	}
 
-	private void openFinish() {
+	private void refreshOperation(MouseEvent e) {
 		try {
-			OrderExecutePanel panel = orderExecuteOpenFrame.getPanel();
-			OrderExecute orderExecute = panel.getOrderExecute();
+			List<OrderExecute> orderExecutes = this.orderExecuteFinishFrame
+					.getSelectedOrderExecutes();
 
-			orderExecuteAppService.finish(orderExecute.getId(),
-					panel.getParams(), UserUtil.getUser());
+			if (orderExecutes == null || orderExecutes.size() != 1) {
+				Notifications.showFormValidationAlert("请选择一条执行条目");
+			}
 
-			loadOrderExecutes();
-			closeOpenWindow();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Notifications.showFormValidationAlert(e.getMessage());
+			OrderExecute orderExecute = orderExecutes.get(0);
+			if (orderExecute instanceof SurgeryAfterOrderExecute) {
+
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			Notifications.showFormValidationAlert(e1.getMessage());
 		}
 	}
 
 	private void closeWindow() {
 		orderExecuteFinishFrame.dispose();
-	}
-
-	private void closeOpenWindow() {
-		orderExecuteOpenFrame.dispose();
 	}
 }

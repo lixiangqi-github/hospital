@@ -62,4 +62,7 @@ public class OrderExecuteFinishListPanel extends JPanel {
 		return orderExecuteTableModel;
 	}
 
+	public JTable getTable() {
+		return table;
+	}
 }

@@ -3,11 +3,13 @@ package com.neusoft.hs.portal.swing.ui.forms.order.view;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.WindowConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class OrderExecuteFinishFrame extends JFrame {
 	JCheckBox displayAllCB;
 
 	private OrderExecuteFinishListPanel orderExecuteFinishListPanel;
+	
+	Map<String, JButton> operationBtns;
 
 	JButton openBtn;
 
@@ -36,8 +40,7 @@ public class OrderExecuteFinishFrame extends JFrame {
 	private static final int DEFAULT_HEIGHT = 350;
 
 	@Autowired
-	public OrderExecuteFinishFrame(
-			OrderExecuteFinishListPanel orderExecuteFinishListPanel) {
+	public OrderExecuteFinishFrame(OrderExecuteFinishListPanel orderExecuteFinishListPanel) {
 		this.orderExecuteFinishListPanel = orderExecuteFinishListPanel;
 
 		setFrameUp();
@@ -85,12 +88,20 @@ public class OrderExecuteFinishFrame extends JFrame {
 		return this.orderExecuteFinishListPanel.getOrderExecuteTableModel();
 	}
 
+	public JTable getTable() {
+		return this.orderExecuteFinishListPanel.getTable();
+	}
+
 	public JCheckBox getDisplayAllCB() {
 		return displayAllCB;
 	}
 
 	public void setDisplayAllCB(JCheckBox displayAllCB) {
 		this.displayAllCB = displayAllCB;
+	}
+	
+	public void clearOperationBtns(){
+		operationBtns = null;
 	}
 
 	public JButton getOpenBtn() {
