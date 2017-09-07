@@ -29,7 +29,7 @@ public class OrderExecuteFinishFrame extends JFrame {
 
 	List<JButton> operationBtns;
 
-	JPanel buttonPanel;
+	JPanel otherButtonPanel;
 
 	JButton openBtn;
 
@@ -68,7 +68,10 @@ public class OrderExecuteFinishFrame extends JFrame {
 
 		add(orderExecuteFinishListPanel, BorderLayout.CENTER);
 
-		buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel();
+
+		otherButtonPanel = new JPanel();
+		buttonPanel.add(otherButtonPanel);
 
 		openBtn = new JButton(ConstMessagesCN.Labels.OPEN_BTN);
 		buttonPanel.add(openBtn);
@@ -83,9 +86,11 @@ public class OrderExecuteFinishFrame extends JFrame {
 	}
 
 	public void refreshOperation() {
+		otherButtonPanel.removeAll();
 		for (JButton operationBtn : operationBtns) {
-			buttonPanel.add(operationBtn, 1);
+			otherButtonPanel.add(operationBtn);
 		}
+		this.setVisible(true);
 	}
 
 	public List<OrderExecute> getSelectedOrderExecutes() throws UIException {
@@ -110,6 +115,7 @@ public class OrderExecuteFinishFrame extends JFrame {
 
 	public void clearOperationBtns() {
 		operationBtns = new ArrayList<JButton>();
+		otherButtonPanel.removeAll();
 	}
 
 	public List<JButton> getOperationBtns() {
