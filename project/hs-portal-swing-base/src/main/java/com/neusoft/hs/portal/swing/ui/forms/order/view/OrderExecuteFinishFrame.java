@@ -84,7 +84,7 @@ public class OrderExecuteFinishFrame extends JFrame {
 
 	public void refreshOperation() {
 		for (JButton operationBtn : operationBtns) {
-			buttonPanel.add(operationBtn, 0);
+			buttonPanel.add(operationBtn, 1);
 		}
 	}
 
