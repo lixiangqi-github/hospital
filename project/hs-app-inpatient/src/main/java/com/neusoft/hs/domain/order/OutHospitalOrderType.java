@@ -1,13 +1,14 @@
 package com.neusoft.hs.domain.order;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 import com.neusoft.hs.domain.visit.Visit;
+import com.neusoft.hs.domain.visit.VisitDomainService;
+import com.neusoft.hs.domain.visit.VisitPlanRecord;
 
 @Entity
 @DiscriminatorValue("OutHospital")
@@ -17,6 +18,16 @@ public class OutHospitalOrderType extends OrderType {
 	protected void verify(Order order) throws OrderException {
 		Visit visit = order.getVisit();
 		visit.setPlanLeaveWardDate(order.getPlanStartDate());
+
+		// 创建计划日程
+		VisitPlanRecord visitPlanRecord = new VisitPlanRecord();
+		visitPlanRecord.setVisit(visit);
+		visitPlanRecord.setType(this.getName());
+		visitPlanRecord.setPlanExecuteDate(order.getPlanStartDate());
+		visitPlanRecord.setOperator(order.getCreator());
+		visitPlanRecord.setDept(order.getBelongDept());
+
+		this.getService(VisitDomainService.class).createVisitPlanRecord(visitPlanRecord);
 	}
 
 	@Override

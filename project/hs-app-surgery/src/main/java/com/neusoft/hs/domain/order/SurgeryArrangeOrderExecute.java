@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 
 import com.neusoft.hs.domain.organization.AbstractUser;
 import com.neusoft.hs.domain.surgery.SurgeryApply;
+import com.neusoft.hs.domain.visit.VisitDomainService;
+import com.neusoft.hs.domain.visit.VisitPlanRecord;
 import com.neusoft.hs.platform.util.DateUtil;
 
 @Entity
@@ -23,7 +25,9 @@ public class SurgeryArrangeOrderExecute extends OrderExecute {
 
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(this.getOrder().getDescribe());
+		if (this.getOrder().getDescribe() != null) {
+			builder.append(this.getOrder().getDescribe());
+		}
 		builder.append(" 申请手术时间：");
 		builder.append(DateUtil.toString(this.getOrder().getPlanStartDate()));
 
@@ -56,10 +60,21 @@ public class SurgeryArrangeOrderExecute extends OrderExecute {
 		orderInteraction.setMessage(messageBuilder.toString());
 
 		this.getOrder().addOrderInteraction(orderInteraction);
-		
-		SurgeryApply surgeryApply = (SurgeryApply)this.getOrder().getApply();
+
+		SurgeryApply surgeryApply = (SurgeryApply) this.getOrder().getApply();
 		surgeryApply.setPlanExecuteDate(planExecuteDate);
 		surgeryApply.setSurgeryPlace(surgeryPlace);
+
+		// 创建计划日程
+		VisitPlanRecord visitPlanRecord = new VisitPlanRecord();
+		visitPlanRecord.setVisit(this.getVisit());
+		visitPlanRecord.setType(this.getType());
+		visitPlanRecord.setDescribe(orderInteraction.getMessage());
+		visitPlanRecord.setPlanExecuteDate(planExecuteDate);
+		visitPlanRecord.setOperator(user);
+		visitPlanRecord.setDept(user.getDept());
+
+		this.getService(VisitDomainService.class).createVisitPlanRecord(visitPlanRecord);
 
 		// 修改之后的两条执行条目计划执行时间
 		OrderExecute next = this.getNext();

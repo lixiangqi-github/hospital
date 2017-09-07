@@ -241,7 +241,7 @@ public class DataIniter {
 
 	protected NursingOrderType secondNursingOrderType;// 二级护理医嘱类型
 
-	protected OutHospitalOrderType leaveHospitalOrderType;// 出院医嘱类型
+	protected OutHospitalOrderType outHospitalOrderType;// 出院医嘱类型
 
 	protected InspectOrderType inspectOrderType;// 检查医嘱类型
 
@@ -498,7 +498,7 @@ public class DataIniter {
 		enterHospitalOrderType = dataIniter.enterHospitalOrderType;
 		firstNursingOrderType = dataIniter.firstNursingOrderType;
 		secondNursingOrderType = dataIniter.secondNursingOrderType;
-		leaveHospitalOrderType = dataIniter.leaveHospitalOrderType;
+		outHospitalOrderType = dataIniter.outHospitalOrderType;
 		inspectOrderType = dataIniter.inspectOrderType;
 		transferDeptOrderType = dataIniter.transferDeptOrderType;
 		describeOrderType = dataIniter.describeOrderType;
@@ -1464,12 +1464,12 @@ public class DataIniter {
 
 		orderTypes.add(enterHospitalOrderType);
 
-		leaveHospitalOrderType = new OutHospitalOrderType();
-		leaveHospitalOrderType.setId("leaveHospitalOrderType");
-		leaveHospitalOrderType.setCode("leaveHospitalOrderType");
-		leaveHospitalOrderType.setName("出院医嘱");
+		outHospitalOrderType = new OutHospitalOrderType();
+		outHospitalOrderType.setId("leaveHospitalOrderType");
+		outHospitalOrderType.setCode("leaveHospitalOrderType");
+		outHospitalOrderType.setName("出院医嘱");
 
-		orderTypes.add(leaveHospitalOrderType);
+		orderTypes.add(outHospitalOrderType);
 
 		secondNursingOrderType = new NursingOrderType();
 		secondNursingOrderType.setId("secondNursingOrderType");

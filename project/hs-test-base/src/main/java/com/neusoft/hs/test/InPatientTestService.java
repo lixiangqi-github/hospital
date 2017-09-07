@@ -252,7 +252,7 @@ public abstract class InPatientTestService extends AppTestService {
 		leaveHospitalOrder001.setPlanStartDate(DateUtil.createDay("2017-01-09", dayCount));
 		leaveHospitalOrder001.setPlaceType(OrderCreateCommand.PlaceType_InPatient);
 
-		leaveHospitalOrder001.setOrderType(leaveHospitalOrderType);
+		leaveHospitalOrder001.setOrderType(outHospitalOrderType);
 
 		orderAppService.create(leaveHospitalOrder001, user002);
 
@@ -414,7 +414,7 @@ public abstract class InPatientTestService extends AppTestService {
 		leaveHospitalOrder002.setExecuteDept(dept222);
 		leaveHospitalOrder002.setPlaceType(OrderCreateCommand.PlaceType_InPatient);
 
-		leaveHospitalOrder002.setOrderType(leaveHospitalOrderType);
+		leaveHospitalOrder002.setOrderType(outHospitalOrderType);
 
 		orderAppService.create(leaveHospitalOrder002, userd02);
 
