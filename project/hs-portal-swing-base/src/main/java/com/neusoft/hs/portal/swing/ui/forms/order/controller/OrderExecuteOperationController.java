@@ -48,14 +48,16 @@ public class OrderExecuteOperationController extends AbstractController {
 			}
 
 			OrderExecute orderExecute = orderExecutes.get(0);
+
+			orderExecuteFinishFrame.clearOperationBtns();
 			if (orderExecute instanceof SurgeryAfterOrderExecute) {
 				JButton maintainSurgeryApplyItemBtn = new JButton(
 						ConstMessagesCN.Labels.MaintainSurgeryApplyItem);
 				registerAction(maintainSurgeryApplyItemBtn,
 						(e) -> maintainSurgeryApplyItemWindow(orderExecute));
-				orderExecuteFinishFrame.getOperationBtns()
-						.put(maintainSurgeryApplyItemBtn.getText(), maintainSurgeryApplyItemBtn);
+				orderExecuteFinishFrame.getOperationBtns().add(maintainSurgeryApplyItemBtn);
 			}
+			orderExecuteFinishFrame.refreshOperation();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			Notifications.showFormValidationAlert(e1.getMessage());

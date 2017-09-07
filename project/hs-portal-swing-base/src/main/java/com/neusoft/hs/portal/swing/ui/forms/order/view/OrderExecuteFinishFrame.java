@@ -2,9 +2,8 @@ package com.neusoft.hs.portal.swing.ui.forms.order.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -28,7 +27,9 @@ public class OrderExecuteFinishFrame extends JFrame {
 
 	private OrderExecuteFinishListPanel orderExecuteFinishListPanel;
 
-	Map<String, JButton> operationBtns;
+	List<JButton> operationBtns;
+
+	JPanel buttonPanel;
 
 	JButton openBtn;
 
@@ -67,7 +68,7 @@ public class OrderExecuteFinishFrame extends JFrame {
 
 		add(orderExecuteFinishListPanel, BorderLayout.CENTER);
 
-		JPanel buttonPanel = new JPanel();
+		buttonPanel = new JPanel();
 
 		openBtn = new JButton(ConstMessagesCN.Labels.OPEN_BTN);
 		buttonPanel.add(openBtn);
@@ -79,6 +80,12 @@ public class OrderExecuteFinishFrame extends JFrame {
 		buttonPanel.add(closeBtn);
 
 		add(buttonPanel, BorderLayout.SOUTH);
+	}
+
+	public void refreshOperation() {
+		for (JButton operationBtn : operationBtns) {
+			buttonPanel.add(operationBtn, 0);
+		}
 	}
 
 	public List<OrderExecute> getSelectedOrderExecutes() throws UIException {
@@ -102,10 +109,10 @@ public class OrderExecuteFinishFrame extends JFrame {
 	}
 
 	public void clearOperationBtns() {
-		operationBtns = new LinkedHashMap<String, JButton>();
+		operationBtns = new ArrayList<JButton>();
 	}
 
-	public Map<String, JButton> getOperationBtns() {
+	public List<JButton> getOperationBtns() {
 		return operationBtns;
 	}
 
@@ -120,4 +127,5 @@ public class OrderExecuteFinishFrame extends JFrame {
 	public JButton getCloseBtn() {
 		return closeBtn;
 	}
+
 }
