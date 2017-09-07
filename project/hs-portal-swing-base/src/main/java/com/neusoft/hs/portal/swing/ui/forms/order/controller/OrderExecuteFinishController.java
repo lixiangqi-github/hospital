@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
@@ -36,6 +37,7 @@ import com.neusoft.hs.portal.swing.ui.shared.controller.AbstractFrameController;
 import com.neusoft.hs.portal.swing.ui.shared.model.DoctorComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.NurseComboBoxModel;
 import com.neusoft.hs.portal.swing.ui.shared.model.OrderExecuteTableModel;
+import com.neusoft.hs.portal.swing.util.ConstMessagesCN;
 import com.neusoft.hs.portal.swing.util.Notifications;
 
 @Controller
@@ -50,6 +52,9 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 	@Autowired
 	private OrderExecuteOpenController orderExecuteOpenController;
 
+	@Autowired
+	private OrderExecuteOperationController orderExecuteOperationController;
+
 	@PostConstruct
 	private void prepareListeners() {
 		registerAction(orderExecuteFinishFrame.getDisplayAllCB(), (e) -> loadOrderExecutes());
@@ -60,7 +65,7 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 		registerAction(orderExecuteFinishFrame.getTable(), new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				refreshOperation(e);
+				orderExecuteOperationController.refreshOperation(e);
 			}
 		});
 
@@ -69,6 +74,7 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 	@Override
 	public void prepareAndOpenFrame() throws HsException {
 		loadOrderExecutes();
+		orderExecuteFinishFrame.clearOperationBtns();
 		orderExecuteFinishFrame.setVisible(true);
 	}
 
@@ -124,25 +130,6 @@ public class OrderExecuteFinishController extends AbstractFrameController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Notifications.showFormValidationAlert(e.getMessage());
-		}
-	}
-
-	private void refreshOperation(MouseEvent e) {
-		try {
-			List<OrderExecute> orderExecutes = this.orderExecuteFinishFrame
-					.getSelectedOrderExecutes();
-
-			if (orderExecutes == null || orderExecutes.size() != 1) {
-				Notifications.showFormValidationAlert("请选择一条执行条目");
-			}
-
-			OrderExecute orderExecute = orderExecutes.get(0);
-			if (orderExecute instanceof SurgeryAfterOrderExecute) {
-
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			Notifications.showFormValidationAlert(e1.getMessage());
 		}
 	}
 

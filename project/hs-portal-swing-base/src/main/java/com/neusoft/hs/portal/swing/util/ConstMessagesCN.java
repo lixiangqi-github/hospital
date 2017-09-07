@@ -148,7 +148,7 @@ public interface ConstMessagesCN {
 		String QualityControl = "确认诊疗过程合格";
 		String ArchiveMedicalRecord = "归档病历";
 		String CreateOutPatientRecord = "创建出诊记录";
-
+		
 		String Order = "医嘱";
 
 		String ID = "ID";
@@ -218,6 +218,7 @@ public interface ConstMessagesCN {
 		
 		String PlanSurgeryDate = "手术时间";
 		String PlanSurgeryPlace = "手术地点";
+		String MaintainSurgeryApplyItem = "维护手术项目";
 
 		String GOAL = "目标";
 

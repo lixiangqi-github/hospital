@@ -2,6 +2,7 @@ package com.neusoft.hs.portal.swing.ui.forms.order.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class OrderExecuteFinishFrame extends JFrame {
 	JCheckBox displayAllCB;
 
 	private OrderExecuteFinishListPanel orderExecuteFinishListPanel;
-	
+
 	Map<String, JButton> operationBtns;
 
 	JButton openBtn;
@@ -99,9 +100,13 @@ public class OrderExecuteFinishFrame extends JFrame {
 	public void setDisplayAllCB(JCheckBox displayAllCB) {
 		this.displayAllCB = displayAllCB;
 	}
-	
-	public void clearOperationBtns(){
-		operationBtns = null;
+
+	public void clearOperationBtns() {
+		operationBtns = new LinkedHashMap<String, JButton>();
+	}
+
+	public Map<String, JButton> getOperationBtns() {
+		return operationBtns;
 	}
 
 	public JButton getOpenBtn() {

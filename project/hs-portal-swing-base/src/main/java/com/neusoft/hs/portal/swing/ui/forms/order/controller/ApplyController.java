@@ -14,7 +14,6 @@ import com.neusoft.hs.domain.inspect.InspectApply;
 import com.neusoft.hs.domain.inspect.InspectApplyItem;
 import com.neusoft.hs.domain.inspect.InspectDomainService;
 import com.neusoft.hs.domain.inspect.InspectItem;
-import com.neusoft.hs.domain.order.Apply;
 import com.neusoft.hs.domain.order.InspectOrderType;
 import com.neusoft.hs.domain.order.OrderType;
 import com.neusoft.hs.domain.order.SurgeryOrderType;

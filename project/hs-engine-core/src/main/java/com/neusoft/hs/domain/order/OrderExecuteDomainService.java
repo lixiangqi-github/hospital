@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +46,10 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse, Date planStartDate, Pageable pageable) {
-		return orderExecuteRepo.findByStateAndBelongDeptInAndPlanStartDateLessThan(OrderExecute.State_NeedSend,
-				nurse.getOperationDepts(), planStartDate, pageable);
+	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse, Date planStartDate,
+			Pageable pageable) {
+		return orderExecuteRepo.findByStateAndBelongDeptInAndPlanStartDateLessThan(
+				OrderExecute.State_NeedSend, nurse.getOperationDepts(), planStartDate, pageable);
 	}
 
 	/**
@@ -60,9 +60,10 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user, Date planStartDate, Pageable pageable) {
-		return orderExecuteRepo.findByStateAndExecuteDeptInAndPlanStartDateLessThan(OrderExecute.State_Executing,
-				user.getOperationDepts(), planStartDate, pageable);
+	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user, Date planStartDate,
+			Pageable pageable) {
+		return orderExecuteRepo.findByStateAndExecuteDeptInAndPlanStartDateLessThan(
+				OrderExecute.State_Executing, user.getOperationDepts(), planStartDate, pageable);
 	}
 
 	/**
@@ -73,12 +74,14 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user, Pageable pageable) {
+	public List<OrderExecute> findAllNeedExecuteOrderExecutes(AbstractUser user,
+			Pageable pageable) {
 		List<String> states = new ArrayList<String>();
 		states.add(OrderExecute.State_NeedExecute);
 		states.add(OrderExecute.State_Executing);
 
-		return orderExecuteRepo.findByStateInAndExecuteDeptIn(states, user.getOperationDepts(), pageable);
+		return orderExecuteRepo.findByStateInAndExecuteDeptIn(states, user.getOperationDepts(),
+				pageable);
 	}
 
 	/**
@@ -91,10 +94,10 @@ public class OrderExecuteDomainService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> findNeedExecuteOrderExecutes(Visit visit, String type, AbstractUser user,
-			Date planStartDate, Pageable pageable) {
-		return orderExecuteRepo.findByVisitAndTypeAndStateAndExecuteDeptAndPlanStartDateLessThan(visit, type,
-				OrderExecute.State_Executing, user.getDept(), planStartDate, pageable);
+	public List<OrderExecute> findNeedExecuteOrderExecutes(Visit visit, String type,
+			AbstractUser user, Date planStartDate, Pageable pageable) {
+		return orderExecuteRepo.findByVisitAndTypeAndStateAndExecuteDeptAndPlanStartDateLessThan(
+				visit, type, OrderExecute.State_Executing, user.getDept(), planStartDate, pageable);
 	}
 
 	/**
@@ -105,7 +108,8 @@ public class OrderExecuteDomainService {
 	 * @return
 	 */
 	public List<OrderExecute> findNeedBackChargeOrderExecutes(Staff user, Pageable pageable) {
-		return orderExecuteRepo.findByChargeState(OrderExecute.ChargeState_NeedBackCharge, pageable);
+		return orderExecuteRepo.findByChargeState(OrderExecute.ChargeState_NeedBackCharge,
+				pageable);
 	}
 
 	public OrderExecute find(String executeId) {
@@ -135,9 +139,24 @@ public class OrderExecuteDomainService {
 	 * @return
 	 * @throws HsException
 	 */
-	public List<OrderExecute> find(OrderExecuteFilter filter, Map<String, Object> params, AbstractUser user,
-			Pageable pageable) throws HsException {
+	public List<OrderExecute> find(OrderExecuteFilter filter, Map<String, Object> params,
+			AbstractUser user, Pageable pageable) throws HsException {
 		return orderExecuteDAO.find(filter, params, user, pageable);
+	}
+
+	/**
+	 * 得到执行条目关联的申请单
+	 * 
+	 * @param executeId
+	 * @return
+	 */
+	public Apply findApply(String executeId) {
+		OrderExecute orderExecute = this.orderExecuteRepo.findOne(executeId);
+		if (orderExecute != null) {
+			return orderExecute.getOrder().getApply();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -167,8 +186,8 @@ public class OrderExecuteDomainService {
 	public int start(Admin admin) {
 		Date sysDate = DateUtil.getSysDate();
 		Date startDate = DateUtil.addDay(DateUtil.getSysDateStart(), 1);
-		int count = orderExecuteRepo.start(OrderExecute.State_Executing, OrderExecute.State_NeedExecute,
-				ChargeBill.State_Normal, sysDate, startDate);
+		int count = orderExecuteRepo.start(OrderExecute.State_Executing,
+				OrderExecute.State_NeedExecute, ChargeBill.State_Normal, sysDate, startDate);
 
 		LogUtil.log(this.getClass(), "系统自动启动了{}条符合条件的医嘱执行条目", count);
 
@@ -191,8 +210,8 @@ public class OrderExecuteDomainService {
 
 		applicationContext.publishEvent(new OrderExecuteFinishedEvent(execute));
 
-		LogUtil.log(this.getClass(), "用户[{}]完成了患者一次就诊[{}]的医嘱执行条目{},类型为[{}]", user.getId(), execute.getVisit().getName(),
-				execute.getId(), execute.getType());
+		LogUtil.log(this.getClass(), "用户[{}]完成了患者一次就诊[{}]的医嘱执行条目{},类型为[{}]", user.getId(),
+				execute.getVisit().getName(), execute.getId(), execute.getType());
 
 		return next;
 	}
@@ -211,7 +230,7 @@ public class OrderExecuteDomainService {
 
 		applicationContext.publishEvent(new OrderExecuteCanceledEvent(execute));
 
-		LogUtil.log(this.getClass(), "用户[{}]取消了患者一次就诊[{}]的医嘱执行条目{},类型为[{}]", user.getId(), execute.getVisit().getName(),
-				execute.getId(), execute.getType());
+		LogUtil.log(this.getClass(), "用户[{}]取消了患者一次就诊[{}]的医嘱执行条目{},类型为[{}]", user.getId(),
+				execute.getVisit().getName(), execute.getId(), execute.getType());
 	}
 }
