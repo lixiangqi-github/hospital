@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
+import com.neusoft.hs.application.surgery.SurgeryAppService;
 import com.neusoft.hs.domain.order.Apply;
 import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.OrderExecuteDomainService;
@@ -31,6 +32,9 @@ public class OrderExecuteOperationController extends AbstractController {
 
 	@Autowired
 	private SurgeryDomainService surgeryDomainService;
+
+	@Autowired
+	private SurgeryAppService surgeryAppService;
 
 	@Autowired
 	private OrderExecuteDomainService orderExecuteDomainService;
@@ -75,7 +79,7 @@ public class OrderExecuteOperationController extends AbstractController {
 		Pageable pageable = new PageRequest(0, Integer.MAX_VALUE);
 		List<SurgeryType> items = surgeryDomainService.findSurgeryType(pageable);
 
-		SurgeryApply surgeryApply = surgeryDomainService.findSurgeryApply(apply.getId());
+		SurgeryApply surgeryApply = surgeryAppService.findSurgeryApply(apply.getId());
 		surgeryApplyDialog.setSurgeryApply(surgeryApply);
 		surgeryApplyDialog.refreshItems(items);
 		surgeryApplyDialog.load();

@@ -1,5 +1,6 @@
 package com.neusoft.hs.application.surgery;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,16 @@ public class SurgeryAppService {
 
 	@Autowired
 	private OrderExecuteDomainService orderExecuteDomainService;
+
+	public SurgeryApply findSurgeryApply(String id) {
+		SurgeryApply surgeryApply = surgeryDomainService.findSurgeryApply(id);
+		if (surgeryApply != null) {
+			for (SurgeryApplyItem surgeryApplyItem : surgeryApply.getSurgeryApplyItems()) {
+				Hibernate.initialize(surgeryApplyItem.getSurgeryType());
+			}
+		}
+		return surgeryApply;
+	}
 
 	public void addSurgeryApplyItem(String executeId, SurgeryType surgeryType) {
 
