@@ -11,9 +11,15 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 
 public abstract class AbstractController {
-	
+
 	protected void registerAction(JButton button, ActionListener listener) {
 		button.addActionListener(listener);
+	}
+
+	protected void unRegisterAction(JButton button) {
+		for (ActionListener listener : button.getActionListeners()) {
+			button.addActionListener(listener);
+		}
 	}
 
 	protected void registerAction(JComboBox comboBox, ItemListener listener) {

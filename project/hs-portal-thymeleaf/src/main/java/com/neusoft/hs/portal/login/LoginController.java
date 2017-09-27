@@ -5,7 +5,12 @@ package com.neusoft.hs.portal.login;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
+
 import org.apache.log4j.Logger;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.neusoft.hs.application.user.User2Impl;
 import com.neusoft.hs.platform.exception.HsException;
+import com.neusoft.hs.portal.security.MyFormAuthenticationFilter;
 import com.neusoft.hs.portal.security.UserUtil;
 
 @Controller
@@ -32,8 +38,20 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public String fail1(Model model) {
-		model.addAttribute("msg", "登录失败！");
+	public String fail1(Model model, ServletRequest request) {
+		AuthenticationException ae = (AuthenticationException) request
+				.getAttribute(MyFormAuthenticationFilter.LoginFailureExeception);
+		if (ae != null) {
+			if (ae instanceof UnknownAccountException) {
+				request.setAttribute("msg", "账户不存在");
+			} else if (ae instanceof IncorrectCredentialsException) {
+				request.setAttribute("msg", "密码错误");
+			} else {
+				request.setAttribute("msg", ae.getMessage());
+			}
+		} else {
+			model.addAttribute("msg", "登录失败！");
+		}	
 		return LOGIN_PAGE;
 	}
 
