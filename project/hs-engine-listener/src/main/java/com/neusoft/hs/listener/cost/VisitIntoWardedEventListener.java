@@ -14,8 +14,7 @@ import com.neusoft.hs.domain.visit.VisitIntoWardedEvent;
 import com.neusoft.hs.platform.util.DateUtil;
 
 @Service
-public class VisitIntoWardedEventListener implements
-		ApplicationListener<VisitIntoWardedEvent> {
+public class VisitIntoWardedEventListener implements ApplicationListener<VisitIntoWardedEvent> {
 
 	@Autowired
 	private CostDomainService costDomainService;
@@ -30,7 +29,6 @@ public class VisitIntoWardedEventListener implements
 		// 暂时床位费只有一个计费项目
 		ChargeItem item = costAdminDomainService.find("bedChargeItem");
 
-		costDomainService.createVisitChargeItem(visit, item,
-				DateUtil.getSysDate());
+		costDomainService.createVisitChargeItem(visit, item, DateUtil.getSysDate());
 	}
 }
