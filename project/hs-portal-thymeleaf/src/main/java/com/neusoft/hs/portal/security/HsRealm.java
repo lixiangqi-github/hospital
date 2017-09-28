@@ -30,6 +30,9 @@ public class HsRealm extends IniRealm {
 		String userId = (String) token.getPrincipal();
 
 		User user = userService.getUser(userId);
+		if(user == null){
+			throw new AuthenticationException("用户不存在");
+		}
 		
 		SimpleAccount simpleAccount = (SimpleAccount)info;
 		user.setRoleIds(new ArrayList<String>(simpleAccount.getRoles()));
