@@ -24,26 +24,23 @@
 						<table class="table table-hover">
 							<tr>
 								<th>标识</th>
-								<th>姓名</th>
-								<th>性别</th>
-								<th>状态</th>
+								<th>患者姓名</th>
+								<th>类型</th>
+								<th>信息</th>
 								<th>所属部门</th>
-								<th>创建时间</th>
-								<th>操作</th>
+								<th>操作人</th>
+								<th>操作时间</th>
 							</tr>
-							<tr th:each="visit,visitStat : ${visits}">
+							<tr th:each="log,logStat : ${logs}">
 								<td><input type="hidden" name="ids"
-									th:value="${visit.id}" /></td>
-								<td th:text="${visit.name}"></td>
-								<td th:text="${visit.patient.sex}"></td>
-								<td th:text="${visit.state}"></td>
-								<td th:text="${visit.deptName}"></td>
+									th:value="${log.id}" /></td>
+								<td th:text="${log.visitName}"></td>
+								<td th:text="${log.type}"></td>
+								<td th:text="${log.info}"></td>
+								<td th:text="${log.deptName}"></td>
+								<td th:text="${log.operatorName}"></td>
 								<td
-									th:text="${#calendars.format(visit.createDate,'yyyy-MM-dd HH:mm')}"></td>
-								<td><a
-									href="#" class="btn btn-default"
-									th:href="@{'/manage/visit/log/' + ${visit.id} + '/list'}">查看日志</a>
-								</td>
+									th:text="${#calendars.format(log.createDate,'yyyy-MM-dd HH:mm')}"></td>
 							</tr>
 						</table>
 					</div>
