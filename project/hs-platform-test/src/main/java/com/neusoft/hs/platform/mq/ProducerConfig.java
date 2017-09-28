@@ -1,10 +1,14 @@
 package com.neusoft.hs.platform.mq;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -14,6 +18,9 @@ import org.springframework.messaging.converter.MappingJackson2MessageConverter;
  */
 @Configuration
 public class ProducerConfig {
+	
+	@Value("${custom.spring.rabbitmq.message.timeout}")
+	private int messageTimeout;
 
     @Bean
     RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
@@ -22,7 +29,12 @@ public class ProducerConfig {
 
     @Bean
     Queue queueFoo(RabbitAdmin rabbitAdmin) {
-        Queue queue = new Queue("queue.foo", true);
+    	
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-message-ttl", messageTimeout);
+		Queue queue = new Queue("queue.foo", true, false, false, args);
+		
+        //Queue queue = new Queue("queue.foo", true);
         rabbitAdmin.declareQueue(queue);
         return queue;
     }

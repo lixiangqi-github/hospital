@@ -25,9 +25,15 @@ public class RabbitmqdemoApplication implements CommandLineRunner {
 
 	@Autowired
 	SenderService senderService;
+	
+	@Autowired
+	ConsumerQueueCreater consumerQueueCreater;
 
 	@Override
 	public void run(String... strings) throws Exception {
+		
+		consumerQueueCreater.init();
+		
 		Random random = new Random();
 		while (true){
 			senderService.sendBar2Rabbitmq(new Bar(random.nextInt()));

@@ -91,10 +91,10 @@ public class ConsumerQueueCreater {
 	}
 
 	private String consumerQueueName() throws HsException {
-		return "dynamicQueue";
+		return "queue.foo";
 	}
 
 	private String routingKey() {
-		return "routingKey";
+		return "queue.foo";
 	}
 }
