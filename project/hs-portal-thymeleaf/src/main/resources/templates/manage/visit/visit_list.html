@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="base/layout">
+
+<!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<title>未回复危急值列表</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+</head>
+
+<body class="no-trans">
+	<!-- banner start -->
+	<!-- ================ -->
+	<div layout:fragment="content" id="banner" class="banner">
+		<div class="banner-image"></div>
+		<div class="banner-caption">
+			<div class="container">
+				<div class="row">
+					<div>
+						<table class="table table-hover">
+							<tr>
+								<th>标识</th>
+								<th>姓名</th>
+								<th>性别</th>
+								<th>状态</th>
+								<th>所属部门</th>
+								<th>创建时间</th>
+								<th>操作</th>
+							</tr>
+							<tr th:each="visit,visitStat : ${visits}">
+								<td><input type="hidden" name="ids"
+									th:value="${visit.id}" /></td>
+								<td th:text="${visit.name}"></td>
+								<td th:text="${visit.patient.sex}"></td>
+								<td th:text="${visit.state}"></td>
+								<td th:text="${visit.deptName}"></td>
+								<td
+									th:text="${#calendars.format(visit.createDate,'yyyy-MM-dd HH:mm')}"></td>
+								<td><a
+									href="#" class="btn btn-default"
+									th:href="@{'/manage/visit/' + ${visit.id} + '/log/list'}">查看日志</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- banner end -->
+</body>
+</html>
