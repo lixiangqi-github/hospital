@@ -3,6 +3,8 @@ package com.neusoft.hs.test.notice.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -35,7 +37,7 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-message-ttl", messageTimeout);
-		Queue queue = new Queue(MQConstant.VisitQueue, true, false, false, args);
+		Queue queue = new Queue(MQConstant.VisitCreateQueue, true, false, false, args);
 		rabbitAdmin.declareQueue(queue);
 		return queue;
 	}
@@ -45,6 +47,14 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 		TopicExchange exchange = new TopicExchange(MQConstant.VisitExchange);// 配置广播路由器
 		rabbitAdmin.declareExchange(exchange);
 		return exchange;
+	}
+	
+	@Bean
+	Binding bindingExchangeVisit(Queue queueVisit, TopicExchange exchange,
+			RabbitAdmin rabbitAdmin) {
+		Binding binding = BindingBuilder.bind(queueVisit).to(exchange).with(MQConstant.VisitCreateRoutingKey);
+		rabbitAdmin.declareBinding(binding);
+		return binding;
 	}
 
 	@Bean

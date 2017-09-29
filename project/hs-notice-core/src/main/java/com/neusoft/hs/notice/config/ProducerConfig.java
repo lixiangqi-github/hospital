@@ -32,7 +32,7 @@ public class ProducerConfig {
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-message-ttl", messageTimeout);
-		Queue queue = new Queue(MQConstant.VisitQueue, true, false, false, args);
+		Queue queue = new Queue(MQConstant.VisitCreateQueue, true, false, false, args);
 		rabbitAdmin.declareQueue(queue);
 		return queue;
 	}
@@ -47,7 +47,7 @@ public class ProducerConfig {
 	@Bean
 	Binding bindingExchangeVisit(Queue queueVisit, TopicExchange exchange,
 			RabbitAdmin rabbitAdmin) {
-		Binding binding = BindingBuilder.bind(queueVisit).to(exchange).with(MQConstant.VisitRoutingKey);
+		Binding binding = BindingBuilder.bind(queueVisit).to(exchange).with(MQConstant.VisitCreateRoutingKey);
 		rabbitAdmin.declareBinding(binding);
 		return binding;
 	}

@@ -9,11 +9,19 @@ import com.neusoft.hs.platform.log.LogUtil;
 import com.neusoft.hs.platform.util.DateUtil;
 
 @Component
-public class ReceiverService {
+public class VisitCreateReceiverService {
 
-	@RabbitListener(queues = MQConstant.VisitQueue)
-	public void receiveFooQueue(VisitDTO visitDTO) {
-		LogUtil.log(ReceiverService.class, "接收到患者一次就诊[{}]创建消息,创建时间为[{}]", visitDTO.getId(),
+	private int createCount = 0;
+
+	@RabbitListener(queues = MQConstant.VisitCreateQueue)
+	public void receiveVisitQueue(VisitDTO visitDTO) {
+		createCount++;
+		LogUtil.log(VisitCreateReceiverService.class, "接收到患者一次就诊[{}]创建消息,创建时间为[{}]", visitDTO.getId(),
 				DateUtil.toString(visitDTO.getCreateDate()));
 	}
+
+	public int getCreateCount() {
+		return createCount;
+	}
+
 }

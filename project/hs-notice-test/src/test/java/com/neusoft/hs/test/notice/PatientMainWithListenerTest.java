@@ -1,5 +1,7 @@
 package com.neusoft.hs.test.notice;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +14,7 @@ import com.neusoft.hs.engine.DTOException;
 import com.neusoft.hs.platform.exception.HsException;
 import com.neusoft.hs.platform.util.DateUtil;
 import com.neusoft.hs.test.AppTestService;
+import com.neusoft.hs.test.notice.listener.VisitCreateReceiverService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -20,6 +23,9 @@ public class PatientMainWithListenerTest {
 	@Autowired
 	@Qualifier(value = "patientMainTestService")
 	private AppTestService appTestService;
+	
+	@Autowired
+	private VisitCreateReceiverService visitCreateReceiverService;
 
 	@Before
 	public void testInit() throws HsException {
@@ -32,6 +38,8 @@ public class PatientMainWithListenerTest {
 	@Test
 	public void testExecute() throws HsException, DTOException {
 		appTestService.execute();
+		
+		assertTrue(visitCreateReceiverService.getCreateCount() == 5);
 	}
 
 }

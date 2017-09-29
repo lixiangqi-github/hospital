@@ -29,7 +29,7 @@ public class VisitCreatedEventListener implements ApplicationListener<VisitCreat
 			Visit visit = (Visit) event.getSource();
 			VisitDTO visitDTO = VisitDTOUtil.convert(visit);
 			rabbitMessagingTemplate.convertAndSend(MQConstant.VisitExchange,
-					MQConstant.VisitRoutingKey, visitDTO);
+					MQConstant.VisitCreateRoutingKey, visitDTO);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
