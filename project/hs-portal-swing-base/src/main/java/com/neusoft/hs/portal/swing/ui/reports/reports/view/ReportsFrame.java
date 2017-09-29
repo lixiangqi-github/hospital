@@ -41,7 +41,6 @@ public class ReportsFrame extends JFrame {
 	public ReportsFrame() {
 		setFrameUp();
 		initComponents();
-		pack();
 	}
 
 	private void setFrameUp() {

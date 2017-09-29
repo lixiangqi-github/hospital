@@ -40,13 +40,12 @@ public class MainMenuFrame extends JFrame implements
 	private JLabel sysDateLbl;
 	private JButton updateSysDateBtn;
 
-	private final static int Width = 370;
+	private final static int Width = 470;
 	private final static int Height = 230;
 
 	public MainMenuFrame() {
 		setFrameUp();
 		initComponents();
-		pack();
 	}
 
 	private void setFrameUp() {

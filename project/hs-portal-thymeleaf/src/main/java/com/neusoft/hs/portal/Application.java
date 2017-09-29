@@ -1,5 +1,7 @@
 package com.neusoft.hs.portal;
 
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -22,6 +24,8 @@ import com.neusoft.hs.platform.bean.ApplicationContextUtil;
 public class Application {
 
 	public static void main(String[] args) {
+		ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+		
 		ApplicationContext applicationContext = SpringApplication.run(Application.class, args);
 
 		ApplicationContextUtil.setApplicationContext(applicationContext);

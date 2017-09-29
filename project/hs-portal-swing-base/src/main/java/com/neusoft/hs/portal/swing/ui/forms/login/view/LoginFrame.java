@@ -15,6 +15,9 @@ public class LoginFrame extends JDialog {
 
 	private LoginFormPanel formPanel;
 	private LoginFormBtnPanel formBtnPanel;
+	
+	private final static int Width = 440;
+	private final static int Height = 150;
 
 	@Autowired
 	public LoginFrame(LoginFormPanel formPanel, LoginFormBtnPanel formBtnPanel) {
@@ -22,12 +25,12 @@ public class LoginFrame extends JDialog {
 		this.formBtnPanel = formBtnPanel;
 		setFrameUp();
 		initComponents();
-		pack();
 	}
 
 	private void setFrameUp() {
 		setTitle(ConstMessagesCN.DialogTitles.Login_MODAL);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setSize(Width, Height);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setModal(true);

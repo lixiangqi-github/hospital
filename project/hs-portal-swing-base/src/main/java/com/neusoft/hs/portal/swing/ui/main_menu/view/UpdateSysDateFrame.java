@@ -35,7 +35,6 @@ public class UpdateSysDateFrame extends JFrame {
 	public UpdateSysDateFrame() {
 		setFrameUp();
 		initComponents();
-		pack();
 	}
 
 	private void setFrameUp() {

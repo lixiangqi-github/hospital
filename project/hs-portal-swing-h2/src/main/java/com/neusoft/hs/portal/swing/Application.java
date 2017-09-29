@@ -1,5 +1,7 @@
 package com.neusoft.hs.portal.swing;
 
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -22,7 +24,8 @@ import com.neusoft.hs.portal.swing.util.LookAndFeelUtils;
 public class Application {
 
 	public static void main(String[] args) {
-
+		ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+		
 		LookAndFeelUtils.setWindowsLookAndFeel();
 
 		ConfigurableApplicationContext context = new SpringApplicationBuilder(

@@ -19,7 +19,6 @@ public class AddVisitFrame extends JDialog {
         this.formBtnPanel = formBtnPanel;
         setFrameUp();
         initComponents();
-        pack();
     }
 
     private void setFrameUp() {

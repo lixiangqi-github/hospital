@@ -37,12 +37,11 @@ public class OutPatientFrame extends JFrame {
 	private JLabel loginLbl;
 
 	private final static int Width = 225;
-	private final static int Height = 450;
+	private final static int Height = 500;
 
 	public OutPatientFrame() {
 		setFrameUp();
 		initComponents();
-		pack();
 	}
 
 	private void setFrameUp() {
