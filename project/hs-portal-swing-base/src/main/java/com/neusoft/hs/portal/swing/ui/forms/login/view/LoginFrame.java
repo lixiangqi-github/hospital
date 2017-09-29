@@ -17,7 +17,7 @@ public class LoginFrame extends JDialog {
 	private LoginFormBtnPanel formBtnPanel;
 	
 	private final static int Width = 440;
-	private final static int Height = 150;
+	private final static int Height = 130;
 
 	@Autowired
 	public LoginFrame(LoginFormPanel formPanel, LoginFormBtnPanel formBtnPanel) {

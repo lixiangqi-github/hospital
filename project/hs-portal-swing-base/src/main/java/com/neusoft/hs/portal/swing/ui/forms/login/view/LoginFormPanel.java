@@ -21,7 +21,7 @@ public class LoginFormPanel extends JPanel {
 	private static final int LAYOUT_ROWS = 1;
 	private static final int LAYOUT_COLS = 2;
 	private static final int HORIZONTAL_GAP = 0;
-	private static final int VERTICAL_GAP = 20;
+	private static final int VERTICAL_GAP = 5;
 	private static final int TEXT_FIELD_COLUMNS = 20;
 
 //	private JTextField accountTF;

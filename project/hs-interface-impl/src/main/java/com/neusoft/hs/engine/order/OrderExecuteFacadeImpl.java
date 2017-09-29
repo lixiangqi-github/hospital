@@ -33,8 +33,8 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 	private OrderExecuteDTOUtil orderExecuteDTOUtil;
 
 	@Override
-	public List<OrderExecuteDTO> findNeedExecute(String userId, Integer pageNumber,
-			Integer pageSize) throws OrderExecuteDTOException {
+	public OrderExecuteDTOSet findNeedExecute(String userId, Integer pageNumber, Integer pageSize)
+			throws OrderExecuteDTOException {
 		AbstractUser user = userAdminDomainService.find(userId);
 		if (user == null) {
 			throw new OrderExecuteDTOException(null, "用户userId=[%s]不存在", userId);
@@ -50,7 +50,7 @@ public class OrderExecuteFacadeImpl implements OrderExecuteFacade {
 			for (OrderExecute execute : executes) {
 				executeDTOs.add(orderExecuteDTOUtil.convert(execute));
 			}
-			return executeDTOs;
+			return new OrderExecuteDTOSet(executeDTOs);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 			throw new OrderExecuteDTOException(e);

@@ -1,6 +1,5 @@
 package com.neusoft.hs.engine.order;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class OrderExecuteRestController {
 	private OrderExecuteFacade orderExecuteFacade;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/order/execute/{userId}/need/execute/find/{pageNumber}/pageNumber/{pageSize}/pageSize")
-	public List<OrderExecuteDTO> findNeedExecute(@PathVariable("userId") String userId,
+	public OrderExecuteDTOSet findNeedExecute(@PathVariable("userId") String userId,
 			@PathVariable("pageNumber") Integer pageNumber,
 			@PathVariable("pageSize") Integer pageSize) throws OrderExecuteDTOException {
 		return orderExecuteFacade.findNeedExecute(userId, pageNumber, pageSize);
