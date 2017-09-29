@@ -53,6 +53,9 @@
 		
 		<module>hs-portal-base</module>
 		
+		<module>hs-notice-core</module>
+    	<module>hs-notice-test</module>
+		
 		<module>hs-interface-core</module>
 		<module>hs-interface-impl</module>
 		<module>hs-interface-stub</module>
@@ -80,6 +83,7 @@
 
 		<module>hs-platform-core</module>
 		<module>hs-platform-test</module>
+
   </modules>
 
 	<build>
