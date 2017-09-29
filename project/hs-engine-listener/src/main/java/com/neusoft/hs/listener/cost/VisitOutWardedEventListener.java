@@ -12,15 +12,14 @@ import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitOutWardedEvent;
 import com.neusoft.hs.platform.util.DateUtil;
 
-@Service
-public class VisitOutWardedEventListener implements
-		ApplicationListener<VisitOutWardedEvent> {
+@Service(value = "engine-cost-visitOutWardedEventListener")
+public class VisitOutWardedEventListener implements ApplicationListener<VisitOutWardedEvent> {
 
 	@Override
 	public void onApplicationEvent(VisitOutWardedEvent event) {
 
 		Visit visit = (Visit) event.getSource();
-		
+
 		Date sysDate = DateUtil.getSysDate();
 
 		for (VisitChargeItem visitChargeItem : visit.getChargeItems()) {

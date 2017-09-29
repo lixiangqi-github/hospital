@@ -13,7 +13,7 @@ import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.domain.visit.VisitIntoWardedEvent;
 import com.neusoft.hs.platform.util.DateUtil;
 
-@Service
+@Service(value="engine-cost-visitIntoWardedEventListener")
 public class VisitIntoWardedEventListener implements ApplicationListener<VisitIntoWardedEvent> {
 
 	@Autowired

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.neusoft.hs.domain.visit.Visit;
+import com.neusoft.hs.engine.visit.VisitDTO;
 
 public class VisitDTOUtil {
 

@@ -11,9 +11,9 @@ import com.neusoft.hs.domain.cost.CostException;
 import com.neusoft.hs.domain.order.OrderExecute;
 import com.neusoft.hs.domain.order.OrderExecuteFinishedEvent;
 
-@Service
-public class OrderExecuteFinishedEventListener implements
-		ApplicationListener<OrderExecuteFinishedEvent> {
+@Service(value = "engine-cost-orderExecuteFinishedEventListener")
+public class OrderExecuteFinishedEventListener
+		implements ApplicationListener<OrderExecuteFinishedEvent> {
 
 	@Autowired
 	private CostDomainService costDomainService;
