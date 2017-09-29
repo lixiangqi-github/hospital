@@ -23,7 +23,7 @@ import com.neusoft.hs.notice.config.MQConstant;
 @Configuration
 @EnableRabbit
 public class ConsumerConfig implements RabbitListenerConfigurer {
-	
+
 	@Value("${custom.visit.rabbitmq.message.timeout}")
 	private int messageTimeout;
 
@@ -31,9 +31,9 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 	RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
 		return new RabbitAdmin(connectionFactory);
 	}
-	
+
 	@Bean
-	Queue queueVisit(RabbitAdmin rabbitAdmin) {
+	Queue queueCreateVisit(RabbitAdmin rabbitAdmin) {
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-message-ttl", messageTimeout);
@@ -43,16 +43,36 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 	}
 
 	@Bean
-	TopicExchange exchange(RabbitAdmin rabbitAdmin) {
-		TopicExchange exchange = new TopicExchange(MQConstant.VisitExchange);// 配置广播路由器
-		rabbitAdmin.declareExchange(exchange);
-		return exchange;
+	Queue queueIntoWardVisit(RabbitAdmin rabbitAdmin) {
+
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-message-ttl", messageTimeout);
+		Queue queue = new Queue(MQConstant.VisitIntoWardQueue, true, false, false, args);
+		rabbitAdmin.declareQueue(queue);
+		return queue;
 	}
-	
+
 	@Bean
-	Binding bindingExchangeVisit(Queue queueVisit, TopicExchange exchange,
+	TopicExchange exchange(RabbitAdmin rabbitAdmin) {
+		TopicExchange topicExchange = new TopicExchange(MQConstant.VisitExchange);
+		rabbitAdmin.declareExchange(topicExchange);
+		return topicExchange;
+	}
+
+	@Bean
+	Binding bindingExchangeCreateVisit(Queue queueCreateVisit, TopicExchange exchange,
 			RabbitAdmin rabbitAdmin) {
-		Binding binding = BindingBuilder.bind(queueVisit).to(exchange).with(MQConstant.VisitCreateRoutingKey);
+		Binding binding = BindingBuilder.bind(queueCreateVisit).to(exchange)
+				.with(MQConstant.VisitCreateRoutingKey);
+		rabbitAdmin.declareBinding(binding);
+		return binding;
+	}
+
+	@Bean
+	Binding bindingExchangeIntoWardVisit(Queue queueIntoWardVisit, TopicExchange exchange,
+			RabbitAdmin rabbitAdmin) {
+		Binding binding = BindingBuilder.bind(queueIntoWardVisit).to(exchange)
+				.with(MQConstant.VisitIntoWardRoutingKey);
 		rabbitAdmin.declareBinding(binding);
 		return binding;
 	}
