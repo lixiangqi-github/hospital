@@ -57,13 +57,12 @@ public class OrderFacadeImpl implements OrderFacade {
 	private OrderDTOUtil orderDTOUtil;
 
 	@Override
-	public List<OrderDTO> create(CreateOrderDTO createOrderDTO)
+	public OrderDTOSet create(CreateOrderDTO createOrderDTO)
 			throws OrderDTOException, OrderExecuteDTOException {
 
 		OrderCreateCommand orderCommand;
 		if (createOrderDTO.getItems().size() == 1) {
-			orderCommand = this.createOrder(createOrderDTO, createOrderDTO
-					.getItems().get(0));
+			orderCommand = this.createOrder(createOrderDTO, createOrderDTO.getItems().get(0));
 		} else {
 			CompsiteOrder compsiteOrder = new CompsiteOrder();
 			Order order;
@@ -74,8 +73,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				} catch (OrderException e) {
 					e.printStackTrace();
 					if (e.getOrder() != null) {
-						throw new OrderDTOException(e.getOrder().getId(),
-								e.getMessage());
+						throw new OrderDTOException(e.getOrder().getId(), e.getMessage());
 					} else {
 						throw new OrderDTOException(null, e.getMessage());
 					}
@@ -85,37 +83,32 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderCommand = compsiteOrder;
 		}
 
-		Doctor doctor = userAdminAppService.findDoctor(createOrderDTO
-				.getCreator());
+		Doctor doctor = userAdminAppService.findDoctor(createOrderDTO.getCreator());
 		if (doctor == null) {
-			throw new OrderDTOException(null, "创建者医生[%s]不存在",
-					createOrderDTO.getCreator());
+			throw new OrderDTOException(null, "创建者医生[%s]不存在", createOrderDTO.getCreator());
 		}
 
 		try {
-			List<Order> orders = orderDomainService
-					.create(orderCommand, doctor);
+			List<Order> orders = orderDomainService.create(orderCommand, doctor);
 
 			List<OrderDTO> orderDTOs = new ArrayList<OrderDTO>();
 			for (Order order : orders) {
 				orderDTOs.add(orderDTOUtil.convert(order));
 			}
 
-			return orderDTOs;
+			return new OrderDTOSet(orderDTOs);
 
 		} catch (OrderException e) {
 			e.printStackTrace();
 			if (e.getOrder() != null) {
-				throw new OrderDTOException(e.getOrder().getId(),
-						e.getMessage());
+				throw new OrderDTOException(e.getOrder().getId(), e.getMessage());
 			} else {
 				throw new OrderDTOException(null, e.getMessage());
 			}
 		} catch (OrderExecuteException e) {
 			e.printStackTrace();
 			if (e.getExecute() != null) {
-				throw new OrderDTOException(e.getExecute().getId(),
-						e.getMessage());
+				throw new OrderDTOException(e.getExecute().getId(), e.getMessage());
 			} else {
 				throw new OrderDTOException(null, e.getMessage());
 			}
@@ -146,8 +139,8 @@ public class OrderFacadeImpl implements OrderFacade {
 		}
 	}
 
-	private Order createOrder(CreateOrderDTO createOrderDTO,
-			CreateOrderItemDTO item) throws OrderDTOException {
+	private Order createOrder(CreateOrderDTO createOrderDTO, CreateOrderItemDTO item)
+			throws OrderDTOException {
 		Order order;
 		if (createOrderDTO.isLong()) {
 			LongOrder longOrder = new LongOrder();
@@ -177,12 +170,10 @@ public class OrderFacadeImpl implements OrderFacade {
 		if (createOrderDTO.getVisitId() != null) {
 			visit = visitDomainService.find(createOrderDTO.getVisitId());
 			if (visit == null) {
-				throw new OrderDTOException(null, "患者一次就诊Id[%s]不存在",
-						createOrderDTO.getVisitId());
+				throw new OrderDTOException(null, "患者一次就诊Id[%s]不存在", createOrderDTO.getVisitId());
 			}
 		} else {
-			visit = visitDomainService.findLastVisit(createOrderDTO
-					.getVisitCardNumber());
+			visit = visitDomainService.findLastVisit(createOrderDTO.getVisitCardNumber());
 			if (visit == null) {
 				throw new OrderDTOException(null, "患者一次就诊cardNumber[%s]不存在",
 						createOrderDTO.getVisitCardNumber());
@@ -194,8 +185,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			Dept executeDept = organizationAdminDomainService
 					.findTheDept(createOrderDTO.getExecuteDeptId());
 			if (executeDept == null) {
-				throw new OrderDTOException(null, "执行部门[%s]不存在",
-						createOrderDTO.getExecuteDeptId());
+				throw new OrderDTOException(null, "执行部门[%s]不存在", createOrderDTO.getExecuteDeptId());
 			}
 			order.setExecuteDept(executeDept);
 		}
@@ -203,11 +193,9 @@ public class OrderFacadeImpl implements OrderFacade {
 		order.setCount(item.getCount());
 
 		String orderTypeId = item.getOrderTypeId();
-		OrderType orderType = orderAdminDomainService
-				.findOrderType(orderTypeId);
+		OrderType orderType = orderAdminDomainService.findOrderType(orderTypeId);
 		if (orderType == null) {
-			throw new OrderDTOException(null, "医嘱类型[%s]不存在",
-					item.getOrderTypeId());
+			throw new OrderDTOException(null, "医嘱类型[%s]不存在", item.getOrderTypeId());
 		}
 		order.setOrderType(orderType);
 		order.setName(orderType.getName());
@@ -221,8 +209,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			DrugUseMode drugUseMode = pharmacyAdminService
 					.findDrugUseMode(createOrderDTO.getDrugUseModeId());
 			if (drugUseMode == null) {
-				throw new OrderDTOException(null, "药品用法[%s]不存在",
-						createOrderDTO.getDrugUseModeId());
+				throw new OrderDTOException(null, "药品用法[%s]不存在", createOrderDTO.getDrugUseModeId());
 			}
 
 			order.setTypeApp(new DrugOrderTypeApp(pharmacy, drugUseMode));

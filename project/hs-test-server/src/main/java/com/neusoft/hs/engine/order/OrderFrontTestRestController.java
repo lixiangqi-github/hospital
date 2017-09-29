@@ -1,7 +1,5 @@
 package com.neusoft.hs.engine.order;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +17,7 @@ public class OrderFrontTestRestController {
 	private OrderFacade orderFacade;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/test/order/create")
-	public List<OrderDTO> create() throws HsException,DTOException {
+	public OrderDTOSet create() throws HsException,DTOException {
 
 		CreateOrderDTO createOrderDTO = new CreateOrderDTO();
 
