@@ -20,12 +20,15 @@ public class VisitIntoWardedEventListener implements ApplicationListener<VisitIn
 
 	@Autowired
 	private RabbitMessagingTemplate rabbitMessagingTemplate;
+	
+	@Autowired
+	private VisitDTOUtil visitDTOUtil;
 
 	@Override
 	public void onApplicationEvent(VisitIntoWardedEvent event) {
 		try {
 			Visit visit = (Visit) event.getSource();
-			VisitDTO visitDTO = VisitDTOUtil.convert(visit);
+			VisitDTO visitDTO = visitDTOUtil.convert(visit);
 			rabbitMessagingTemplate.convertAndSend(MQConstant.VisitExchange,
 					MQConstant.VisitIntoWardRoutingKey, visitDTO);
 		} catch (IllegalAccessException | InvocationTargetException e) {

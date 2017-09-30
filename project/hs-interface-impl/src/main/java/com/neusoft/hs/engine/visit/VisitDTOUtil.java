@@ -3,13 +3,15 @@ package com.neusoft.hs.engine.visit;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Service;
 
 import com.neusoft.hs.domain.visit.Visit;
 import com.neusoft.hs.engine.visit.VisitDTO;
 
+@Service
 public class VisitDTOUtil {
 
-	public static VisitDTO convert(Visit visit) throws IllegalAccessException,
+	public VisitDTO convert(Visit visit) throws IllegalAccessException,
 			InvocationTargetException {
 		VisitDTO visitDTO = new VisitDTO();
 		BeanUtils.copyProperties(visitDTO, visit);

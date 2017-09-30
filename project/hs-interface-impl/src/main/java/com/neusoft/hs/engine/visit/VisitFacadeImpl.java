@@ -16,12 +16,15 @@ public class VisitFacadeImpl implements VisitFacade {
 	@Autowired
 	private VisitDomainService visitDomainService;
 
+	@Autowired
+	private VisitDTOUtil visitDTOUtil;
+
 	@Override
-	public VisitDTO find(String visitId) throws VisitDTOException{
+	public VisitDTO find(String visitId) throws VisitDTOException {
 		Visit visit = visitDomainService.find(visitId);
 		if (visit != null) {
 			try {
-				return VisitDTOUtil.convert(visit);
+				return visitDTOUtil.convert(visit);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 				throw new VisitDTOException(e);

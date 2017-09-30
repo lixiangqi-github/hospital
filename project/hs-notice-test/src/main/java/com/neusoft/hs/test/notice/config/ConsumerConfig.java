@@ -37,7 +37,7 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-message-ttl", messageTimeout);
-		Queue queue = new Queue(MQConstant.VisitCreateQueue, true, false, false, args);
+		Queue queue = new Queue(MQConsumerConstant.VisitCreateQueue, true, false, false, args);
 		rabbitAdmin.declareQueue(queue);
 		return queue;
 	}
@@ -47,7 +47,7 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("x-message-ttl", messageTimeout);
-		Queue queue = new Queue(MQConstant.VisitIntoWardQueue, true, false, false, args);
+		Queue queue = new Queue(MQConsumerConstant.VisitIntoWardQueue, true, false, false, args);
 		rabbitAdmin.declareQueue(queue);
 		return queue;
 	}

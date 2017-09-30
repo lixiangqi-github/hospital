@@ -439,7 +439,7 @@ public abstract class OrderExecute extends IdEntity {
 			return !this.executeDept.equals(this.order.getBelongDept());
 		}
 	}
-
+	
 	protected void calTip() {
 	}
 

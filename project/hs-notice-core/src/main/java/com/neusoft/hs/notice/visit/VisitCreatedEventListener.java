@@ -21,13 +21,16 @@ public class VisitCreatedEventListener implements ApplicationListener<VisitCreat
 
 	@Autowired
 	private RabbitMessagingTemplate rabbitMessagingTemplate;
+	
+	@Autowired
+	private VisitDTOUtil visitDTOUtil;
 
 	@Async
 	@Override
 	public void onApplicationEvent(VisitCreatedEvent event) {
 		try {
 			Visit visit = (Visit) event.getSource();
-			VisitDTO visitDTO = VisitDTOUtil.convert(visit);
+			VisitDTO visitDTO = visitDTOUtil.convert(visit);
 			rabbitMessagingTemplate.convertAndSend(MQConstant.VisitExchange,
 					MQConstant.VisitCreateRoutingKey, visitDTO);
 		} catch (IllegalAccessException | InvocationTargetException e) {

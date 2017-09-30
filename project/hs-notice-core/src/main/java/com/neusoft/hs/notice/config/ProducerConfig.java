@@ -27,51 +27,6 @@ public class ProducerConfig {
 		return new RabbitAdmin(connectionFactory);
 	}
 
-	@Bean
-	Queue queueCreateVisit(RabbitAdmin rabbitAdmin) {
-
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-message-ttl", messageTimeout);
-		Queue queue = new Queue(MQConstant.VisitCreateQueue, true, false, false, args);
-		rabbitAdmin.declareQueue(queue);
-		return queue;
-	}
-
-	@Bean
-	Queue queueIntoWardVisit(RabbitAdmin rabbitAdmin) {
-
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("x-message-ttl", messageTimeout);
-		Queue queue = new Queue(MQConstant.VisitIntoWardQueue, true, false, false, args);
-		rabbitAdmin.declareQueue(queue);
-		return queue;
-	}
-
-	@Bean
-	TopicExchange exchange(RabbitAdmin rabbitAdmin) {
-		TopicExchange topicExchange = new TopicExchange(MQConstant.VisitExchange);
-		rabbitAdmin.declareExchange(topicExchange);
-		return topicExchange;
-	}
-
-	@Bean
-	Binding bindingExchangeCreateVisit(Queue queueCreateVisit, TopicExchange exchange,
-			RabbitAdmin rabbitAdmin) {
-		Binding binding = BindingBuilder.bind(queueCreateVisit).to(exchange)
-				.with(MQConstant.VisitCreateRoutingKey);
-		rabbitAdmin.declareBinding(binding);
-		return binding;
-	}
-
-	@Bean
-	Binding bindingExchangeIntoWardVisit(Queue queueIntoWardVisit, TopicExchange exchange,
-			RabbitAdmin rabbitAdmin) {
-		Binding binding = BindingBuilder.bind(queueIntoWardVisit).to(exchange)
-				.with(MQConstant.VisitIntoWardRoutingKey);
-		rabbitAdmin.declareBinding(binding);
-		return binding;
-	}
-
 	/**
 	 * 生产者用
 	 * 
