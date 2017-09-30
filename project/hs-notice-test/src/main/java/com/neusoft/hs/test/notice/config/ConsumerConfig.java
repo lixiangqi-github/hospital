@@ -27,6 +27,12 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 	@Value("${custom.visit.rabbitmq.message.timeout}")
 	private int messageTimeout;
 
+	@Value("${test.custom.inspect.orderExecute.notice.queue}")
+	private String inspectOrderExecuteNoticeQueue;
+	
+	@Value("${test.custom.inspect.orderExecute.notice.routing}")
+	private String inspectOrderExecuteNoticeRoutingKey;
+
 	@Bean
 	RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
 		return new RabbitAdmin(connectionFactory);
@@ -53,26 +59,52 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
 	}
 
 	@Bean
-	TopicExchange exchange(RabbitAdmin rabbitAdmin) {
+	Queue queueInspectOrderExecuteNotice(RabbitAdmin rabbitAdmin) {
+
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("x-message-ttl", messageTimeout);
+		Queue queue = new Queue(inspectOrderExecuteNoticeQueue, true, false, false, args);
+		rabbitAdmin.declareQueue(queue);
+		return queue;
+	}
+
+	@Bean
+	TopicExchange exchangeVisit(RabbitAdmin rabbitAdmin) {
 		TopicExchange topicExchange = new TopicExchange(MQConstant.VisitExchange);
 		rabbitAdmin.declareExchange(topicExchange);
 		return topicExchange;
 	}
 
 	@Bean
-	Binding bindingExchangeCreateVisit(Queue queueCreateVisit, TopicExchange exchange,
+	TopicExchange exchangeInspectOrderExecuteNotice(RabbitAdmin rabbitAdmin) {
+		TopicExchange topicExchange = new TopicExchange(MQConstant.OrderExecuteNoticeExchange);
+		rabbitAdmin.declareExchange(topicExchange);
+		return topicExchange;
+	}
+
+	@Bean
+	Binding bindingExchangeCreateVisit(Queue queueCreateVisit, TopicExchange exchangeVisit,
 			RabbitAdmin rabbitAdmin) {
-		Binding binding = BindingBuilder.bind(queueCreateVisit).to(exchange)
+		Binding binding = BindingBuilder.bind(queueCreateVisit).to(exchangeVisit)
 				.with(MQConstant.VisitCreateRoutingKey);
 		rabbitAdmin.declareBinding(binding);
 		return binding;
 	}
 
 	@Bean
-	Binding bindingExchangeIntoWardVisit(Queue queueIntoWardVisit, TopicExchange exchange,
+	Binding bindingExchangeIntoWardVisit(Queue queueIntoWardVisit, TopicExchange exchangeVisit,
 			RabbitAdmin rabbitAdmin) {
-		Binding binding = BindingBuilder.bind(queueIntoWardVisit).to(exchange)
+		Binding binding = BindingBuilder.bind(queueIntoWardVisit).to(exchangeVisit)
 				.with(MQConstant.VisitIntoWardRoutingKey);
+		rabbitAdmin.declareBinding(binding);
+		return binding;
+	}
+
+	@Bean
+	Binding bindingInspectOrderExecuteNotice(Queue queueInspectOrderExecuteNotice,
+			TopicExchange exchangeInspectOrderExecuteNotice, RabbitAdmin rabbitAdmin) {
+		Binding binding = BindingBuilder.bind(queueInspectOrderExecuteNotice)
+				.to(exchangeInspectOrderExecuteNotice).with(inspectOrderExecuteNoticeRoutingKey);
 		rabbitAdmin.declareBinding(binding);
 		return binding;
 	}

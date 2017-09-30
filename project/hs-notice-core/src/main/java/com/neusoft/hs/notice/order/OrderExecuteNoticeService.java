@@ -29,7 +29,7 @@ public class OrderExecuteNoticeService {
 	private OrderExecuteDTOUtil orderExecuteDTOUtil;
 
 	@Value("${custom.order.execute.need.notice.minute}")
-	private int noticeMinute = 5;
+	private int noticeMinute;
 
 	public void notice() {
 
