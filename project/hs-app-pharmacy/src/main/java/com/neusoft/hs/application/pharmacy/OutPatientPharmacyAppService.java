@@ -26,7 +26,7 @@ public class OutPatientPharmacyAppService {
 	 */
 	public List<OrderExecute> taskDrug(Visit visit, AbstractUser user,
 			Pageable pageable) {
-		return orderExecuteAppService.getNeedExecuteOrderExecutes(visit,
+		return orderExecuteAppService.findNeedExecuteOrderExecutes(visit,
 				OrderExecute.Type_Distribute_Drug, user, pageable);
 	}
 }

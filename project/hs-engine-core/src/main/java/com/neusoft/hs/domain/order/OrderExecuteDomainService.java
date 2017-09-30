@@ -112,6 +112,20 @@ public class OrderExecuteDomainService {
 				pageable);
 	}
 
+	/**
+	 * 得到需要通知的执行条目列表
+	 * 
+	 * @param noticeStartDate
+	 * @param noticeEndDate
+	 * @param pageable
+	 * @return
+	 */
+	public List<OrderExecute> findNeedNoticeOrderExecutes(Date noticeStartDate, Date noticeEndDate,
+			Pageable pageable) {
+		return orderExecuteRepo.findByStateAndPlanStartDateGreaterThanEqualAndPlanStartDateLessThan(
+				OrderExecute.State_Executing, noticeStartDate, noticeEndDate, pageable);
+	}
+
 	public OrderExecute find(String executeId) {
 		return orderExecuteRepo.findOne(executeId);
 	}

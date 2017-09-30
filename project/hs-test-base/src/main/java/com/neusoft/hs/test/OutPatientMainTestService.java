@@ -438,7 +438,7 @@ public class OutPatientMainTestService extends AppTestService {
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
 		// 通过患者一次就诊得到输液的任务列表
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(visit002,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(visit002,
 				OrderExecute.Type_Transport_Fluid, usera01, pageable);
 
 		assertTrue(executes.size() == 2);
@@ -578,7 +578,7 @@ public class OutPatientMainTestService extends AppTestService {
 
 		pageable = new PageRequest(0, Integer.MAX_VALUE);
 		// 通过患者一次就诊得到输液的任务列表
-		executes = orderExecuteAppService.getNeedExecuteOrderExecutes(visit002,
+		executes = orderExecuteAppService.findNeedExecuteOrderExecutes(visit002,
 				OrderExecute.Type_Transport_Fluid, usera01, pageable);
 
 		assertTrue(executes.size() == 2);

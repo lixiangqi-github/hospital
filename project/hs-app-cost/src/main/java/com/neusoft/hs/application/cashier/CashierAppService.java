@@ -38,7 +38,7 @@ public class CashierAppService {
 
 	public List<OrderExecute> getNeedChageExecutes(Visit visit, AbstractUser user,
 			Pageable pageable) {
-		return orderExecuteAppService.getNeedExecuteOrderExecutes(visit, OrderExecute.Type_Change,
+		return orderExecuteAppService.findNeedExecuteOrderExecutes(visit, OrderExecute.Type_Change,
 				user, pageable);
 	}
 

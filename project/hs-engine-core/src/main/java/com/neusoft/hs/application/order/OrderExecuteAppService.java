@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +28,12 @@ public class OrderExecuteAppService {
 
 	@Autowired
 	private OrderExecuteDomainService orderExecuteDomainService;
+	
+	@Value("${custom.order.execute.need.send.orderExecute.hour}")
+	private int needSendOrderExecuteHour = 36;// 明天12：00之前的医嘱
 
-	public static final int NeedSendOrderExecuteDay = 1;// 今天
-
-	public static final int NeedSendOrderExecuteHour = 36;// 明天12：00之前的医嘱
-
-	public static final int NeedExecuteOrderMinute = 30;// 医嘱执行可提前分钟数
+	@Value("${custom.order.execute.need.executeOrder.minute}")
+	private int needExecuteOrderMinute = 30;// 医嘱执行可提前分钟数
 
 	/**
 	 * 发送执行条目
@@ -132,7 +133,7 @@ public class OrderExecuteAppService {
 	 * @return
 	 */
 	public List<OrderExecute> findNeedSendOrderExecutes(AbstractUser nurse, Pageable pageable) {
-		Date date = DateUtil.addHour(DateUtil.getSysDateStart(), NeedSendOrderExecuteHour);
+		Date date = DateUtil.addHour(DateUtil.getSysDateStart(), needSendOrderExecuteHour);
 		return orderExecuteDomainService.findNeedSendOrderExecutes(nurse, date, pageable);
 	}
 
@@ -144,7 +145,7 @@ public class OrderExecuteAppService {
 	 * @return
 	 */
 	public List<OrderExecute> findNeedExecuteOrderExecutes(AbstractUser user, Pageable pageable) {
-		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), NeedExecuteOrderMinute);
+		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), needExecuteOrderMinute);
 		return orderExecuteDomainService.findNeedExecuteOrderExecutes(user, planStartDate,
 				pageable);
 	}
@@ -170,11 +171,19 @@ public class OrderExecuteAppService {
 	 * @param pageable
 	 * @return
 	 */
-	public List<OrderExecute> getNeedExecuteOrderExecutes(Visit visit, String type,
+	public List<OrderExecute> findNeedExecuteOrderExecutes(Visit visit, String type,
 			AbstractUser user, Pageable pageable) {
-		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), NeedExecuteOrderMinute);
+		Date planStartDate = DateUtil.addMinute(DateUtil.getSysDate(), needExecuteOrderMinute);
 		return orderExecuteDomainService.findNeedExecuteOrderExecutes(visit, type, user,
 				planStartDate, pageable);
+	}
+
+	public List<OrderExecute> findNeedNoticeOrderExecutes(int noticeMinute, Pageable pageable) {
+		Date noticeStartDate = DateUtil.getSysDate();
+		Date noticeEndDate = DateUtil.addMinute(DateUtil.getSysDate(), noticeMinute);
+
+		return orderExecuteDomainService.findNeedNoticeOrderExecutes(noticeStartDate, noticeEndDate,
+				pageable);
 	}
 
 }
