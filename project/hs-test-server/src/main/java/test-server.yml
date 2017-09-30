@@ -53,6 +53,16 @@ eureka:
   instance:
     leaseRenewalIntervalInSeconds: 5   # DO NOT DO THIS IN PRODUCTION
 
+custom:
+  order:
+    execute:
+      need:
+        send:
+          orderExecute:
+            hour: 36 #可以发送的的医嘱执行条目的提前小时数，以当前天零点起算，36小时表示可以发送明天12：00之前的医嘱执行条目
+        executeOrder:
+          minute: 30 #医嘱执行条目可以被提前执行的分钟数
+
 #  3. If using the Angel release-train ONLY, give the process a unique instance id 
 #     so that multiple instances can register when running on SAME host.  This is
 #     not needed since release-train Brixton.
