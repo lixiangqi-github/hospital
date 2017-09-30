@@ -20,8 +20,9 @@
       <versionLine x="20" y="40" text="version %VERSION%" fontSize="8" fontColor="0,0,0" bold="false" />
     </text>
   </splashScreen>
-  <java mainClass="com.neusoft.hs.portal.swing.Application" vmParameters="-Xms512m -Xmx6144m" arguments="" allowVMPassthroughParameters="true" preferredVM="server" bundleRuntime="true" minVersion="1.7" maxVersion="1.8" allowBetaVM="false" jdkOnly="false">
+  <java mainClass="com.neusoft.hs.portal.swing.Application" vmParameters="-Xms512m -Xmx6144m" arguments="" allowVMPassthroughParameters="true" preferredVM="server" bundleRuntime="true" minVersion="1.8" maxVersion="1.8" allowBetaVM="false" jdkOnly="false">
     <searchSequence>
+      <directory location="./jre" />
       <registry />
       <envVar name="JAVA_HOME" />
       <envVar name="JDK_HOME" />
